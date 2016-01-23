@@ -13,6 +13,7 @@ Submission Preparation Tool for Sequences of Phylogenetic Datasets
 
 from Bio import SeqFeature
 from Bio import SeqIO
+from Bio.Alphabet import generic_dna
 from Bio.Nexus import Nexus
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
@@ -34,12 +35,48 @@ __version__ = "2016.01.23.1900"
 # DEBUGGING #
 #############
 
-#import pdb
+import pdb
 #pdb.set_trace()
 
 ####################
 # GLOBAL VARIABLES #
 ####################
+
+###########
+# CLASSES #
+###########
+
+
+class DegapButMaintainAnnot:
+    ''' class for degapping DNA sequences but maintaining annotation association '''
+
+# Potential Improvements: the loops are not necessary
+# Potential Improvements: this code generates negative numbers
+
+    def __init__(self, a, b):
+        self.alignm = a
+        self.annot = b
+    def go(self):
+        for seq_name, seq in self.alignm.items():
+            seq_out = ''
+            gaps_in_gene = 0
+            for s_name, index_list in self.annot[seq_name].items():
+                gaps_in_list = 0
+                for index, nucl in enumerate(seq):
+                    if nucl == '-' and index in index_list:
+                        index_list.remove(index)
+                        gaps_in_list += 1
+                    if nucl != '-' and index in index_list:
+                        seq_out += nucl
+                        index_list[index_list.index(index)] = index - gaps_in_list
+                index_list = [i-gaps_in_gene for i in index_list]
+                self.annot[seq_name][s_name] = index_list
+                gaps_in_gene += gaps_in_list
+            self.alignm[seq_name] = ''.join(seq_out)
+            
+            seq_degap = self.alignm.values()[0]
+            charset_degap = self.annot.values()[0]
+        return (seq_degap, charset_degap)
 
 ###########
 # MODULES #
@@ -76,7 +113,8 @@ def main(inFn_nex, inFn_csv, outformat):
 # STEP 5
 # Degap the sequence while maintaing correct annotations; has to occur
 # before (!) SeqFeature "source" is created.
-#       seq_record.seq = Seq('GATC')
+        seq_degap, charset_degap = DegapButMaintainAnnot({seq_name: seq_record.seq}, {seq_name:charsets_full}).go()
+        seq_record.seq = Seq(seq_degap, generic_dna)
 
 # STEP 6
 # Create SeqFeature "source" for given seq_record; is appended to 
@@ -95,7 +133,7 @@ def main(inFn_nex, inFn_csv, outformat):
 
 # STEP 7
 # Convert each charset (a dictionary) to a list element in the list SeqRecord.features
-        for charset_name, charset_range in charsets_full.items():
+        for charset_name, charset_range in charset_degap.items():
 
 # STEP 7.a
 # Define the locations of the charsets
