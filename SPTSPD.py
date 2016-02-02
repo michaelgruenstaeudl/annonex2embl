@@ -28,8 +28,8 @@ import sys
 
 __author__ = "Michael Gruenstaeudl, PhD <mi.gruenstaeudl@gmail.com>"
 __copyright__ = "Copyright (C) 2016 Michael Gruenstaeudl"
-__info__ = "Submission Preparation Tool for Sequences of Phylogenetic Datasets"
-__version__ = "2016.01.23.1900"
+__info__ = "Submission Preparation Tool for Sequences of Phylogenetic Datasets (SPTSPD)"
+__version__ = "2016.02.02.2000"
 
 #############
 # DEBUGGING #
@@ -47,16 +47,48 @@ import pdb
 ###########
 
 
-class DegapButMaintainAnnot:
-    ''' class for degapping DNA sequences but maintaining annotation association '''
-
-# Potential Improvements: the loops are not necessary
-# Potential Improvements: this code generates negative numbers
-
-    def __init__(self, a, b):
-        self.alignm = a
-        self.annot = b
-    def go(self):
+class DegapButMaintainAnno:
+    ''' This function degaps DNA sequences while maintaining annotations.
+    
+    This function removes dashes from strings while maintaining 
+    annotations on these strings.
+    
+    Args:
+        alignm (dict):  a dict with sequence names (str) as keys and 
+                        sequences (str) as values; example: 
+                        {seq_name: seq_record.seq}
+        annot (dict):   a dictionary with sequence names (str) as keys 
+                        and annotation info (dict) as values; example: 
+                        {seq_name:charsets}
+    '''
+    
+    def __init__(self, alignm, annot):
+        self.alignm = alignm
+        self.annot = annot
+    
+    def standard(self):
+        ''' This function conducts the default operation.
+        
+        Returns:
+            tupl.   The return consists of the degapped sequence and the 
+                    corresponding annotations; example: 
+                    {degapped_seq:adjusted_charsets}
+        
+        Raises:
+            currently nothing
+        
+        Examples:
+            >>> alignm = {"seq_1":"ATG-C"}
+            >>> annot = {"seq_1":{"gene_1":[0,1],"gene_2":[2,3,4]}}
+            >>> DegapButMaintainAnno(alignm, annot).standard()
+            Out: ('ATGC', {'gene_1': [0, 1], 'gene_2': [2, 3]})
+            
+        TODO:
+            (i)     Why is the seq_name provided in the input. It is not used in the code.
+            (ii)    The loop over self.alignm is unnecessary, since there is only a single key-value pair anyway.
+            (iii)   Something is fishy, since the code generates negative numbers.
+        '''
+    
         for seq_name, seq in self.alignm.items():
             seq_out = ''
             gaps_in_gene = 0
@@ -113,7 +145,7 @@ def main(inFn_nex, inFn_csv, outformat):
 # STEP 5
 # Degap the sequence while maintaing correct annotations; has to occur
 # before (!) SeqFeature "source" is created.
-        seq_degap, charset_degap = DegapButMaintainAnnot({seq_name: seq_record.seq}, {seq_name:charsets_full}).go()
+        seq_degap, charset_degap = DegapButMaintainAnno({seq_name: seq_record.seq}, {seq_name:charsets_full}).standard()
         seq_record.seq = Seq(seq_degap, generic_dna)
 
 # STEP 6
