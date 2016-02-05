@@ -20,7 +20,6 @@ from Bio.SeqRecord import SeqRecord
 from csv import DictReader
 
 import argparse
-import sys
 
 ###############
 # AUTHOR INFO #
@@ -29,13 +28,13 @@ import sys
 __author__ = "Michael Gruenstaeudl, PhD <mi.gruenstaeudl@gmail.com>"
 __copyright__ = "Copyright (C) 2016 Michael Gruenstaeudl"
 __info__ = "Submission Preparation Tool for Sequences of Phylogenetic Datasets (SPTSPD)"
-__version__ = "2016.02.02.2000"
+__version__ = "2016.02.05.2000"
 
 #############
 # DEBUGGING #
 #############
 
-import pdb
+#import pdb
 #pdb.set_trace()
 
 ####################
@@ -46,73 +45,119 @@ import pdb
 # CLASSES #
 ###########
 
+#############
+# FUNCTIONS #
+#############
 
-class DegapButMaintainAnno:
+def intersection_exists(ranges_list):
+    init_range = set(ranges_list[0])
+    for r in ranges_list[1:]:
+        if init_range.intersection(r):
+            return True # Exits the entire function with 'True' (i.e., stops all of the loops)
+    return False
+
+def DegapButMaintainAnno(seq, charsets):
     ''' This function degaps DNA sequences while maintaining annotations.
     
-    This function removes dashes from strings while maintaining 
-    annotations on these strings.
-    
+    Specifically, this function removes dashes from strings while maintaining 
+    annotations on these strings. In its current implementation, this function 
+    only works if none of the charsets are overlapping; hence, the initial check.
+
     Args:
-        alignm (dict):  a dict with sequence names (str) as keys and 
-                        sequences (str) as values; example: 
-                        {seq_name: seq_record.seq}
-        annot (dict):   a dictionary with sequence names (str) as keys 
-                        and annotation info (dict) as values; example: 
-                        {seq_name:charsets}
+        seq (str):      a string that represents an aligned DNA sequence;
+                        example: "ATG-C"
+        charsets (dict):a dictionary with gene names (str) as keys and lists 
+                        of nucleotide positions (list) as values; example: 
+                        {"gene_1":[0,1],"gene_2":[2,3,4]}
+
+    Returns:
+        tupl.   The return consists of the degapped sequence and the 
+                corresponding degapped charsets; example: 
+                (degapped_seq, degapped_charsets)
+    
+    Raises:
+        currently nothing
+        
+    Examples:
+    
+        Example 1: # Contains an internal gap
+            >>> seq = "ATG-C"
+            >>> annot = {"gene_1":[0,1],"gene_2":[2,3,4]}
+            >>> DegapButMaintainAnno(seq, annot)
+            Out: ('ATGC', {'gene_1': [0, 1], 'gene_2': [2, 3]})
+        
+        Example 2: # Contains start and end gaps
+            >>> seq = "AA----TT"
+            >>> annot = {"gene1":[0,1,2,3], "gene2":[4,5,6,7]}
+            >>> DegapButMaintainAnno(seq, annot)
+            Out: ('AATT', {'gene1': [0, 1], 'gene2': [2, 3]})
+                
+        Example 3: # Entire genes missing
+            >>> seq = "AA----TT"
+            >>> annot = {"gene1":[0,1,2], "gene2":[3,4], "gene3":[5,6,7]}
+            >>> DegapButMaintainAnno(seq, annot)
+            Out: ('AATT', {'gene1': [0, 1], 'gene2': [], 'gene3': [2, 3]})
+                
+        Example 4: # Overlapping genes with internal gaps
+            >>> seq = "A--AT--T"
+            >>> annot = {"gene1":[0,1,2,3,4], "gene2":[4,5,6,7]}
+            >>> DegapButMaintainAnno(seq, annot)
+            Out: ('AATTT', {'gene1': [0, 1, 2], 'gene2': [2, 3]})
+                
+        Example 5: # Overlapping genes with start and end gaps
+            >>> seq = "AA----TT"
+            >>> annot = {"gene1":[0,1,2,3,4], "gene2":[4,5,6,7]}
+            >>> DegapButMaintainAnno(seq, annot)
+            Out: ('AATT', {'gene1': [0, 1], 'gene2': [1, 2]})
+        
+        Example 6: # Contains start and end gaps; incorrect charset order
+            >>> seq = "AT----GC"
+            >>> annot = {"gene2":[4,5,6,7], "gene1":[0,1,2,3]}
+            >>> DegapButMaintainAnno(seq, annot)
+            Out: ('ATGC', {'gene1': [0, 1], 'gene2': [2, 3]})
+        
+    TODO:
+        (i)   Error in example 4: Out: AATT[sic!]T
+        (ii)  Error in example 5: Out: {'gene1': [0, 1], 'gene2': [1[sic!], 2]})
+    
+    Notes:
+        (i) In its current implementation, this function only works if 
+        none of the charsets are overlapping; hence, the initial check.
+        (ii) Order of charset in charsets seems to be irrelevant.
+        
     '''
     
-    def __init__(self, alignm, annot):
-        self.alignm = alignm
-        self.annot = annot
-    
-    def standard(self):
-        ''' This function conducts the default operation.
-        
-        Returns:
-            tupl.   The return consists of the degapped sequence and the 
-                    corresponding annotations; example: 
-                    {degapped_seq:adjusted_charsets}
-        
-        Raises:
-            currently nothing
-        
-        Examples:
-            >>> alignm = {"seq_1":"ATG-C"}
-            >>> annot = {"seq_1":{"gene_1":[0,1],"gene_2":[2,3,4]}}
-            >>> DegapButMaintainAnno(alignm, annot).standard()
-            Out: ('ATGC', {'gene_1': [0, 1], 'gene_2': [2, 3]})
-            
-        TODO:
-            (i)     Why is the seq_name provided in the input. It is not used in the code.
-            (ii)    The loop over self.alignm is unnecessary, since there is only a single key-value pair anyway.
-            (iii)   Something is fishy, since the code generates negative numbers.
-        '''
-    
-        for seq_name, seq in self.alignm.items():
-            seq_out = ''
-            gaps_in_gene = 0
-            for s_name, index_list in self.annot[seq_name].items():
-                gaps_in_list = 0
-                for index, nucl in enumerate(seq):
-                    if nucl == '-' and index in index_list:
-                        index_list.remove(index)
-                        gaps_in_list += 1
-                    if nucl != '-' and index in index_list:
-                        seq_out += nucl
-                        index_list[index_list.index(index)] = index - gaps_in_list
-                index_list = [i-gaps_in_gene for i in index_list]
-                self.annot[seq_name][s_name] = index_list
-                gaps_in_gene += gaps_in_list
-            self.alignm[seq_name] = ''.join(seq_out)
-            
-            seq_degap = self.alignm.values()[0]
-            charset_degap = self.annot.values()[0]
-        return (seq_degap, charset_degap)
+    if intersection_exists(charsets.values()):
+        raise ValueError('MY ERROR: Character sets are overlapping.')
 
-###########
-# MODULES #
-###########
+    degapped_seq = ''
+    degapped_charsets = {}
+
+    #print "seq", seq
+    gaps_cumulative = 0
+    for gene_name, index_list in charsets.items():
+        #print "gene_name", gene_name
+        #print "index_list", index_list
+        gaps_within_gene = 0
+        for pos, nucl in enumerate(seq):
+            #print "nucl", nucl
+            #print "pos", pos
+            if pos in index_list and nucl == '-':
+                index_list.remove(pos)
+                gaps_within_gene += 1
+            if pos in index_list and nucl != '-':
+                degapped_seq += nucl
+                index_list[index_list.index(pos)] = pos - gaps_within_gene
+            #print index_list, "\n"
+        index_list = [i-gaps_cumulative for i in index_list]
+        degapped_charsets[gene_name] = index_list
+        gaps_cumulative += gaps_within_gene
+    return (degapped_seq, degapped_charsets)
+
+
+########
+# MAIN #
+########
 
 def main(inFn_nex, inFn_csv, outformat):
 
@@ -145,8 +190,8 @@ def main(inFn_nex, inFn_csv, outformat):
 # STEP 5
 # Degap the sequence while maintaing correct annotations; has to occur
 # before (!) SeqFeature "source" is created.
-        seq_degap, charset_degap = DegapButMaintainAnno({seq_name: seq_record.seq}, {seq_name:charsets_full}).standard()
-        seq_record.seq = Seq(seq_degap, generic_dna)
+        degapped_seq, degapped_charsets = DegapButMaintainAnno(seq_record.seq, charsets_full)
+        seq_record.seq = Seq(degapped_seq, generic_dna)
 
 # STEP 6
 # Create SeqFeature "source" for given seq_record; is appended to 
@@ -157,7 +202,7 @@ def main(inFn_nex, inFn_csv, outformat):
         try:
             seq_feature_Qualifiers = [q for q in qualifiers_full if q['sequence_name']==seq_name][0]
         except:
-            sys.exit('Unable to generate SeqFeature "source"')
+            raise ValueError('MY ERROR: Unable to generate SeqFeature "source"')
         source_feature = SeqFeature.SeqFeature(seq_feature_Location,
                                                type='source',
                                                qualifiers=seq_feature_Qualifiers)
@@ -165,7 +210,7 @@ def main(inFn_nex, inFn_csv, outformat):
 
 # STEP 7
 # Convert each charset (a dictionary) to a list element in the list SeqRecord.features
-        for charset_name, charset_range in charset_degap.items():
+        for charset_name, charset_range in degapped_charsets.items():
 
 # STEP 7.a
 # Define the locations of the charsets
