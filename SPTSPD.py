@@ -20,6 +20,7 @@ from Bio.SeqRecord import SeqRecord
 from csv import DictReader
 
 import argparse
+from copy import copy
 
 ###############
 # AUTHOR INFO #
@@ -49,14 +50,48 @@ __version__ = "2016.02.05.2000"
 # FUNCTIONS #
 #############
 
+def DegapButMaintainAnno_2(seq, charsets):
+    ''' This function degaps DNA sequences while maintaining annotations. Since 
+    it works on overlapping charsets, this function replaces DegapButMaintainAnno_1.
+    
+    Source: http://stackoverflow.com/questions/35233714/maintaining-overlapping-annotations-while-removing-dashes-from-string
+    
+        Examples:
+                  
+        Example 4: # Overlapping genes with internal gaps
+            >>> seq = "A--AT--T"
+            >>> charsets = {"gene1":[0,1,2,3,4], "gene2":[4,5,6,7]}
+            >>> rewriteGene(seq, charsets)
+            Out: ('AATTT', {'gene1': [0, 1, 2], 'gene2': [2, 3]})
+                
+        Example 5: # Overlapping genes with start and end gaps
+            >>> seq = "AA----TT"
+            >>> charsets = {"gene1":[0,1,2,3,4], "gene2":[4,5,6,7]}
+            >>> rewriteGene(seq, charsets)
+            Out: ('AATT', {'gene1': [0, 1], 'gene2': [1, 2]})
+       
+    '''
+    
+    annotations = copy(charsets)
+    index = seq.find('-')
+    while index > -1:
+        for gene_name, indices in annotations.items():
+            if index in indices:
+                indices.remove(index)
+            annotations[gene_name] = [e-1 if e > index else e for e in indices]
+        seq = seq[:index] + seq[index+1:]
+        index = seq.find('-')
+    return seq, annotations
+
+
 def intersection_exists(ranges_list):
     init_range = set(ranges_list[0])
     for r in ranges_list[1:]:
         if init_range.intersection(r):
             return True # Exits the entire function with 'True' (i.e., stops all of the loops)
     return False
-
-def DegapButMaintainAnno(seq, charsets):
+    
+def DegapButMaintainAnno_1(seq, charsets):
     ''' This function degaps DNA sequences while maintaining annotations.
     
     Specifically, this function removes dashes from strings while maintaining 
@@ -132,23 +167,16 @@ def DegapButMaintainAnno(seq, charsets):
 
     degapped_seq = ''
     degapped_charsets = {}
-
-    #print "seq", seq
     gaps_cumulative = 0
     for gene_name, index_list in charsets.items():
-        #print "gene_name", gene_name
-        #print "index_list", index_list
         gaps_within_gene = 0
         for pos, nucl in enumerate(seq):
-            #print "nucl", nucl
-            #print "pos", pos
             if pos in index_list and nucl == '-':
                 index_list.remove(pos)
                 gaps_within_gene += 1
             if pos in index_list and nucl != '-':
                 degapped_seq += nucl
                 index_list[index_list.index(pos)] = pos - gaps_within_gene
-            #print index_list, "\n"
         index_list = [i-gaps_cumulative for i in index_list]
         degapped_charsets[gene_name] = index_list
         gaps_cumulative += gaps_within_gene
@@ -190,7 +218,7 @@ def main(inFn_nex, inFn_csv, outformat):
 # STEP 5
 # Degap the sequence while maintaing correct annotations; has to occur
 # before (!) SeqFeature "source" is created.
-        degapped_seq, degapped_charsets = DegapButMaintainAnno(seq_record.seq, charsets_full)
+        degapped_seq, degapped_charsets = DegapButMaintainAnno_2(seq_record.seq, charsets_full)
         seq_record.seq = Seq(degapped_seq, generic_dna)
 
 # STEP 6
