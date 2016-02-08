@@ -24,6 +24,7 @@ from csv import DictReader
 import CustomOps as COps
 
 import argparse
+import os
 
 ###############
 # AUTHOR INFO #
@@ -61,7 +62,8 @@ def main(inFn_nex, inFn_csv, seqname_col_label, outformat):
 
 # STEP 1
 # Define output files; initialize output list
-    outFn = inFn_nex[:inFn_nex.rfind('.')] + ".embl"
+    path, inFn =  os.path.split(inFn_nex)
+    outFn = inFn[:inFn.rfind('.')] + ".embl"
     records = []
 
 # STEP 2
@@ -86,6 +88,9 @@ def main(inFn_nex, inFn_csv, seqname_col_label, outformat):
 # IMPROVEMENTS NECESSARY:
 # (ii) Check if sequence_names are also in .nex-file
 # (iii) Compare other column titles to list of acceptable SeqFeatures
+
+# IMPROVEMENTS NECESSARY:
+# (iii) Have all metadata conform to basic ASCII standards (not extended ASCII) !
 
 # STEP 5
 # Create SeqRecords by providing sequence names and the sequences 
@@ -112,7 +117,7 @@ def main(inFn_nex, inFn_csv, seqname_col_label, outformat):
 # seq_record.features. 
 # SeqFeature "source" is critical for submissions to EMBL or GenBank as it 
 # contains all the relevant info on collection locality, herbarium voucher, etc.
-        start_pos = SeqFeature.ExactPosition(1)
+        start_pos = SeqFeature.ExactPosition(0)
         end_pos = SeqFeature.ExactPosition(len(seq_record))
         seq_feature_Location = SeqFeature.FeatureLocation(start_pos, end_pos)
        
