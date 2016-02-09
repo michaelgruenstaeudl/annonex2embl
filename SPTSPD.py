@@ -36,7 +36,7 @@ __author__ = "Michael Gruenstaeudl, PhD <mi.gruenstaeudl@gmail.com>"
 __copyright__ = "Copyright (C) 2016 Michael Gruenstaeudl"
 __info__ = "Submission Preparation Tool for Sequences of Phylogenetic"\
            " Datasets (SPTSPD)"
-__version__ = "2016.02.06.2100"
+__version__ = "2016.02.09.1500"
 
 #############
 # DEBUGGING #
@@ -103,36 +103,37 @@ class MetaQualChecks:
             'invalid INSDC qualifiers:  "%s"' % (not_valid))
 
 
-class GenerateSeqRecords:
+class GenerateSeqRecord:
     
-    def __init__(self, alignment_full, qualifiers_full):
-        self.alignm = alignment_full
-        self.quals = qualifiers_full
+    def __init__(self, current_seq, current_qual):
+        self.seq = current_seq
+        self.qual = current_qual
     
-    def generate_base_record(self, seq_name, seqname_col_label):
+    def generate_base_record(self, seqname_col_label):
         ''' Generate a base SeqRecord '''
         
-        current_seq = self.alignm[seq_name]
+        id_handle = self.qual[seqname_col_label]
         try:
-            current_qual = [d for d in self.quals\
-                if d[seqname_col_label] == seq_name][0]
-        except:
-            current_qual = []
-       
-        seq_handle = current_seq
-        id_handle = seq_name
-        try:
-            name_handle = current_qual['organism']
+            name_handle = self.qual['organism']
         except:
             name_handle = 'unknown organism'
         descr_handle = name_handle
-        #try:
-        #    descr_handle = current_qual['organism']
-        #except:
-        #    descr_handle = 'not specified'
 
-        return SeqRecord(seq_handle, id=id_handle, name=name_handle, 
-            description=descr_handle)  
+        return SeqRecord(self.seq, id=id_handle, name=name_handle, 
+            description=descr_handle)
+
+class GenerateFeatureLocation:
+
+    def __init__(self, start_pos, stop_pos):
+        self.start = start_pos
+        self.stop = stop_pos
+
+    def exact(self):
+        ''' Generate an exact feature location '''
+        
+        start_pos = SeqFeature.ExactPosition(self.start)
+        end_pos = SeqFeature.ExactPosition(self.stop)
+        return SeqFeature.FeatureLocation(start_pos, end_pos)
 
 #############
 # FUNCTIONS #
@@ -174,7 +175,7 @@ def main(path_to_nex, path_to_csv, seqname_col_label, outformat):
 
 # STEP 03: Do quality checks on input data
     qual_checks = MetaQualChecks(qualifiers_full)
-# i. Check if qualifier matrix (and, hence, each entry) contains a column 
+# i. Check if qualifier matrix (and, hence, each! entry) contains a column 
 #    labelled by <seqname_col_label>
     qual_checks.specific_label_present(seqname_col_label)
 # ii. Check if column names constitute valid INSDC feature table qualifiers 
@@ -183,82 +184,74 @@ def main(path_to_nex, path_to_csv, seqname_col_label, outformat):
 
 # TO DO:
 # (iii) Check if sequence_names are also in .nex-file
-# (iv) Have all metadata conform to basic ASCII standards (not extended ASCII) !
+# (iv) Have all metadata conform to basic ASCII standards (not extended ASCII)!
 
-# STEP 5
-# Create SeqRecords for each sequence of the alignment.
-    record_handle = GenerateSeqRecords(alignment_full, qualifiers_full)
+# STEP 05: Create a full SeqRecord for each sequence of the alignment.
     for seq_name in alignment_full.keys():
-# i. Generate the basic SeqRecord (i.e., no features or annotations yet)
-        seq_record = record_handle.generate_base_record(seq_name,
-                                                        seqname_col_label)
-# IMPROVEMENTS NECESSARY:
+# i. Select current sequences and current qualifiers
+        try:
+            current_seq = alignment_full[seq_name]
+            current_qual = [d for d in qualifiers_full\
+                if d[seqname_col_label] == seq_name][0]
+        except:
+            raise ValueError('SPTSPD ERROR: Sequence association between'\
+                '%s and %s incorrect' % (path_to_nex, path_to_csv))
+# ii. Generate the basic SeqRecord (i.e., without features or annotations)
+        record_handle = GenerateSeqRecord(current_seq, current_qual)
+        seq_record = record_handle.generate_base_record(seqname_col_label)
+# TO DO:
 # (ii) include db_x in base_record
 
+# iii. Degap the sequence while maintaing correct annotations
+#     Note: Degapping has to occur before (!) the SeqFeature "source" is
+#           generated.
+#     Note: Charsets are identical across all sequences
 
-# STEP 6
-# Degap the sequence while maintaing correct annotations; has to occur
-# before (!) SeqFeature "source" is created.
         degap_handle = COps.DegapButMaintainAnno(seq_record.seq, charsets_full)
         seq_record.seq, degapped_charsets = degap_handle.degap_2()
 
-# STEP 7
-# Create SeqFeature "source" for given seq_record; it is appended to 
-# seq_record.features. 
-# SeqFeature "source" is critical for submissions to EMBL or GenBank as it 
-# contains all the relevant info on collection locality, herbarium voucher, etc.
-        start_pos = SeqFeature.ExactPosition(0)
-        end_pos = SeqFeature.ExactPosition(len(seq_record))
-        seq_feature_Location = SeqFeature.FeatureLocation(start_pos, end_pos)
-       
-        try:
-            seq_feature_Qualifiers = [q for q in qualifiers_full\
-                if q[seqname_col_label]==seq_name][0]
-        except:
-            raise ValueError('SPTSPD ERROR: Unable to generate SeqFeature'\
-            '"source"')
-        source_feature = SeqFeature.SeqFeature(seq_feature_Location,
-            type='source', qualifiers=seq_feature_Qualifiers)
+# iv. Create a "source" feature for the seq_record.
+#      Note: The SeqFeature "source" is critical for submissions to EMBL or 
+#            GenBank, as it contains all the relevant info on collection 
+#            locality, herbarium voucher, etc.
+        feature_loc = GenerateFeatureLocation(0, len(seq_record)).exact()
+        source_feature = SeqFeature.SeqFeature(feature_loc, type='source',
+            qualifiers=current_qual)
+# v. Append to features list
         seq_record.features.append(source_feature)
 
-# STEP 8
-# Convert each charset (a dictionary) to a list element in the list SeqRecord.features
+# vi. Populate the feature keys with the charset information
+#     Note: Each charset represents a dictionary that is added to the 
+#           list "SeqRecord.features"
         for charset_name, charset_range in degapped_charsets.items():
 
-# STEP 8.a
-# Define the locations of the charsets
-# Potential Improvements: MORE PRECISE POSITIONS OF CHARSETS (E.G. 
-# AUTOMATIC IDENTIFICATION OF START CODON).
+# a. Define the locations of the charsets
+            feature_loc = GenerateFeatureLocation(charset_range[0],
+                charset_range[-1]).exact()
+# TO DO: 
+# b. Include a greater number of possible feature location functions.
             #start_pos = SeqFeature.AfterPosition(charset_range[0])
             #end_pos = SeqFeature.BeforePosition(charset_range[-1])
-            start_pos = SeqFeature.ExactPosition(charset_range[0])
-            end_pos = SeqFeature.ExactPosition(charset_range[-1])
-            seq_feature_Location = SeqFeature.FeatureLocation(start_pos, end_pos)
 
-# STEP 8.b
-# Define the annotation type
-# Potential Improvements: AUTOMATICALLY IDENTIFY SEQFEATURE (E.G. SEARCH
-# FOR TYPE IN DATABASE)
+# vii. Define the annotation type
             anno_types = ['cds', 'gene', 'rrna', 'trna']
             keyw_present = [keyw for keyw in anno_types if keyw in charset_name.lower()]
             if keyw_present:
                 type_info = keyw_present[0]
             else:
                 type_info = 'misc_feature'
-            seq_feature = SeqFeature.SeqFeature(seq_feature_Location,
-                type=type_info, qualifiers={'note':charset_name})
+            seq_feature = SeqFeature.SeqFeature(feature_loc, type=type_info,
+                qualifiers={'note':charset_name})
+# TO DO:
+# c. AUTOMATICALLY IDENTIFY SEQFEATURE (E.G. SEARCH FOR TYPE IN DATABASE)
 
-# STEP 8.c
-# Add to seq_record
+# vii. Append to features list
             seq_record.features.append(seq_feature)
 
-# STEP 9
-# Save record to list "out_records"
+# STEP 06: Save completed record to list "out_records"
         out_records.append(seq_record)
 
-# STEP 10
-# Export all seq_out_records as single file in embl-format
-
+# STEP 07: Export all out_records as single file in embl-format
     outp_handle = open(out_fn, 'w')
     SeqIO.write(out_records, outp_handle, outformat)
     outp_handle.close()
