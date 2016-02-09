@@ -17,7 +17,7 @@ taxon_E  AAATGAATCCTGGACGTGAGTAACC
 END;
 
 BEGIN SETS;
-charSet psbI = 3-23;
+charSet psbI_CDS = 3-23;
 END;
 
 [End of File]

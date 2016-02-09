@@ -15,12 +15,12 @@ Submission Preparation Tool for Sequences of Phylogenetic Datasets
 # IMPORT OPERATIONS #
 #####################
 
-from Bio import SeqFeature
+
 from Bio import SeqIO
 #from Bio.Alphabet import generic_dna
 from Bio.Nexus import Nexus
 #from Bio.Seq import Seq
-from Bio.SeqRecord import SeqRecord
+from Bio import SeqFeature
 from csv import DictReader
 
 import CustomOps as COps
@@ -77,7 +77,28 @@ valid_INSDC_qualifiers = ['allele','altitude','anticodon',
 # CLASSES #
 ###########
 
+class AnnoQualChecks:
+    ''' Operations to evaluate the quality of annotations '''
+    
+    def __init__(self, feature, record):
+        extract = feature.extract(record)
+        self.extract = extract.seq
+
+    def transl(self, transl_table, to_stop):
+        ''' Perform translation '''
+        
+        transl = self.extract.translate(table=transl_table, to_stop=to_stop)
+        return transl
+    
+    def check_protein_start(self, transl_table):
+        ''' Check if a coding region starts with a methionine '''
+        
+        transl = self.extract.translate(table=transl_table)
+        return transl.startswith("M")
+
+
 class MetaQualChecks:
+    ''' Operations to evaluate the quality of metadata '''
     
     def __init__(self, qualifiers_full):
         self.quals = qualifiers_full
@@ -104,13 +125,15 @@ class MetaQualChecks:
 
 
 class GenerateSeqRecord:
-    
+    ''' Operations to generate SeqRecords '''
+        
     def __init__(self, current_seq, current_qual):
         self.seq = current_seq
         self.qual = current_qual
     
     def generate_base_record(self, seqname_col_label):
         ''' Generate a base SeqRecord '''
+        from Bio.SeqRecord import SeqRecord
         
         id_handle = self.qual[seqname_col_label]
         try:
@@ -122,7 +145,9 @@ class GenerateSeqRecord:
         return SeqRecord(self.seq, id=id_handle, name=name_handle, 
             description=descr_handle)
 
+
 class GenerateFeatureLocation:
+    ''' Operations to generate feature locations '''
 
     def __init__(self, start_pos, stop_pos):
         self.start = start_pos
@@ -130,6 +155,7 @@ class GenerateFeatureLocation:
 
     def exact(self):
         ''' Generate an exact feature location '''
+        from Bio import SeqFeature
         
         start_pos = SeqFeature.ExactPosition(self.start)
         end_pos = SeqFeature.ExactPosition(self.stop)
@@ -153,7 +179,7 @@ def replace_fileending(fn, new_end):
 # MAIN #
 ########
 
-def main(path_to_nex, path_to_csv, seqname_col_label, outformat):
+def main(path_to_nex, path_to_csv, seqname_col_label, transl_table, outformat):
 
 # STEP 01: Prepare output files
 # i. Define output files
@@ -194,7 +220,7 @@ def main(path_to_nex, path_to_csv, seqname_col_label, outformat):
             current_qual = [d for d in qualifiers_full\
                 if d[seqname_col_label] == seq_name][0]
         except:
-            raise ValueError('SPTSPD ERROR: Sequence association between'\
+            raise ValueError('SPTSPD ERROR: Sequence association between '\
                 '%s and %s incorrect' % (path_to_nex, path_to_csv))
 # ii. Generate the basic SeqRecord (i.e., without features or annotations)
         record_handle = GenerateSeqRecord(current_seq, current_qual)
@@ -227,11 +253,14 @@ def main(path_to_nex, path_to_csv, seqname_col_label, outformat):
 
 # a. Define the locations of the charsets
             feature_loc = GenerateFeatureLocation(charset_range[0],
-                charset_range[-1]).exact()
+                charset_range[-1]+1).exact()
 # TO DO: 
 # b. Include a greater number of possible feature location functions.
             #start_pos = SeqFeature.AfterPosition(charset_range[0])
             #end_pos = SeqFeature.BeforePosition(charset_range[-1])
+
+# TO DO:
+# c. AUTOMATICALLY IDENTIFY SEQFEATURE (E.G. SEARCH FOR TYPE IN DATABASE)
 
 # vii. Define the annotation type
             anno_types = ['cds', 'gene', 'rrna', 'trna']
@@ -242,16 +271,42 @@ def main(path_to_nex, path_to_csv, seqname_col_label, outformat):
                 type_info = 'misc_feature'
             seq_feature = SeqFeature.SeqFeature(feature_loc, type=type_info,
                 qualifiers={'note':charset_name})
-# TO DO:
-# c. AUTOMATICALLY IDENTIFY SEQFEATURE (E.G. SEARCH FOR TYPE IN DATABASE)
 
-# vii. Append to features list
+# ix. Append to features list
             seq_record.features.append(seq_feature)
 
-# STEP 06: Save completed record to list "out_records"
+# STEP 06: Perform translation and quality control on coding regions
+# i. If "cds", prepare to add translation              
+        for feature in seq_record.features:
+            if feature.type.lower() == 'cds':
+                anno_handle = AnnoQualChecks(feature, seq_record)
+
+# ii. Check if coding region starts with methionine
+                if not anno_handle.check_protein_start(transl_table):
+                    raise ValueError('SPTSPD ERROR: Feature "%s" of sequence '\
+                    '"%s" does not start with a Methionine.' % (feature.type, 
+                                                                seq_record.id))
+                
+# iii. Translate CDS
+#   Note: The asterisk indicating a stop codon is truncated under 
+#         transl(to_stop=True) and must consequently be added again.
+                without_internalStop = anno_handle.transl(transl_table, to_stop=False)
+                with_internalStop = anno_handle.transl(transl_table, to_stop=True)
+                feature.qualifiers["translation"] = with_internalStop + "*"
+# iv. If internal stop codon present, adjust location of CDS
+                if len(without_internalStop) > len(with_internalStop):
+                    start_pos = feature.location.start
+                    stop_pos = start_pos + (len(with_internalStop) * 3)
+                    feature_loc = GenerateFeatureLocation(start_pos, stop_pos).exact()
+                if len(without_internalStop) == len(with_internalStop):
+                    pass
+# TO DO:
+# c. ALSO ADJUST THE START POSITION OF SUBSEQUENT FEATURE
+
+# STEP 07: Save completed record to list "out_records"
         out_records.append(seq_record)
 
-# STEP 07: Export all out_records as single file in embl-format
+# STEP 08: Export all out_records as single file in embl-format
     outp_handle = open(out_fn, 'w')
     SeqIO.write(out_records, outp_handle, outformat)
     outp_handle.close()
@@ -274,8 +329,12 @@ if __name__ == '__main__':
         help='Available arguments: embl, genbank', 
         default='embl', required=False)
     parser.add_argument('-l', '--label',
-        help='How the column specifying the sequence names is labelled',
+        help='Which xxx the column specifying the sequence names is labelled with.',
         default='isolate', required=False)
+    parser.add_argument('-t', '--table',
+        help='Which translation table coding regions shall be translate with.'\
+        'For details, see: http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi',
+        default='11', required=False)
     parser.add_argument('-V', '--version', 
         help='Print version information and exit', 
         action='version', version='%(prog)s ' + __version__)
@@ -285,4 +344,4 @@ if __name__ == '__main__':
 # MAIN #
 ########
 
-main(args.nexus, args.csv, args.label, args.outformat)
+main(args.nexus, args.csv, args.label, args.table, args.outformat)
