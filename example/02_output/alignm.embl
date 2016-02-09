@@ -2,7 +2,7 @@ ID   taxon_B; ; ; DNA; ; UNC; 19 BP.
 XX
 AC   taxon_B;
 XX
-DE   Barnadesia ciliata
+DE   Barnadesia ciliata psbI CDS DNA.
 XX
 OS   .
 OC   .
@@ -14,6 +14,7 @@ FT                   /isolate="taxon_B"
 FT                   /note="Authority: (I.C.Chung) Harling"
 FT                   /organism="Barnadesia ciliata"
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
+FT                   /transl_table=11
 FT   cds             3..17
 FT                   /note="psbI_CDS"
 FT                   /translation="MNPE*"
@@ -25,7 +26,7 @@ ID   taxon_C; ; ; DNA; ; UNC; 13 BP.
 XX
 AC   taxon_C;
 XX
-DE   Barnadesia aculeata
+DE   Barnadesia aculeata psbI CDS DNA.
 XX
 OS   .
 OC   .
@@ -37,6 +38,7 @@ FT                   /isolate="taxon_C"
 FT                   /note="Authority: (Benth.) I.C.Chung"
 FT                   /organism="Barnadesia aculeata"
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
+FT                   /transl_table=11
 FT   cds             3..11
 FT                   /note="psbI_CDS"
 FT                   /translation="MR*"
@@ -48,7 +50,7 @@ ID   taxon_A; ; ; DNA; ; UNC; 19 BP.
 XX
 AC   taxon_A;
 XX
-DE   Barnadesia aculeata
+DE   Barnadesia aculeata psbI CDS DNA.
 XX
 OS   .
 OC   .
@@ -60,6 +62,7 @@ FT                   /isolate="taxon_A"
 FT                   /note="Authority: (Benth.) I.C.Chung"
 FT                   /organism="Barnadesia aculeata"
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
+FT                   /transl_table=11
 FT   cds             3..17
 FT                   /note="psbI_CDS"
 FT                   /translation="MNRE*"
@@ -71,7 +74,7 @@ ID   taxon_D; ; ; DNA; ; UNC; 13 BP.
 XX
 AC   taxon_D;
 XX
-DE   Barnadesia ciliata
+DE   Barnadesia ciliata psbI CDS DNA.
 XX
 OS   .
 OC   .
@@ -83,6 +86,7 @@ FT                   /isolate="taxon_D"
 FT                   /note="Authority: (I.C.Chung) Harling"
 FT                   /organism="Barnadesia ciliata"
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
+FT                   /transl_table=11
 FT   cds             3..11
 FT                   /note="psbI_CDS"
 FT                   /translation="MG*"
@@ -94,7 +98,7 @@ ID   taxon_E; ; ; DNA; ; UNC; 25 BP.
 XX
 AC   taxon_E;
 XX
-DE   Barnadesia aculeata
+DE   Barnadesia aculeata psbI CDS DNA.
 XX
 OS   .
 OC   .
@@ -106,6 +110,7 @@ FT                   /isolate="taxon_E"
 FT                   /note="Authority: (Benth.) I.C.Chung"
 FT                   /organism="Barnadesia aculeata"
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
+FT                   /transl_table=11
 FT   cds             3..23
 FT                   /note="psbI_CDS"
 FT                   /translation="MNPGRE*"

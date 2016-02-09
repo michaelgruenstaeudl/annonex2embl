@@ -84,10 +84,11 @@ class AnnoQualChecks:
         extract = feature.extract(record)
         self.extract = extract.seq
 
-    def transl(self, transl_table, to_stop):
+    def transl(self, transl_table, to_stop=False, cds=False):
         ''' Perform translation '''
         
-        transl = self.extract.translate(table=transl_table, to_stop=to_stop)
+        transl = self.extract.translate(table=transl_table,
+                                        to_stop=to_stop, cds=cds)
         return transl
     
     def check_protein_start(self, transl_table):
@@ -95,7 +96,7 @@ class AnnoQualChecks:
         
         transl = self.extract.translate(table=transl_table)
         return transl.startswith("M")
-
+        
 
 class MetaQualChecks:
     ''' Operations to evaluate the quality of metadata '''
@@ -131,16 +132,20 @@ class GenerateSeqRecord:
         self.seq = current_seq
         self.qual = current_qual
     
-    def generate_base_record(self, seqname_col_label):
+    def generate_base_record(self, seqname_col_label, charsets_full):
         ''' Generate a base SeqRecord '''
         from Bio.SeqRecord import SeqRecord
+        
+        gene_names = [k for k in charsets_full.keys()]
+        gene_names = [gn.replace("_", " ") for gn in gene_names]
+        gene_names_str = ' and '.join(gene_names)
         
         id_handle = self.qual[seqname_col_label]
         try:
             name_handle = self.qual['organism']
         except:
             name_handle = 'unknown organism'
-        descr_handle = name_handle
+        descr_handle = name_handle + ' ' + gene_names_str +' DNA.'
 
         return SeqRecord(self.seq, id=id_handle, name=name_handle, 
             description=descr_handle)
@@ -161,6 +166,37 @@ class GenerateFeatureLocation:
         end_pos = SeqFeature.ExactPosition(self.stop)
         return SeqFeature.FeatureLocation(start_pos, end_pos)
 
+"""
+class GetGeneInfo:
+
+    def get_gene_product:
+        '''    
+        >>> from Bio import Entrez
+        >>> Entrez.email = "mi.gruenstaeudl@gmail.com"
+        #>>> handle = Entrez.esearch(db="gene", retmax=10, term="psbI AND gene[FKEY]")
+        >>> handle = Entrez.esearch(db="gene", retmax=10, term="psbI", retmode="text")
+        >>> records = handle.read()
+        #>>> record["IdList"]
+        #['126789333', '37222967', '37222966', '37222965', ..., '61585492']
+        
+        
+        >>> handle = Entrez.esummary(db="gene", id="30367")
+        >>> record = Entrez.read(handle)
+        >>> handle.close()
+        >>> print(record[0]["Id"])
+        30367
+        >>> print(record[0]["Title"])
+
+        
+        >>> handle = Entrez.efetch(db="gene", id=records[0], rettype="gb", retmode="text")
+        >>> print(handle.read())
+        '''
+
+    def get_gene_id:
+        '''    
+        '''
+"""
+
 #############
 # FUNCTIONS #
 #############
@@ -179,7 +215,7 @@ def replace_fileending(fn, new_end):
 # MAIN #
 ########
 
-def main(path_to_nex, path_to_csv, seqname_col_label, transl_table, outformat):
+def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label, transl_table):
 
 # STEP 01: Prepare output files
 # i. Define output files
@@ -224,7 +260,8 @@ def main(path_to_nex, path_to_csv, seqname_col_label, transl_table, outformat):
                 '%s and %s incorrect' % (path_to_nex, path_to_csv))
 # ii. Generate the basic SeqRecord (i.e., without features or annotations)
         record_handle = GenerateSeqRecord(current_seq, current_qual)
-        seq_record = record_handle.generate_base_record(seqname_col_label)
+        seq_record = record_handle.generate_base_record(seqname_col_label,
+                                                        charsets_full)
 # TO DO:
 # (ii) include db_x in base_record
 
@@ -243,10 +280,14 @@ def main(path_to_nex, path_to_csv, seqname_col_label, transl_table, outformat):
         feature_loc = GenerateFeatureLocation(0, len(seq_record)).exact()
         source_feature = SeqFeature.SeqFeature(feature_loc, type='source',
             qualifiers=current_qual)
-# v. Append to features list
+
+# v. Append translation table info to source qualifiers
+        source_feature.qualifiers["transl_table"]=transl_table
+            
+# vi. Append to features list
         seq_record.features.append(source_feature)
 
-# vi. Populate the feature keys with the charset information
+# vii. Populate the feature keys with the charset information
 #     Note: Each charset represents a dictionary that is added to the 
 #           list "SeqRecord.features"
         for charset_name, charset_range in degapped_charsets.items():
@@ -275,33 +316,46 @@ def main(path_to_nex, path_to_csv, seqname_col_label, transl_table, outformat):
 # ix. Append to features list
             seq_record.features.append(seq_feature)
 
+
 # STEP 06: Perform translation and quality control on coding regions
 # i. If "cds", prepare to add translation              
         for feature in seq_record.features:
             if feature.type.lower() == 'cds':
                 anno_handle = AnnoQualChecks(feature, seq_record)
-
-# ii. Check if coding region starts with methionine
-                if not anno_handle.check_protein_start(transl_table):
-                    raise ValueError('SPTSPD ERROR: Feature "%s" of sequence '\
-                    '"%s" does not start with a Methionine.' % (feature.type, 
-                                                                seq_record.id))
                 
-# iii. Translate CDS
-#   Note: The asterisk indicating a stop codon is truncated under 
-#         transl(to_stop=True) and must consequently be added again.
-                without_internalStop = anno_handle.transl(transl_table, to_stop=False)
-                with_internalStop = anno_handle.transl(transl_table, to_stop=True)
-                feature.qualifiers["translation"] = with_internalStop + "*"
-# iv. If internal stop codon present, adjust location of CDS
-                if len(without_internalStop) > len(with_internalStop):
-                    start_pos = feature.location.start
-                    stop_pos = start_pos + (len(with_internalStop) * 3)
-                    feature_loc = GenerateFeatureLocation(start_pos, stop_pos).exact()
-                if len(without_internalStop) == len(with_internalStop):
-                    pass
+# ii. Try to translate directly
+                try:
+                    transl_out = anno_handle.transl(transl_table, cds=True)
+
+# iii. If translation not direct, check if coding region starts with methionine
+                except:
+                    if not anno_handle.check_protein_start(transl_table):
+                        raise ValueError('SPTSPD ERROR: Feature "%s" of '\
+                            'sequence "%s" does not start with a Methionine.' 
+                            % (feature.type, seq_record.id))     
+
+# iv. If translation not direct, translate with and without regard to 
+#     internal stop codons
+#     Note: The asterisk indicating a stop codon is truncated under 
+#           transl(to_stop=True) and must consequently be added again.
+                    without_internalStop = anno_handle.transl(transl_table)
+                    with_internalStop = anno_handle.transl(transl_table, to_stop=True)
+                    transl_out = with_internalStop
+
+# v. If translation not direct and internal stop codon present, adjust
+#    location of CDS
+                    if len(without_internalStop) > len(with_internalStop):
+                        start_pos = feature.location.start
+                        stop_pos = start_pos + (len(with_internalStop) * 3)
+                        feature_loc = GenerateFeatureLocation(start_pos, stop_pos).exact()
+                    if len(without_internalStop) == len(with_internalStop):
+                        pass
 # TO DO:
 # c. ALSO ADJUST THE START POSITION OF SUBSEQUENT FEATURE
+
+# vi. Add translation to qualifiers list
+                feature.qualifiers["translation"] = transl_out + "*"
+
 
 # STEP 07: Save completed record to list "out_records"
         out_records.append(seq_record)
@@ -325,6 +379,9 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--csv', 
         help='/path_to_input/test.csv',
         default='/home/michael_science/Desktop/test.csv', required=True)
+    parser.add_argument('-e', '--email', 
+        help='Your email address',
+        default='mi.gruenstaeudl@gmail.com', required=True)
     parser.add_argument('-f', '--outformat', 
         help='Available arguments: embl, genbank', 
         default='embl', required=False)
@@ -344,4 +401,4 @@ if __name__ == '__main__':
 # MAIN #
 ########
 
-main(args.nexus, args.csv, args.label, args.table, args.outformat)
+main(args.nexus, args.csv, args.email, args.outformat, args.label, args.table)
