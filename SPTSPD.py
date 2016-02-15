@@ -77,25 +77,7 @@ valid_INSDC_qualifiers = ['allele','altitude','anticodon',
 # CLASSES #
 ###########
 
-class AnnoQualChecks:
-    ''' Operations to evaluate the quality of annotations '''
-    
-    def __init__(self, feature, record):
-        extract = feature.extract(record)
-        self.extract = extract.seq
 
-    def transl(self, transl_table, to_stop=False, cds=False):
-        ''' Perform translation '''
-        
-        transl = self.extract.translate(table=transl_table,
-                                        to_stop=to_stop, cds=cds)
-        return transl
-    
-    def check_protein_start(self, transl_table):
-        ''' Check if a coding region starts with a methionine '''
-        
-        transl = self.extract.translate(table=transl_table)
-        return transl.startswith("M")
         
 
 class MetaQualChecks:
@@ -151,20 +133,7 @@ class GenerateSeqRecord:
             description=descr_handle)
 
 
-class GenerateFeatureLocation:
-    ''' Operations to generate feature locations '''
 
-    def __init__(self, start_pos, stop_pos):
-        self.start = start_pos
-        self.stop = stop_pos
-
-    def exact(self):
-        ''' Generate an exact feature location '''
-        from Bio import SeqFeature
-        
-        start_pos = SeqFeature.ExactPosition(self.start)
-        end_pos = SeqFeature.ExactPosition(self.stop)
-        return SeqFeature.FeatureLocation(start_pos, end_pos)
 
 """
 class GetGeneInfo:
@@ -277,7 +246,7 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label, tra
 #      Note: The SeqFeature "source" is critical for submissions to EMBL or 
 #            GenBank, as it contains all the relevant info on collection 
 #            locality, herbarium voucher, etc.
-        feature_loc = GenerateFeatureLocation(0, len(seq_record)).exact()
+        feature_loc = COps.GenerateFeatureLocation(0, len(seq_record)).exact()
         source_feature = SeqFeature.SeqFeature(feature_loc, type='source',
             qualifiers=current_qual)
 
@@ -293,7 +262,7 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label, tra
         for charset_name, charset_range in degapped_charsets.items():
 
 # a. Define the locations of the charsets
-            feature_loc = GenerateFeatureLocation(charset_range[0],
+            feature_loc = COps.GenerateFeatureLocation(charset_range[0],
                 charset_range[-1]+1).exact()
 # TO DO: 
 # b. Include a greater number of possible feature location functions.
@@ -318,44 +287,13 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label, tra
 
 
 # STEP 06: Perform translation and quality control on coding regions
-# i. If "cds", prepare to add translation              
         for feature in seq_record.features:
-            if feature.type.lower() == 'cds':
-                anno_handle = AnnoQualChecks(feature, seq_record)
-                
-# ii. Try to translate directly
-                try:
-                    transl_out = anno_handle.transl(transl_table, cds=True)
-
-# iii. If translation not direct, check if coding region starts with methionine
-                except:
-                    if not anno_handle.check_protein_start(transl_table):
-                        raise ValueError('SPTSPD ERROR: Feature "%s" of '\
-                            'sequence "%s" does not start with a Methionine.' 
-                            % (feature.type, seq_record.id))     
-
-# iv. If translation not direct, translate with and without regard to 
-#     internal stop codons
-#     Note: The asterisk indicating a stop codon is truncated under 
-#           transl(to_stop=True) and must consequently be added again.
-                    without_internalStop = anno_handle.transl(transl_table)
-                    with_internalStop = anno_handle.transl(transl_table, to_stop=True)
-                    transl_out = with_internalStop
-
-# v. If translation not direct and internal stop codon present, adjust
-#    location of CDS
-                    if len(without_internalStop) > len(with_internalStop):
-                        start_pos = feature.location.start
-                        stop_pos = start_pos + (len(with_internalStop) * 3)
-                        feature_loc = GenerateFeatureLocation(start_pos, stop_pos).exact()
-                    if len(without_internalStop) == len(with_internalStop):
-                        pass
-# TO DO:
-# c. ALSO ADJUST THE START POSITION OF SUBSEQUENT FEATURE
-
-# vi. Add translation to qualifiers list
-                feature.qualifiers["translation"] = transl_out + "*"
-
+            if feature.type.lower() == 'cds': # Check if feature coding region
+                extract = feature.extract(seq_record)
+                transl, loc = COps.AnnoChecks(extract.seq, feature.location, 
+                    transl_table).check()
+                feature.qualifiers["translation"] = transl
+                feature.location = loc
 
 # STEP 07: Save completed record to list "out_records"
         out_records.append(seq_record)
@@ -396,6 +334,8 @@ if __name__ == '__main__':
         help='Print version information and exit', 
         action='version', version='%(prog)s ' + __version__)
     args = parser.parse_args()
+
+# Include selection on topology of submission (linear [default] or circular)
 
 ########
 # MAIN #

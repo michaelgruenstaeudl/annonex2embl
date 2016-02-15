@@ -33,6 +33,139 @@ __version__ = "2016.02.06.2000"
 # CLASSES #
 ###########
 
+class AnnoChecks:
+    ''' This class contains functions to evaluate the quality of an 
+    annotation.
+    
+    Args:
+        extract (obj):      a sequence object; example: Seq('ATGGAGTAA', 
+                            IUPACAmbiguousDNA())
+
+        location (obj):     a location object;
+        
+        transl_table (int): an integer; example: 11 (for bacterial code)
+    
+    Returns:
+        tupl.   The return consists of the translated sequence (a str) and the
+                updated feature location (a location object); example: 
+                (transl_out, feat_loc)
+    
+    Raises:
+        -
+    '''
+
+    def __init__(self, extract, location, transl_table=11):
+        self.e = extract
+        self.l = location
+        self.t = transl_table
+
+    @staticmethod
+    def _transl(extract, transl_table, to_stop=False, cds=False):
+        ''' An internal static function to translate a coding region. '''
+        transl = extract.translate(table=transl_table, to_stop=to_stop,
+            cds=cds)
+        return transl
+
+    @staticmethod            
+    def _check_protein_start(extract, transl_table):
+        ''' An internal static function to translate a coding region and check
+        if it starts with a methionine. '''            
+        transl = extract.translate(table=transl_table)
+        return transl.startswith("M")
+
+    @staticmethod    
+    def _adjust_feat_loc(location, with_internalStop, without_internalStop):
+        ''' An internal static function to adjust the feature location if an
+        internal stop codon were present. '''
+        if len(without_internalStop) > len(with_internalStop):
+            start_pos = location.start
+            stop_pos = start_pos + (len(with_internalStop) * 3)
+            feat_loc = GenerateFeatureLocation(start_pos, stop_pos).exact()
+        if len(without_internalStop) == len(with_internalStop):
+            feat_loc = location
+        return feat_loc
+
+    def check(self):
+        ''' This function performs checks on a coding region.
+        
+        Specifically, the function tries to translate the coding region (CDS)
+        directly, using the internal checker "cds=True". If a direct 
+        translation fails, it confirms if the CDS starts with a methionine. If 
+        the CDS does not start with a methionine, a ValueError is raised. If 
+        the CDS does start with a methionine, translations are conducted with 
+        and without regard to internal stop codons. The shorter of the two 
+        translations is kept. The feature location is adjusted, where 
+        necessary.
+        
+        Note:
+            The asterisk indicating a stop codon is truncated under 
+            _transl(to_stop=True) and must consequently be added again.
+        
+        Examples:
+        
+            Example 1: # Default behaviour
+                >>> from Bio.Seq import Seq
+                >>> from Bio.Alphabet import generic_dna
+                >>> extract = Seq("ATGGCCTAA", generic_dna)
+                >>> from Bio.SeqFeature import FeatureLocation
+                >>> location = FeatureLocation(0, 8)
+                >>> AnnoChecks(extract, location).check()
+                Out: (Seq('MA*', ExtendedIUPACProtein()),
+                     FeatureLocation(ExactPosition(0), ExactPosition(8)))
+            
+            Example 2: # Internal stop codon
+                >>> from Bio.Seq import Seq
+                >>> from Bio.Alphabet import generic_dna
+                >>> extract = Seq("ATGTAATAA", generic_dna)
+                >>> from Bio.SeqFeature import FeatureLocation
+                >>> location = FeatureLocation(0, 8)
+                >>> AnnoChecks(extract, location).check()
+                Out: (Seq('M*', ExtendedIUPACProtein()),
+                     FeatureLocation(ExactPosition(0), ExactPosition(3)))
+            
+            NOTE: SHOULD EXAMPLE 2 NOT RESULT IN A FEATURE LOCATION THAT ENDS 
+                  AT ExactPosition(5), I.E. AFTER THE STOP CODON ???
+             
+            Example 3: # Does not start with a Methionine 
+                >>> from Bio.Seq import Seq
+                >>> from Bio.Alphabet import generic_dna
+                >>> extract = Seq("AAGTAA", generic_dna)
+                >>> from Bio.SeqFeature import FeatureLocation
+                >>> location = FeatureLocation(0, 5)
+                >>> AnnoChecks(extract, location).check()
+                Out: ValueError: SPTSPD ERROR: Feature does not start with a 
+                     Methionine.
+
+        TODO:
+            (i) Adjust code so that the start position of a subsequent feature
+                is also adjusted.
+                
+            (ii) Adjust the location position so that the stop codon is also
+                included.
+
+        '''
+        try:
+            transl_out = AnnoChecks._transl(self.e, self.t, cds=True)
+            feat_loc = self.l
+        except:
+            if not AnnoChecks._check_protein_start(self.e, self.t):
+                raise ValueError('SPTSPD ERROR: Feature does not start with '\
+                'a Methionine.')
+                #raise ValueError('SPTSPD ERROR: Feature "%s" of '\
+                #    'sequence "%s" does not start with a Methionine.' 
+                #    % (self.feature.type, self.record.id))
+            else:
+                without_internalStop = AnnoChecks._transl(self.e, self.t)
+                with_internalStop = AnnoChecks._transl(self.e, self.t,
+                    to_stop=True)
+                transl_out = with_internalStop
+                feat_loc = AnnoChecks._adjust_feat_loc(self.l, 
+                    with_internalStop, without_internalStop)
+        transl_out = transl_out + "*"
+        return (transl_out, feat_loc)
+        
+
+
 class DegapButMaintainAnno:
     ''' This class contains functions to degap DNA sequences while maintaining 
     annotations. 
@@ -61,7 +194,7 @@ class DegapButMaintainAnno:
         self.seq = seq
         self.charsets = charsets
         
-    def intersection_exists(ranges_list):
+    def _intersection_exists(ranges_list):
         init_range = set(ranges_list[0])
         for r in ranges_list[1:]:
             if init_range.intersection(r):
@@ -124,7 +257,7 @@ class DegapButMaintainAnno:
         seq = self.seq
         charsets = self.charsets
         
-        if DegapButMaintainAnno.intersection_exists(charsets.values()):
+        if DegapButMaintainAnno._intersection_exists(charsets.values()):
             raise ValueError('MY ERROR: Character sets are overlapping.')
     
         degapped_seq = ''
@@ -177,6 +310,26 @@ class DegapButMaintainAnno:
             seq = seq[:index] + seq[index+1:]
             index = seq.find('-')
         return seq, annotations
+
+
+class GenerateFeatureLocation:
+    ''' Operations to generate feature locations
+    '''
+
+    def __init__(self, start_pos, stop_pos):
+        self.start = start_pos
+        self.stop = stop_pos
+
+    def exact(self):
+        ''' Generate an exact feature location
+        '''
+        
+        from Bio import SeqFeature
+        
+        start_pos = SeqFeature.ExactPosition(self.start)
+        end_pos = SeqFeature.ExactPosition(self.stop)
+        return SeqFeature.FeatureLocation(start_pos, end_pos)
+
 
 #############
 # FUNCTIONS #
