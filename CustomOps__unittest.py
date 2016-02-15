@@ -44,7 +44,10 @@ class AnnoChecksTestCase(unittest.TestCase):
     ''' Tests for class "AnnoChecks" '''
     
     def test_AnnoChecks_example_1(self):
-        ''' Evaluating AnnoChecks.check example 1 '''
+        ''' Test to evaluate example 1 of AnnoChecks.check
+
+        This test evaluates the default behaviour of the function.
+        '''
         
         extract = Seq("ATGGCCTAA", generic_dna)
         location = FeatureLocation(0, 8)
@@ -53,12 +56,29 @@ class AnnoChecksTestCase(unittest.TestCase):
     
     
     def test_AnnoChecks_example_2(self):
-        ''' Evaluating AnnoChecks.check example 2 '''
+        ''' Test to evaluate example 2 of AnnoChecks.check
+
+        This test evaluates the situation where an internal stop codon is 
+        present in the input sequence.
+        '''
         
         extract = Seq("ATGTAATAA", generic_dna)
         location = FeatureLocation(0, 8)
         self.assertTrue(COps.AnnoChecks(extract,
             location).for_unittest())
+
+    def test_AnnoChecks_example_3(self):
+        ''' Test to evaluate example 3 of AnnoChecks.check
+
+        This test evaluates the situation where the input sequence does not 
+        start with a Methionine.
+        '''
+        
+        extract = Seq("AAGTAA", generic_dna)
+        location = FeatureLocation(0, 5)
+        self.assertFalse(COps.AnnoChecks(extract,
+            location).for_unittest())
+
 
 #############
 # FUNCTIONS #

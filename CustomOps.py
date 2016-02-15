@@ -163,7 +163,7 @@ class AnnoChecks:
             feat_loc = self.l
         except:
             if not AnnoChecks._check_protein_start(self.e, self.t):
-                raise ValueError('SPTSPD ERROR: Feature "%s" of '\
+                return ValueError('SPTSPD ERROR: Feature "%s" of '\
                     'sequence "%s" does not start with a Methionine.' 
                     % (self.f, self.i))
             else:
@@ -175,18 +175,21 @@ class AnnoChecks:
                     feat_loc = AnnoChecks._adjust_feat_loc(self.l, 
                         with_internalStop, without_internalStop)
                 except:
-                    raise ValueError('SPTSPD ERROR: Translation of feature '\
+                    return ValueError('SPTSPD ERROR: Translation of feature '\
                     '"%s" of sequence "%s" not successful.' % (self.f, self.i))
         transl_out = transl_out + "*"
         return (transl_out, feat_loc)
     
     def for_unittest(self):
-        transl_out, feat_loc = AnnoChecks(self.e, self.l, self.f, self.i,
-            self.t).check()
-        if isinstance(transl_out, Seq) and isinstance(feat_loc, 
-            FeatureLocation):
-            return True
-        else:
+        try:
+            transl_out, feat_loc = AnnoChecks(self.e, self.l, self.f, self.i,
+                self.t).check()
+            if isinstance(transl_out, Seq) and isinstance(feat_loc, 
+                FeatureLocation):
+                return True
+            else:
+                return False
+        except ValueError:
             return False
         
         
