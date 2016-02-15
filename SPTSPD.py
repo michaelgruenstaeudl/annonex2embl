@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 """
 Submission Preparation Tool for Sequences of Phylogenetic Datasets
+(SPTSPD)
+
+EMBL Submission Preparation Tool for Sequences of Multiple Sequence Alignments
+(EMBL-SPTSMSA)
 """
 # CURRENT DESIGN:
 # Charset-definitions in .nex-file must indicate annotation type (e.g. 'cds', 
@@ -291,7 +295,7 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label, tra
             if feature.type.lower() == 'cds': # Check if feature coding region
                 extract = feature.extract(seq_record)
                 transl, loc = COps.AnnoChecks(extract.seq, feature.location, 
-                    transl_table).check()
+                    feature.type, seq_record.id, transl_table).check()
                 feature.qualifiers["translation"] = transl
                 feature.location = loc
 

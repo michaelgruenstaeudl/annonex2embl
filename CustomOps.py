@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 '''
-Custom operations for submission preparation tool
+Custom operations for EMBL submission preparation tool
 '''
 
 #####################
@@ -9,6 +9,10 @@ Custom operations for submission preparation tool
 
 from copy import copy
 
+from Bio.Seq import Seq
+from Bio.Alphabet import generic_dna
+from Bio.SeqFeature import FeatureLocation
+
 ###############
 # AUTHOR INFO #
 ###############
@@ -16,7 +20,7 @@ from copy import copy
 __author__ = "Michael Gruenstaeudl, PhD <mi.gruenstaeudl@gmail.com>"
 __copyright__ = "Copyright (C) 2016 Michael Gruenstaeudl"
 __info__ = "Submission Preparation Tool for Sequences of Phylogenetic Datasets (SPTSPD)"
-__version__ = "2016.02.06.2000"
+__version__ = "2016.02.15.1900"
 
 #############
 # DEBUGGING #
@@ -41,8 +45,15 @@ class AnnoChecks:
         extract (obj):      a sequence object; example: Seq('ATGGAGTAA', 
                             IUPACAmbiguousDNA())
 
-        location (obj):     a location object;
+        location (obj):     a location object; example: FeatureLocation(
+                            ExactPosition(0), ExactPosition(8))
+
+        feature_type (str): a string detailing the type of the feature;
+                            example: "cds"
         
+        record_id (str):    a string deatiling the name of the sequence in 
+                            question; example: "taxon_A"
+
         transl_table (int): an integer; example: 11 (for bacterial code)
     
     Returns:
@@ -54,9 +65,12 @@ class AnnoChecks:
         -
     '''
 
-    def __init__(self, extract, location, transl_table=11):
+    def __init__(self, extract, location, feature_type="foobar", 
+                 record_id="foobar", transl_table=11):
         self.e = extract
         self.l = location
+        self.f = feature_type
+        self.i = record_id
         self.t = transl_table
 
     @staticmethod
@@ -149,20 +163,32 @@ class AnnoChecks:
             feat_loc = self.l
         except:
             if not AnnoChecks._check_protein_start(self.e, self.t):
-                raise ValueError('SPTSPD ERROR: Feature does not start with '\
-                'a Methionine.')
-                #raise ValueError('SPTSPD ERROR: Feature "%s" of '\
-                #    'sequence "%s" does not start with a Methionine.' 
-                #    % (self.feature.type, self.record.id))
+                raise ValueError('SPTSPD ERROR: Feature "%s" of '\
+                    'sequence "%s" does not start with a Methionine.' 
+                    % (self.f, self.i))
             else:
-                without_internalStop = AnnoChecks._transl(self.e, self.t)
-                with_internalStop = AnnoChecks._transl(self.e, self.t,
-                    to_stop=True)
-                transl_out = with_internalStop
-                feat_loc = AnnoChecks._adjust_feat_loc(self.l, 
-                    with_internalStop, without_internalStop)
+                try:
+                    without_internalStop = AnnoChecks._transl(self.e, self.t)
+                    with_internalStop = AnnoChecks._transl(self.e, self.t,
+                        to_stop=True)
+                    transl_out = with_internalStop
+                    feat_loc = AnnoChecks._adjust_feat_loc(self.l, 
+                        with_internalStop, without_internalStop)
+                except:
+                    raise ValueError('SPTSPD ERROR: Translation of feature '\
+                    '"%s" of sequence "%s" not successful.' % (self.f, self.i))
         transl_out = transl_out + "*"
         return (transl_out, feat_loc)
+    
+    def for_unittest(self):
+        transl_out, feat_loc = AnnoChecks(self.e, self.l, self.f, self.i,
+            self.t).check()
+        if isinstance(transl_out, Seq) and isinstance(feat_loc, 
+            FeatureLocation):
+            return True
+        else:
+            return False
+        
         
 
 
@@ -335,3 +361,6 @@ class GenerateFeatureLocation:
 # FUNCTIONS #
 #############
 
+########
+# MAIN #
+########
