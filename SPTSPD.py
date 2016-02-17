@@ -244,7 +244,7 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label, tra
 #     Note: Charsets are identical across all sequences
 
         degap_handle = COps.DegapButMaintainAnno(seq_record.seq, charsets_full)
-        seq_record.seq, degapped_charsets = degap_handle.degap_2()
+        seq_record.seq, degapped_charsets = degap_handle.degap()
 
 # iv. Create a "source" feature for the seq_record.
 #      Note: The SeqFeature "source" is critical for submissions to EMBL or 

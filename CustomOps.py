@@ -7,12 +7,6 @@ Custom operations for EMBL submission preparation tool
 # IMPORT OPERATIONS #
 #####################
 
-from copy import copy
-
-from Bio.Seq import Seq
-from Bio.Alphabet import generic_dna
-from Bio.SeqFeature import FeatureLocation
-
 ###############
 # AUTHOR INFO #
 ###############
@@ -20,7 +14,7 @@ from Bio.SeqFeature import FeatureLocation
 __author__ = "Michael Gruenstaeudl, PhD <mi.gruenstaeudl@gmail.com>"
 __copyright__ = "Copyright (C) 2016 Michael Gruenstaeudl"
 __info__ = "Submission Preparation Tool for Sequences of Phylogenetic Datasets (SPTSPD)"
-__version__ = "2016.02.15.1900"
+__version__ = "2016.02.17.1900"
 
 #############
 # DEBUGGING #
@@ -76,6 +70,7 @@ class AnnoChecks:
     @staticmethod
     def _transl(extract, transl_table, to_stop=False, cds=False):
         ''' An internal static function to translate a coding region. '''
+        from Bio.Seq import Seq
         transl = extract.translate(table=transl_table, to_stop=to_stop,
             cds=cds)
         return transl
@@ -83,7 +78,8 @@ class AnnoChecks:
     @staticmethod            
     def _check_protein_start(extract, transl_table):
         ''' An internal static function to translate a coding region and check
-        if it starts with a methionine. '''            
+        if it starts with a methionine. '''
+        from Bio.Seq import Seq
         transl = extract.translate(table=transl_table)
         return transl.startswith("M")
 
@@ -156,8 +152,10 @@ class AnnoChecks:
                 
             (ii) Adjust the location position so that the stop codon is also
                 included.
-
         '''
+        from Bio.Seq import Seq
+        from Bio.SeqFeature import FeatureLocation
+
         try:
             transl_out = AnnoChecks._transl(self.e, self.t, cds=True)
             feat_loc = self.l
@@ -181,18 +179,18 @@ class AnnoChecks:
         return (transl_out, feat_loc)
     
     def for_unittest(self):
+        from Bio.Seq import Seq
+        from Bio.SeqFeature import FeatureLocation
+
         try:
             transl_out, feat_loc = AnnoChecks(self.e, self.l, self.f, self.i,
                 self.t).check()
             if isinstance(transl_out, Seq) and isinstance(feat_loc, 
                 FeatureLocation):
                 return True
-            else:
-                return False
+            return False
         except ValueError:
             return False
-        
-        
 
 
 class DegapButMaintainAnno:
@@ -222,56 +220,95 @@ class DegapButMaintainAnno:
     def __init__(self, seq, charsets):
         self.seq = seq
         self.charsets = charsets
-        
+
+    @staticmethod
     def _intersection_exists(ranges_list):
         init_range = set(ranges_list[0])
         for r in ranges_list[1:]:
             if init_range.intersection(r):
                 return True # Exits the entire function with 'True' (i.e., stops all of the loops)
         return False
-
-    def degap_1(self):
+    
+    def degap(self):
+        ''' This function works on overlapping charsets and is preferable over 
+        "degap_legacy".
+        Source: http://stackoverflow.com/questions/35233714/
+        maintaining-overlapping-annotations-while-removing-dashes-from-string
+        
+            Examples:
+            
+            Example 1: # Contains an internal gap
+                >>> seq = "ATG-C"
+                >>> charsets = {"gene_1":[0,1],"gene_2":[2,3,4]}
+                >>> DegapButMaintainAnno(seq, annot).degap()
+                Out: ('ATGC', {'gene_1': [0, 1], 'gene_2': [2, 3]})
+            
+            Example 2: # Contains start and end gaps
+                >>> seq = "AA----TT"
+                >>> charsets = {"gene1":[0,1,2,3], "gene2":[4,5,6,7]}
+                >>> DegapButMaintainAnno(seq, annot).degap()
+                Out: ('AATT', {'gene1': [0, 1], 'gene2': [2, 3]})
+                    
+            Example 3: # Entire genes missing
+                >>> seq = "AA----TT"
+                >>> charsets = {"gene1":[0,1,2], "gene2":[3,4], "gene3":[5,6,7]}
+                >>> DegapButMaintainAnno(seq, annot).degap()
+                Out: ('AATT', {'gene1': [0, 1], 'gene2': [], 'gene3': [2, 3]})
+                      
+            Example 4: # Overlapping genes with internal gaps
+                >>> seq = "A--AT--T"
+                >>> charsets = {"gene1":[0,1,2,3,4], "gene2":[4,5,6,7]}
+                >>> DegapButMaintainAnno(seq, charsets).degap()
+                Out: ('AATT', {'gene1': [0, 1, 2], 'gene2': [2, 3]})
+                    
+            Example 5: # Overlapping genes with start and end gaps
+                >>> seq = "AA----TT"
+                >>> charsets = {"gene1":[0,1,2,3,4], "gene2":[4,5,6,7]}
+                >>> DegapButMaintainAnno(seq, charsets).degap()
+                Out: ('AATT', {'gene1': [0, 1], 'gene2': [2, 3]})
+                        
+            Example 6: # Contains start and end gaps; incorrect charset order
+                >>> seq = "AT----GC"
+                >>> charsets = {"gene2":[4,5,6,7], "gene1":[0,1,2,3]}
+                >>> DegapButMaintainAnno(seq, annot).degap()
+                Out: ('ATGC', {'gene1': [0, 1], 'gene2': [2, 3]})
+        '''
+        from copy import copy
+        
+        seq = self.seq
+        charsets = self.charsets
+        
+        annotations = copy(charsets)
+        index = seq.find('-')
+        while index > -1:
+            for gene_name, indices in annotations.items():
+                if index in indices:
+                    indices.remove(index)
+                annotations[gene_name] = [e-1 if e > index else e \
+                    for e in indices]
+            seq = seq[:index] + seq[index+1:]
+            index = seq.find('-')
+        return seq, annotations
+    
+    """
+    def degap_legacy(self):
         '''
         In its current implementation, this function only works if none of the 
         charsets are overlapping; hence, the initial check.
     
         Examples:
-        
-            Example 1: # Contains an internal gap
-                >>> seq = "ATG-C"
-                >>> annot = {"gene_1":[0,1],"gene_2":[2,3,4]}
-                >>> DegapButMaintainAnno(seq, annot)
-                Out: ('ATGC', {'gene_1': [0, 1], 'gene_2': [2, 3]})
-            
-            Example 2: # Contains start and end gaps
-                >>> seq = "AA----TT"
-                >>> annot = {"gene1":[0,1,2,3], "gene2":[4,5,6,7]}
-                >>> DegapButMaintainAnno(seq, annot)
-                Out: ('AATT', {'gene1': [0, 1], 'gene2': [2, 3]})
-                    
-            Example 3: # Entire genes missing
-                >>> seq = "AA----TT"
-                >>> annot = {"gene1":[0,1,2], "gene2":[3,4], "gene3":[5,6,7]}
-                >>> DegapButMaintainAnno(seq, annot)
-                Out: ('AATT', {'gene1': [0, 1], 'gene2': [], 'gene3': [2, 3]})
-                    
+                   
             Example 4: # Overlapping genes with internal gaps
                 >>> seq = "A--AT--T"
-                >>> annot = {"gene1":[0,1,2,3,4], "gene2":[4,5,6,7]}
-                >>> DegapButMaintainAnno(seq, annot)
+                >>> charsets = {"gene1":[0,1,2,3,4], "gene2":[4,5,6,7]}
+                >>> DegapButMaintainAnno(seq, annot).degap_legacy()
                 Out: ('AATTT', {'gene1': [0, 1, 2], 'gene2': [2, 3]})
                     
             Example 5: # Overlapping genes with start and end gaps
                 >>> seq = "AA----TT"
-                >>> annot = {"gene1":[0,1,2,3,4], "gene2":[4,5,6,7]}
-                >>> DegapButMaintainAnno(seq, annot)
+                >>> charsets = {"gene1":[0,1,2,3,4], "gene2":[4,5,6,7]}
+                >>> DegapButMaintainAnno(seq, annot).degap_legacy()
                 Out: ('AATT', {'gene1': [0, 1], 'gene2': [1, 2]})
-            
-            Example 6: # Contains start and end gaps; incorrect charset order
-                >>> seq = "AT----GC"
-                >>> annot = {"gene2":[4,5,6,7], "gene1":[0,1,2,3]}
-                >>> DegapButMaintainAnno(seq, annot)
-                Out: ('ATGC', {'gene1': [0, 1], 'gene2': [2, 3]})
             
         TODO:
             (i)   Error in example 4: Out: AATT[sic!]T
@@ -286,7 +323,7 @@ class DegapButMaintainAnno:
         seq = self.seq
         charsets = self.charsets
         
-        if DegapButMaintainAnno._intersection_exists(charsets.values()):
+        if _intersection_exists(charsets.values()):
             raise ValueError('MY ERROR: Character sets are overlapping.')
     
         degapped_seq = ''
@@ -305,44 +342,20 @@ class DegapButMaintainAnno:
             degapped_charsets[gene_name] = index_list
             gaps_cumulative += gaps_within_gene
         return (degapped_seq, degapped_charsets)
-
-    def degap_2(self):
-        ''' This function works on overlapping charsets and is preferable over 
-        "degap_1".
-        Source: http://stackoverflow.com/questions/35233714/maintaining-overlapping-annotations-while-removing-dashes-from-string
-        
-            Examples:
-                      
-            Example 4: # Overlapping genes with internal gaps
-                >>> seq = "A--AT--T"
-                >>> charsets = {"gene1":[0,1,2,3,4], "gene2":[4,5,6,7]}
-                >>> rewriteGene(seq, charsets)
-                Out: ('AATTT', {'gene1': [0, 1, 2], 'gene2': [2, 3]})
-                    
-            Example 5: # Overlapping genes with start and end gaps
-                >>> seq = "AA----TT"
-                >>> charsets = {"gene1":[0,1,2,3,4], "gene2":[4,5,6,7]}
-                >>> rewriteGene(seq, charsets)
-                Out: ('AATT', {'gene1': [0, 1], 'gene2': [1, 2]})
-           
-        '''
-        seq = self.seq
-        charsets = self.charsets
-        
-        annotations = copy(charsets)
-        index = seq.find('-')
-        while index > -1:
-            for gene_name, indices in annotations.items():
-                if index in indices:
-                    indices.remove(index)
-                annotations[gene_name] = [e-1 if e > index else e for e in indices]
-            seq = seq[:index] + seq[index+1:]
-            index = seq.find('-')
-        return seq, annotations
+    """
 
 
 class GenerateFeatureLocation:
-    ''' Operations to generate feature locations
+    ''' This class contains functions to generate feature locations.
+    
+    Args:
+        start_pos (int):    the start position of a feature; example: 0
+    
+    Returns:
+        FeatureLocation (obj):   A FeatureLocation object
+    
+    Raises:
+        -
     '''
 
     def __init__(self, start_pos, stop_pos):
@@ -350,9 +363,7 @@ class GenerateFeatureLocation:
         self.stop = stop_pos
 
     def exact(self):
-        ''' Generate an exact feature location
-        '''
-        
+        ''' Generate an exact feature location '''
         from Bio import SeqFeature
         
         start_pos = SeqFeature.ExactPosition(self.start)
