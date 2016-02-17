@@ -31,6 +31,9 @@ __version__ = "2016.02.17.1900"
 # CLASSES #
 ###########
 
+class MyException(Exception):
+    pass
+
 class AnnoChecks:
     ''' This class contains functions to evaluate the quality of an 
     annotation.
@@ -54,9 +57,8 @@ class AnnoChecks:
         tupl.   The return consists of the translated sequence (a str) and the
                 updated feature location (a location object); example: 
                 (transl_out, feat_loc)
-    
     Raises:
-        -
+        MyException
     '''
 
     def __init__(self, extract, location, feature_type="foobar", 
@@ -132,9 +134,6 @@ class AnnoChecks:
                 >>> AnnoChecks(extract, location).check()
                 Out: (Seq('M*', ExtendedIUPACProtein()),
                      FeatureLocation(ExactPosition(0), ExactPosition(3)))
-            
-            NOTE: SHOULD EXAMPLE 2 NOT RESULT IN A FEATURE LOCATION THAT ENDS 
-                  AT ExactPosition(5), I.E. AFTER THE STOP CODON ???
              
             Example 3: # Does not start with a Methionine 
                 >>> from Bio.Seq import Seq
@@ -145,13 +144,6 @@ class AnnoChecks:
                 >>> AnnoChecks(extract, location).check()
                 Out: ValueError: SPTSPD ERROR: Feature does not start with a 
                      Methionine.
-
-        TODO:
-            (i) Adjust code so that the start position of a subsequent feature
-                is also adjusted.
-                
-            (ii) Adjust the location position so that the stop codon is also
-                included.
         '''
         from Bio.Seq import Seq
         from Bio.SeqFeature import FeatureLocation
@@ -161,9 +153,8 @@ class AnnoChecks:
             feat_loc = self.l
         except:
             if not AnnoChecks._check_protein_start(self.e, self.t):
-                return ValueError('SPTSPD ERROR: Feature "%s" of '\
-                    'sequence "%s" does not start with a Methionine.' 
-                    % (self.f, self.i))
+                return MyException('Feature `%s` of sequence `%s` does not '\
+                'start with a Methionine.' % (self.f, self.i))
             else:
                 try:
                     without_internalStop = AnnoChecks._transl(self.e, self.t)
@@ -173,8 +164,8 @@ class AnnoChecks:
                     feat_loc = AnnoChecks._adjust_feat_loc(self.l, 
                         with_internalStop, without_internalStop)
                 except:
-                    return ValueError('SPTSPD ERROR: Translation of feature '\
-                    '"%s" of sequence "%s" not successful.' % (self.f, self.i))
+                    return MyException('Translation of feature `%s` of '\
+                    'sequence `%s` unsuccessful.' % (self.f, self.i))
         transl_out = transl_out + "*"
         return (transl_out, feat_loc)
     
@@ -324,7 +315,7 @@ class DegapButMaintainAnno:
         charsets = self.charsets
         
         if _intersection_exists(charsets.values()):
-            raise ValueError('MY ERROR: Character sets are overlapping.')
+            raise MyException('SPTSPD ERROR: Character sets are overlapping.')
     
         degapped_seq = ''
         degapped_charsets = {}
@@ -349,7 +340,9 @@ class GenerateFeatureLocation:
     ''' This class contains functions to generate feature locations.
     
     Args:
-        start_pos (int):    the start position of a feature; example: 0
+        start_pos (int):    the start position of a feature; example: 1
+        
+        stop_pos (int):    the stop position of a feature; example: 12
     
     Returns:
         FeatureLocation (obj):   A FeatureLocation object
@@ -363,13 +356,106 @@ class GenerateFeatureLocation:
         self.stop = stop_pos
 
     def exact(self):
-        ''' Generate an exact feature location '''
+        ''' This function generates an exact feature location.
+            
+        Examples:
+                   
+            Example 1: # Default feature location
+                >>> start_pos = 1
+                >>> stop_pos = 12
+                >>> GenerateFeatureLocation(start_pos, stop_pos).exact()
+                Out: FeatureLocation(ExactPosition(1), ExactPosition(12))
+        '''
         from Bio import SeqFeature
         
         start_pos = SeqFeature.ExactPosition(self.start)
         end_pos = SeqFeature.ExactPosition(self.stop)
         return SeqFeature.FeatureLocation(start_pos, end_pos)
 
+
+class MetaChecks:
+    ''' This class contains functions to evaluate the quality of metadata.
+    
+    Args:
+        lst_of_dcts (list): a list of dictionaries; example: 
+                            [{'foo': 'foobarqux', 'bar': 'foobarqux', 
+                              'qux': 'foobarqux'}, {'foo': 'foobarbaz', 
+                              'bar': 'foobarbaz', 'baz': 'foobarbaz'}]    
+    Returns:
+        none
+    
+    Raises:
+        MyException
+    '''
+    
+    def __init__(self, lst_of_dcts):
+        self.lst_of_dcts = lst_of_dcts
+    
+    def label_present(self, label):
+        ''' Check if each (!) list of dictionary keys of a list of dictionaries
+        encompass the element <label> at least once.
+        
+        Examples:
+
+                >>> lst_of_dcts = [{'foo': 'foobarqux', 'bar': 'foobarqux', 
+                'qux': 'foobarqux'}, {'foo': 'foobarbaz', 'bar': 'foobarbaz', 
+                'baz': 'foobarbaz'}]
+        
+            Example 1: # Positive confirmation
+                >>> label = 'foo'
+                >>> MetaQualChecks(lst_of_dcts).label_present(label)
+                Out: True
+                
+            Example 2: # Negative confirmation
+                >>> label = 'qux'
+                >>> MetaQualChecks(lst_of_dcts).label_present(label)
+                Out: MyException: csv-file does not contain a column 
+                labelled "qux"
+        '''
+
+        if not all(label in dct.keys() for dct in self.lst_of_dcts):
+            return MyException('csv-file does not contain a column '\
+                'labelled `%s`' % (label))
+        return True
+    
+    def valid_INSDC_quals(self):
+        ''' Check if field labels are part of list "allowed_INSDC_qualifiers".
+        
+        Since all dictionaries have the same set of keys, it is sufficient to 
+        check only the first dictionary. '''
+        
+        # Valid feature table qualifiers as defined by the International
+        # Nucleotide Sequence Database Collection (INSDC)
+        # http://www.insdc.org/files/feature_table.html#7.3.1
+        valid_INSDC_quals = ['allele','altitude','anticodon',
+        'artificial_location','bio_material','bound_moiety','cell_line',
+        'cell_type','chromosome','citation','clone','clone_lib','codon_start',
+        'collected_by','collection_date','compare','country','cultivar',
+        'culture_collection','db_xref','dev_stage','direction','EC_number',
+        'ecotype','environmental_sample','estimated_length','exception',
+        'experiment','focus','frequency','function','gap_type','gene',
+        'gene_synonym','germline','haplogroup','haplotype','host',
+        'identified_by','inference','isolate','isolation_source','lab_host',
+        'lat_lon','linkage_evidence','locus_tag','macronuclear','map',
+        'mating_type','mobile_element_type','mod_base','mol_type',
+        'ncRNA_class','note','number','old_locus_tag','operon','organelle',
+        'organism','partial','PCR_conditions','PCR_primers','phenotype',
+        'plasmid','pop_variant','product','protein_id','proviral','pseudo',
+        'pseudogene','rearranged','regulatory_class','replace',
+        'ribosomal_slippage','rpt_family','rpt_type','rpt_unit_range',
+        'rpt_unit_seq','satellite','segment','serotype','serovar','sex',
+        'specimen_voucher','standard_name','strain','sub_clone','sub_species',
+        'sub_strain','tag_peptide','tissue_lib','tissue_type','transgenic',
+        'translation','transl_except','transl_table','trans_splicing',
+        'type_material','variety']
+
+        keys_present = self.lst_of_dcts[0].keys()
+        not_valid = [k for k in keys_present if k not in \
+            valid_INSDC_quals]
+        if not_valid:
+            return MyException('The following are invalid INSDC qualifiers: '\
+                '`%s`' % (not_valid))
+        return True
 
 #############
 # FUNCTIONS #

@@ -22,14 +22,15 @@ EMBL Submission Preparation Tool for Sequences of Multiple Sequence Alignments
 
 from Bio import SeqIO
 #from Bio.Alphabet import generic_dna
-from Bio.Nexus import Nexus
+
 #from Bio.Seq import Seq
 from Bio import SeqFeature
-from csv import DictReader
+
 
 import CustomOps as COps
 
 import argparse
+import sys
 
 
 ###############
@@ -40,76 +41,26 @@ __author__ = "Michael Gruenstaeudl, PhD <mi.gruenstaeudl@gmail.com>"
 __copyright__ = "Copyright (C) 2016 Michael Gruenstaeudl"
 __info__ = "Submission Preparation Tool for Sequences of Phylogenetic"\
            " Datasets (SPTSPD)"
-__version__ = "2016.02.09.1500"
+__version__ = "2016.02.17.1900"
 
 #############
 # DEBUGGING #
 #############
 
-import pdb
+#import pdb
 #pdb.set_trace()
 
 ####################
 # GLOBAL VARIABLES #
 ####################
 
-# Possible feature table qualifiers as defined by the International Nucleotide 
-# Sequence Database Collection (INSDC) 
-# http://www.insdc.org/files/feature_table.html#7.3.1
-valid_INSDC_qualifiers = ['allele','altitude','anticodon',
-    'artificial_location','bio_material','bound_moiety','cell_line',
-    'cell_type','chromosome','citation','clone','clone_lib','codon_start',
-    'collected_by','collection_date','compare','country','cultivar',
-    'culture_collection','db_xref','dev_stage','direction','EC_number',
-    'ecotype','environmental_sample','estimated_length','exception',
-    'experiment','focus','frequency','function','gap_type','gene',
-    'gene_synonym','germline','haplogroup','haplotype','host',
-    'identified_by','inference','isolate','isolation_source','lab_host',
-    'lat_lon','linkage_evidence','locus_tag','macronuclear','map',
-    'mating_type','mobile_element_type','mod_base','mol_type','ncRNA_class',
-    'note','number','old_locus_tag','operon','organelle','organism','partial',
-    'PCR_conditions','PCR_primers','phenotype','plasmid','pop_variant',
-    'product','protein_id','proviral','pseudo','pseudogene','rearranged',
-    'regulatory_class','replace','ribosomal_slippage','rpt_family','rpt_type',
-    'rpt_unit_range','rpt_unit_seq','satellite','segment','serotype','serovar',
-    'sex','specimen_voucher','standard_name','strain','sub_clone',
-    'sub_species','sub_strain','tag_peptide','tissue_lib','tissue_type',
-    'transgenic','translation','transl_except','transl_table','trans_splicing',
-    'type_material','variety']
 
 ###########
 # CLASSES #
 ###########
 
-
-        
-
-class MetaQualChecks:
-    ''' Operations to evaluate the quality of metadata '''
-    
-    def __init__(self, qualifiers_full):
-        self.quals = qualifiers_full
-    
-    def specific_label_present(self, label):
-        ''' Check if all of lines contain a field labelled with <label>. '''
-
-        if not all(label in dct.keys() for dct in self.quals):
-            raise ValueError('SPTSPD ERROR: csv-file does not'\
-            'contain a column labeled "%s"' % (label))
-    
-    def valid_INSDC_qualifiers(self):
-        ''' Check if field labels are part of list "allowed_INSDC_qualifiers".
-        
-        Since all dictionaries have the same set of keys, it is sufficient to 
-        check only the first dictionary. '''
-
-        quals_present = self.quals[0].keys()
-        not_valid = [q for q in quals_present if q not in\
-        valid_INSDC_qualifiers]
-        if not_valid:
-            raise ValueError('SPTSPD ERROR: The following qualifiers are'\
-            'invalid INSDC qualifiers:  "%s"' % (not_valid))
-
+class MyException(Exception):
+    pass
 
 class GenerateSeqRecord:
     ''' Operations to generate SeqRecords '''
@@ -135,9 +86,6 @@ class GenerateSeqRecord:
 
         return SeqRecord(self.seq, id=id_handle, name=name_handle, 
             description=descr_handle)
-
-
-
 
 """
 class GetGeneInfo:
@@ -180,9 +128,67 @@ def extract_filename(in_path):
     path, fn =  os.path.split(in_path)
     return fn
 
+
 def replace_fileending(fn, new_end):
     ''' Replace file ending (e.g. ".csv") with different ending '''
     return fn[:fn.rfind('.')] + new_end
+
+
+def parse_csv_file(path_to_csv):
+    ''' This function parses the nexus file. '''
+    from csv import DictReader
+    
+    reader = DictReader(open(path_to_csv, 'rb'), delimiter=',', quotechar='"',
+        skipinitialspace=True)
+    qualifiers_full = list(reader)
+    return qualifiers_full
+
+
+def parse_nexus_file(path_to_nex):
+    ''' This function parses the nexus file. '''
+    from Bio.Nexus import Nexus
+    
+    aln = Nexus.Nexus()
+    aln.read(path_to_nex)
+    charsets_full = aln.charsets
+    alignment_full = aln.matrix
+    return (charsets_full, alignment_full)
+
+
+def check_quality_of_qualifiers(qualifiers_full, seqname_col_label):
+    ''' This function conducts a series of quality checks on the qualifiers 
+    list (a list of dictionaries). '''
+    
+    qual_checks = COps.MetaChecks(qualifiers_full)
+# i. Check if qualifier matrix (and, hence, each! entry) contains a column 
+#    labelled by <seqname_col_label>
+    try:
+        qual_checks.label_present(seqname_col_label)
+    except MyException as e:
+        sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
+# ii. Check if column names constitute valid INSDC feature table qualifiers 
+#    (http://www.insdc.org/files/feature_table.html#7.3.1)
+    try:
+        qual_checks.valid_INSDC_quals()
+    except MyException as e:
+        sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
+
+
+def transl_and_check_quality_of_transl(feature, transl_table, seq_record):
+    ''' This function conducts a translation of a coding region and checks the
+    quality of said translation. '''
+
+    if feature.type.lower() == 'cds': # Check if feature coding region
+        extract = feature.extract(seq_record)
+        try:
+            transl, loc = COps.AnnoChecks(extract.seq, feature.location, 
+                feature.type, seq_record.id, transl_table).check()
+            feature.qualifiers["translation"] = transl
+            feature.location = loc
+        except MyException as e:
+            sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
+        return feature
+
 
 ########
 # MAIN #
@@ -191,35 +197,35 @@ def replace_fileending(fn, new_end):
 def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label, transl_table):
 
 # STEP 01: Prepare output files
-# i. Define output files
     in_fn = extract_filename(path_to_nex)
-    out_fn = replace_fileending(in_fn, ".embl")
-# ii. Initialize output list
-    out_records = []
+    out_fn = replace_fileending(in_fn, ".embl")  # Define output filename
+    out_records = []                             # Initialize output list
 
-# STEP 02: Parse input data
-# i. Parse data from .nex-file.
-    aln = Nexus.Nexus()
-    aln.read(path_to_nex)
-    charsets_full = aln.charsets
-    alignment_full = aln.matrix
-# ii. Parse data from .csv-file
-    reader = DictReader(open(path_to_csv, 'rb'), delimiter=',', quotechar='"',
-        skipinitialspace=True)
-    qualifiers_full = list(reader)
 
-# STEP 03: Do quality checks on input data
-    qual_checks = MetaQualChecks(qualifiers_full)
-# i. Check if qualifier matrix (and, hence, each! entry) contains a column 
-#    labelled by <seqname_col_label>
-    qual_checks.specific_label_present(seqname_col_label)
-# ii. Check if column names constitute valid INSDC feature table qualifiers 
-#    (http://www.insdc.org/files/feature_table.html#7.3.1)
-    qual_checks.valid_INSDC_qualifiers()
+# STEP 02: Parse data from .nex-file
+    try:
+        charsets_full, alignment_full = parse_nexus_file(path_to_nex)
+    except:
+        sys.exit('%s SPTSPD ERROR: %s' % ('\n',
+            'Parsing of .nex-file unsuccessful.'))
 
-# TO DO:
-# (iii) Check if sequence_names are also in .nex-file
-# (iv) Have all metadata conform to basic ASCII standards (not extended ASCII)!
+
+# STEP 03: Parse data from .csv-file
+    try:
+        qualifiers_full = parse_csv_file(path_to_csv)
+    except:
+        sys.exit('%s SPTSPD ERROR: %s' % ('\n',
+            'Parsing .csv-file unsuccessful.'))
+            
+
+# STEP 04: Do quality checks on input data
+    check_quality_of_qualifiers(qualifiers_full, seqname_col_label)
+
+    '''
+    TODO:
+        (i) Check if sequence_names are also in .nex-file
+        (ii) Have all metadata conform to basic ASCII standards (not extended ASCII)!
+    '''
 
 # STEP 05: Create a full SeqRecord for each sequence of the alignment.
     for seq_name in alignment_full.keys():
@@ -235,8 +241,11 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label, tra
         record_handle = GenerateSeqRecord(current_seq, current_qual)
         seq_record = record_handle.generate_base_record(seqname_col_label,
                                                         charsets_full)
-# TO DO:
-# (ii) include db_x in base_record
+        '''
+        TODO:
+            (i) include info on linearity of molecule (i.e., linear or circular)
+            (ii) include db_x in base_record
+        '''
 
 # iii. Degap the sequence while maintaing correct annotations
 #     Note: Degapping has to occur before (!) the SeqFeature "source" is
@@ -268,15 +277,15 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label, tra
 # a. Define the locations of the charsets
             feature_loc = COps.GenerateFeatureLocation(charset_range[0],
                 charset_range[-1]+1).exact()
-# TO DO: 
-# b. Include a greater number of possible feature location functions.
-            #start_pos = SeqFeature.AfterPosition(charset_range[0])
-            #end_pos = SeqFeature.BeforePosition(charset_range[-1])
+            '''
+            TODO: 
+                (i) Include a greater number of possible feature location functions.
+                #start_pos = SeqFeature.AfterPosition(charset_range[0])
+                #end_pos = SeqFeature.BeforePosition(charset_range[-1])
+                (ii) AUTOMATICALLY IDENTIFY SEQFEATURE (E.G. SEARCH FOR TYPE IN DATABASE)
+            '''
 
-# TO DO:
-# c. AUTOMATICALLY IDENTIFY SEQFEATURE (E.G. SEARCH FOR TYPE IN DATABASE)
-
-# vii. Define the annotation type
+# viii. Define the annotation type
             anno_types = ['cds', 'gene', 'rrna', 'trna']
             keyw_present = [keyw for keyw in anno_types if keyw in charset_name.lower()]
             if keyw_present:
@@ -290,14 +299,16 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label, tra
             seq_record.features.append(seq_feature)
 
 
-# STEP 06: Perform translation and quality control on coding regions
+# STEP 06: Translate and check quality of translation
         for feature in seq_record.features:
-            if feature.type.lower() == 'cds': # Check if feature coding region
-                extract = feature.extract(seq_record)
-                transl, loc = COps.AnnoChecks(extract.seq, feature.location, 
-                    feature.type, seq_record.id, transl_table).check()
-                feature.qualifiers["translation"] = transl
-                feature.location = loc
+            feature = transl_and_check_quality_of_transl(feature, transl_table,
+                seq_record)
+        '''
+        TODO:
+            (i) Adjust code of AnnoChecks.check() so that the start position of a subsequent feature is also adjusted.                
+            (ii) Adjust the location position in code of AnnoChecks.check() so that the stop codon is also included.
+            (iii) SHOULD EXAMPLE 2 NOT RESULT IN A FEATURE LOCATION THAT ENDS AT ExactPosition(5), I.E. AFTER THE STOP CODON ???
+        '''
 
 # STEP 07: Save completed record to list "out_records"
         out_records.append(seq_record)

@@ -72,7 +72,7 @@ class AnnoChecksTestCases(unittest.TestCase):
         
         extract = Seq("AAGTAA", generic_dna)
         location = FeatureLocation(0, 5)
-        self.assertFalse(COps.AnnoChecks(extract,
+        self.assertRaises(COps.AnnoChecks(extract,
             location).for_unittest())
 
 
@@ -155,6 +155,49 @@ class DegapButMaintainAnnoTestCases(unittest.TestCase):
         out_actual = COps.DegapButMaintainAnno(seq, charsets).degap()
         self.assertTupleEqual(out_actual, out_ideal)    
 
+
+class GenerateFeatureLocationTestCases(unittest.TestCase):
+    ''' Tests for class `GenerateFeatureLocation` '''
+
+    def test_GenerateFeatureLocation_example_1(self):
+        ''' Test to evaluate example 1 of GenerateFeatureLocation.exact
+
+        This test evaluates an exact feature location.
+        '''
+        start_pos = 1
+        stop_pos = 12
+
+        out = COps.GenerateFeatureLocation(start_pos, stop_pos).exact()
+        self.assertIsInstance(out, FeatureLocation)
+
+
+class MetaChecksTestCases(unittest.TestCase):
+    ''' Tests for class `MetaChecks` '''
+    
+    def test_MetaChecks_example_1(self):
+        ''' Test to evaluate example 1 of MetaChecks.label_present
+
+        This test evaluates a positive confirmation.
+        '''
+        
+        lst_of_dcts = [{'foo': 'foobarqux', 'bar': 'foobarqux', 
+            'qux': 'foobarqux'}, {'foo': 'foobarbaz', 'bar': 'foobarbaz', 
+            'baz': 'foobarbaz'}]
+        label = 'foo'
+        self.assertTrue(COps.MetaChecks(lst_of_dcts).label_present(label)) 
+    
+    def test_MetaChecks_example_2(self):
+        ''' Test to evaluate example 2 of MetaChecks.label_present
+
+        This test evaluates a negative confirmation.
+        '''
+        
+        lst_of_dcts = [{'foo': 'foobarqux', 'bar': 'foobarqux', 
+            'qux': 'foobarqux'}, {'foo': 'foobarbaz', 'bar': 'foobarbaz', 
+            'baz': 'foobarbaz'}]
+        label = 'qux'
+        self.assertRaises(COps.MetaChecks(lst_of_dcts).label_present(label)) 
+               
 
 #############
 # FUNCTIONS #
