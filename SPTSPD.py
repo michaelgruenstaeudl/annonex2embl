@@ -24,10 +24,10 @@ from Bio import SeqIO
 #from Bio.Alphabet import generic_dna
 
 #from Bio.Seq import Seq
-from Bio import SeqFeature
+#from Bio import SeqFeature
 
 
-import CustomOps as COps
+import CustomOps as CO
 
 import argparse
 import sys
@@ -37,17 +37,17 @@ import sys
 # AUTHOR INFO #
 ###############
 
-__author__ = "Michael Gruenstaeudl, PhD <mi.gruenstaeudl@gmail.com>"
-__copyright__ = "Copyright (C) 2016 Michael Gruenstaeudl"
-__info__ = "Submission Preparation Tool for Sequences of Phylogenetic"\
-           " Datasets (SPTSPD)"
-__version__ = "2016.02.17.1900"
+__author__ = 'Michael Gruenstaeudl, PhD <mi.gruenstaeudl@gmail.com>'
+__copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
+__info__ = 'Submission Preparation Tool for Sequences of Phylogenetic '\
+           'Datasets (SPTSPD)'
+__version__ = '2016.02.18.1100'
 
 #############
 # DEBUGGING #
 #############
 
-#import pdb
+import pdb
 #pdb.set_trace()
 
 ####################
@@ -61,31 +61,6 @@ __version__ = "2016.02.17.1900"
 
 class MyException(Exception):
     pass
-
-class GenerateSeqRecord:
-    ''' Operations to generate SeqRecords '''
-        
-    def __init__(self, current_seq, current_qual):
-        self.seq = current_seq
-        self.qual = current_qual
-    
-    def generate_base_record(self, seqname_col_label, charsets_full):
-        ''' Generate a base SeqRecord '''
-        from Bio.SeqRecord import SeqRecord
-        
-        gene_names = [k for k in charsets_full.keys()]
-        gene_names = [gn.replace("_", " ") for gn in gene_names]
-        gene_names_str = ' and '.join(gene_names)
-        
-        id_handle = self.qual[seqname_col_label]
-        try:
-            name_handle = self.qual['organism']
-        except:
-            name_handle = 'unknown organism'
-        descr_handle = name_handle + ' ' + gene_names_str +' DNA.'
-
-        return SeqRecord(self.seq, id=id_handle, name=name_handle, 
-            description=descr_handle)
 
 """
 class GetGeneInfo:
@@ -157,9 +132,15 @@ def parse_nexus_file(path_to_nex):
 
 def check_quality_of_qualifiers(qualifiers_full, seqname_col_label):
     ''' This function conducts a series of quality checks on the qualifiers 
-    list (a list of dictionaries). '''
+    list (a list of dictionaries).
+
+    TODO:
+        (i) Check if sequence_names are also in .nex-file
+        (ii) Have all metadata conform to basic ASCII standards (not 
+            extended ASCII)!
+    '''
     
-    qual_checks = COps.MetaChecks(qualifiers_full)
+    qual_checks = CO.MetaChecks(qualifiers_full)
 # i. Check if qualifier matrix (and, hence, each! entry) contains a column 
 #    labelled by <seqname_col_label>
     try:
@@ -173,15 +154,23 @@ def check_quality_of_qualifiers(qualifiers_full, seqname_col_label):
     except MyException as e:
         sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
 
-
 def transl_and_check_quality_of_transl(feature, transl_table, seq_record):
     ''' This function conducts a translation of a coding region and checks the
-    quality of said translation. '''
+    quality of said translation.
+    
+    TODO:
+        (i) Adjust code of AnnoChecks.check() so that the start position of a 
+            subsequent feature is also adjusted.                
+        (ii) Adjust the location position in code of AnnoChecks.check() so 
+            that the stop codon is also included.
+        (iii) SHOULD EXAMPLE 2 NOT RESULT IN A FEATURE LOCATION THAT ENDS 
+            AT ExactPosition(5), I.E. AFTER THE STOP CODON ???
+    '''
 
     if feature.type.lower() == 'cds': # Check if feature coding region
         extract = feature.extract(seq_record)
         try:
-            transl, loc = COps.AnnoChecks(extract.seq, feature.location, 
+            transl, loc = CO.AnnoChecks(extract.seq, feature.location, 
                 feature.type, seq_record.id, transl_table).check()
             feature.qualifiers["translation"] = transl
             feature.location = loc
@@ -194,13 +183,13 @@ def transl_and_check_quality_of_transl(feature, transl_table, seq_record):
 # MAIN #
 ########
 
-def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label, transl_table):
+def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label,
+         transl_table):
 
 # STEP 01: Prepare output files
     in_fn = extract_filename(path_to_nex)
     out_fn = replace_fileending(in_fn, ".embl")  # Define output filename
     out_records = []                             # Initialize output list
-
 
 # STEP 02: Parse data from .nex-file
     try:
@@ -209,7 +198,6 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label, tra
         sys.exit('%s SPTSPD ERROR: %s' % ('\n',
             'Parsing of .nex-file unsuccessful.'))
 
-
 # STEP 03: Parse data from .csv-file
     try:
         qualifiers_full = parse_csv_file(path_to_csv)
@@ -217,103 +205,49 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label, tra
         sys.exit('%s SPTSPD ERROR: %s' % ('\n',
             'Parsing .csv-file unsuccessful.'))
             
-
 # STEP 04: Do quality checks on input data
     check_quality_of_qualifiers(qualifiers_full, seqname_col_label)
 
-    '''
-    TODO:
-        (i) Check if sequence_names are also in .nex-file
-        (ii) Have all metadata conform to basic ASCII standards (not extended ASCII)!
-    '''
-
 # STEP 05: Create a full SeqRecord for each sequence of the alignment.
     for seq_name in alignment_full.keys():
+        
 # i. Select current sequences and current qualifiers
-        try:
-            current_seq = alignment_full[seq_name]
-            current_qual = [d for d in qualifiers_full\
-                if d[seqname_col_label] == seq_name][0]
-        except:
-            raise ValueError('SPTSPD ERROR: Sequence association between '\
-                '%s and %s incorrect' % (path_to_nex, path_to_csv))
+        current_seq = alignment_full[seq_name]
+        current_quals = [d for d in qualifiers_full\
+            if d[seqname_col_label] == seq_name][0]
+
 # ii. Generate the basic SeqRecord (i.e., without features or annotations)
-        record_handle = GenerateSeqRecord(current_seq, current_qual)
-        seq_record = record_handle.generate_base_record(seqname_col_label,
-                                                        charsets_full)
-        '''
-        TODO:
-            (i) include info on linearity of molecule (i.e., linear or circular)
-            (ii) include db_x in base_record
-        '''
+        seq_record = CO.GenerateSeqRecord(current_seq,
+            current_quals).base_record(seqname_col_label, charsets_full)
 
-# iii. Degap the sequence while maintaing correct annotations
-#     Note: Degapping has to occur before (!) the SeqFeature "source" is
-#           generated.
-#     Note: Charsets are identical across all sequences
-
-        degap_handle = COps.DegapButMaintainAnno(seq_record.seq, charsets_full)
+# iii. Degap the sequence while maintaing correct annotations, which has to 
+#      occur before (!) the SeqFeature 'source' is generated.
+#      Note: Charsets are identical across all sequences.
+        degap_handle = CO.DegapButMaintainAnno(seq_record.seq, charsets_full)
         seq_record.seq, degapped_charsets = degap_handle.degap()
-
-# iv. Create a "source" feature for the seq_record.
-#      Note: The SeqFeature "source" is critical for submissions to EMBL or 
-#            GenBank, as it contains all the relevant info on collection 
-#            locality, herbarium voucher, etc.
-        feature_loc = COps.GenerateFeatureLocation(0, len(seq_record)).exact()
-        source_feature = SeqFeature.SeqFeature(feature_loc, type='source',
-            qualifiers=current_qual)
-
-# v. Append translation table info to source qualifiers
-        source_feature.qualifiers["transl_table"]=transl_table
             
-# vi. Append to features list
+# iv. Generate SeqFeature 'source' and append to features list
+        source_feature = CO.GenerateSeqFeature().source_feat(len(seq_record),
+            current_quals, transl_table)
         seq_record.features.append(source_feature)
 
-# vii. Populate the feature keys with the charset information
-#     Note: Each charset represents a dictionary that is added to the 
-#           list "SeqRecord.features"
+# STEP 06: Populate the feature keys with the charset information
+#          Note: Each charset represents a dictionary that must be added in 
+#          full to the list "SeqRecord.features"
         for charset_name, charset_range in degapped_charsets.items():
-
-# a. Define the locations of the charsets
-            feature_loc = COps.GenerateFeatureLocation(charset_range[0],
-                charset_range[-1]+1).exact()
-            '''
-            TODO: 
-                (i) Include a greater number of possible feature location functions.
-                #start_pos = SeqFeature.AfterPosition(charset_range[0])
-                #end_pos = SeqFeature.BeforePosition(charset_range[-1])
-                (ii) AUTOMATICALLY IDENTIFY SEQFEATURE (E.G. SEARCH FOR TYPE IN DATABASE)
-            '''
-
-# viii. Define the annotation type
-            anno_types = ['cds', 'gene', 'rrna', 'trna']
-            keyw_present = [keyw for keyw in anno_types if keyw in charset_name.lower()]
-            if keyw_present:
-                type_info = keyw_present[0]
-            else:
-                type_info = 'misc_feature'
-            seq_feature = SeqFeature.SeqFeature(feature_loc, type=type_info,
-                qualifiers={'note':charset_name})
-
-# ix. Append to features list
+            seq_feature = CO.GenerateSeqFeature().regular_feat(charset_name,
+                                                               charset_range)
             seq_record.features.append(seq_feature)
 
-
-# STEP 06: Translate and check quality of translation
+# STEP 07: Translate and check quality of translation
         for feature in seq_record.features:
-            feature = transl_and_check_quality_of_transl(feature, transl_table,
-                seq_record)
-        '''
-        TODO:
-            (i) Adjust code of AnnoChecks.check() so that the start position of a subsequent feature is also adjusted.                
-            (ii) Adjust the location position in code of AnnoChecks.check() so that the stop codon is also included.
-            (iii) SHOULD EXAMPLE 2 NOT RESULT IN A FEATURE LOCATION THAT ENDS AT ExactPosition(5), I.E. AFTER THE STOP CODON ???
-        '''
+            feature = transl_and_check_quality_of_transl(feature,
+                transl_table, seq_record)
 
-# STEP 07: Save completed record to list "out_records"
+# STEP 08: Save completed record to list "out_records"
         out_records.append(seq_record)
 
-# STEP 08: Export all out_records as single file in embl-format
+# STEP 09: Export all out_records as single file in embl-format
     outp_handle = open(out_fn, 'w')
     SeqIO.write(out_records, outp_handle, outformat)
     outp_handle.close()

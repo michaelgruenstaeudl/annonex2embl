@@ -11,10 +11,11 @@ Custom operations for EMBL submission preparation tool
 # AUTHOR INFO #
 ###############
 
-__author__ = "Michael Gruenstaeudl, PhD <mi.gruenstaeudl@gmail.com>"
-__copyright__ = "Copyright (C) 2016 Michael Gruenstaeudl"
-__info__ = "Submission Preparation Tool for Sequences of Phylogenetic Datasets (SPTSPD)"
-__version__ = "2016.02.17.1900"
+__author__ = 'Michael Gruenstaeudl, PhD <mi.gruenstaeudl@gmail.com>'
+__copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
+__info__ = 'Submission Preparation Tool for Sequences of Phylogenetic '\
+           'Datasets (SPTSPD)'
+__version__ = '2016.02.18.1100'
 
 #############
 # DEBUGGING #
@@ -41,18 +42,13 @@ class AnnoChecks:
     Args:
         extract (obj):      a sequence object; example: Seq('ATGGAGTAA', 
                             IUPACAmbiguousDNA())
-
         location (obj):     a location object; example: FeatureLocation(
                             ExactPosition(0), ExactPosition(8))
-
         feature_type (str): a string detailing the type of the feature;
                             example: "cds"
-        
         record_id (str):    a string deatiling the name of the sequence in 
                             question; example: "taxon_A"
-
         transl_table (int): an integer; example: 11 (for bacterial code)
-    
     Returns:
         tupl.   The return consists of the translated sequence (a str) and the
                 updated feature location (a location object); example: 
@@ -92,7 +88,7 @@ class AnnoChecks:
         if len(without_internalStop) > len(with_internalStop):
             start_pos = location.start
             stop_pos = start_pos + (len(with_internalStop) * 3)
-            feat_loc = GenerateFeatureLocation(start_pos, stop_pos).exact()
+            feat_loc = GenerateFeatLoc(start_pos, stop_pos).exact()
         if len(without_internalStop) == len(with_internalStop):
             feat_loc = location
         return feat_loc
@@ -180,7 +176,7 @@ class AnnoChecks:
                 FeatureLocation):
                 return True
             return False
-        except ValueError:
+        except ValueError: # Keep 'ValueError'; don't replace with 'MyException'
             return False
 
 
@@ -198,12 +194,10 @@ class DegapButMaintainAnno:
         charsets (dict):a dictionary with gene names (str) as keys and lists 
                         of nucleotide positions (list) as values; example: 
                         {"gene_1":[0,1],"gene_2":[2,3,4]}
-    
     Returns:
         tupl.   The return consists of the degapped sequence and the 
                 corresponding degapped charsets; example: 
                 (degapped_seq, degapped_charsets)
-    
     Raises:
         currently nothing
     '''
@@ -336,17 +330,14 @@ class DegapButMaintainAnno:
     """
 
 
-class GenerateFeatureLocation:
+class GenerateFeatLoc:
     ''' This class contains functions to generate feature locations.
-    
+
     Args:
-        start_pos (int):    the start position of a feature; example: 1
-        
+        start_pos (int):    the start position of a feature; example: 1        
         stop_pos (int):    the stop position of a feature; example: 12
-    
     Returns:
         FeatureLocation (obj):   A FeatureLocation object
-    
     Raises:
         -
     '''
@@ -359,11 +350,10 @@ class GenerateFeatureLocation:
         ''' This function generates an exact feature location.
             
         Examples:
-                   
             Example 1: # Default feature location
                 >>> start_pos = 1
                 >>> stop_pos = 12
-                >>> GenerateFeatureLocation(start_pos, stop_pos).exact()
+                >>> GenerateFeatLoc(start_pos, stop_pos).exact()
                 Out: FeatureLocation(ExactPosition(1), ExactPosition(12))
         '''
         from Bio import SeqFeature
@@ -371,6 +361,151 @@ class GenerateFeatureLocation:
         start_pos = SeqFeature.ExactPosition(self.start)
         end_pos = SeqFeature.ExactPosition(self.stop)
         return SeqFeature.FeatureLocation(start_pos, end_pos)
+
+
+class GenerateSeqFeature:
+    ''' This class contains functions to generate SeqFeatures. '''
+        
+    def __init__(self):
+        pass
+    
+    def source_feat(self, feat_len, quals, transl_table):
+        ''' This function generates the SeqFeature `source` for a SeqRecord.
+
+        The SeqFeature `source` is critical for submissions to EMBL or GenBank, 
+        as it contains all the relevant info on collection locality, herbarium 
+        voucher, etc. It also provides info on which translation table is used
+        for subsequent CDS features.
+            
+        Args:
+            feat_len (int): length of the feature; example: 500
+            quals (dict):   a dictionary of qualifiers; example: 
+                            {'isolate': 'taxon_B', 'country': 'Ecuador'}
+            transl_table (int): an integer; example: 11 (for bacterial code)
+        Returns:
+            SeqFeature (obj):   A SeqFeature object
+        Raises:
+            [currently nothing]
+            
+        Examples:
+            Example 1: # Default evaluation
+                >>> feat_len = 500
+                >>> quals = {'isolate': 'taxon_B', 'country': 'Ecuador'}
+                >>> transl_table = 11
+                >>> GenerateSeqFeature().source_feat(feat_len, quals, transl_table)
+                Out: SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(500)), type='source')
+        '''
+        
+        from Bio import SeqFeature
+    
+        feature_loc = GenerateFeatLoc(0, feat_len).exact()
+        source_feature = SeqFeature.SeqFeature(feature_loc, type='source',
+            qualifiers=quals)
+        source_feature.qualifiers["transl_table"]=transl_table
+        return source_feature
+    
+    def regular_feat(self, feat_name, feat_range):
+        ''' This function generates a regular SeqFeature for a SeqRecord.
+            
+        Args:
+            feat_name (str):  a string; example: 'psbI_CDS'
+            feat_range (list): a list of indices; example: [2, 3, 4, 5]
+        Returns:
+            SeqFeature (obj):   A SeqFeature object
+        Raises:
+            -
+    
+        TODO: 
+            (i) Include a greater number of possible feature location functions.
+            #start_pos = SeqFeature.AfterPosition(feat_range[0])
+            #end_pos = SeqFeature.BeforePosition(feat_range[-1])
+            (ii) Automatically identify a SeqFeature (e.g. search for the type in
+            a database)
+            
+        Examples:
+            Example 1: # Default evaluation
+                >>> feat_name = 'psbI_CDS'
+                >>> feat_range = [2, 3, 4, 5]
+                >>> GenerateSeqFeature().regular_feat(feat_name, feat_range)
+                Out: SeqFeature(FeatureLocation(ExactPosition(2), ExactPosition(6)), type='cds')
+        '''
+        from Bio import SeqFeature
+        
+        # a. Define the locations of the charsets
+        start_pos = feat_range[0]
+        stop_pos = feat_range[-1]+1
+        feature_loc = GenerateFeatLoc(start_pos, stop_pos).exact()
+        # b. Define the annotation type
+        anno_types = ['cds', 'gene', 'rrna', 'trna']
+        kw_present = [kw for kw in anno_types if kw in feat_name.lower()]
+        if kw_present:
+            feat_type = kw_present[0]
+        else:
+            feat_type = 'misc_feature'
+        seq_feature = SeqFeature.SeqFeature(feature_loc, type=feat_type, 
+                                            qualifiers={'note':feat_name})
+        return seq_feature
+
+
+class GenerateSeqRecord:
+    ''' This class contains functions to generate SeqRecords.
+    
+    Args:
+        current_seq (str): the DNA sequence of; example: 1
+        
+        current_qual (xxx): foobar; example: foobar
+    
+    Returns:
+        SeqRecord (obj):   A SeqRecord object
+    
+    Raises:
+        [specific to function]
+    '''
+        
+    def __init__(self, current_seq, current_qual):
+        self.seq = current_seq
+        self.qual = current_qual
+    
+    def base_record(self, seqname_col_label, charsets_full):
+        ''' This function generates a base SeqRecord (i.e., the foundation to
+        subsequent SeqRecords).
+            
+        Args:
+            seqname_col_label (str): the label of the .csv-file column that
+                                     contains info on the sequence names; 
+                                     example: "sequence_name"
+        
+            charsets_full (dict):    foobar; example: foobar
+                
+        
+        TODO:
+            (i) include info on linearity of molecule (i.e., linear or 
+                circular)
+            (ii) include db_x in base_record
+            
+        Examples:
+        
+            Example 1: # foobar
+                >>> foobar
+                >>> GenerateSeqRecord(foo, bar).generate_base_record(baz, qux)
+                Out: ...
+        '''
+
+        from Bio.SeqRecord import SeqRecord
+        
+        gene_names = [k for k in charsets_full.keys()]
+        gene_names = [gn.replace("_", " ") for gn in gene_names]
+        gene_names_str = ' and '.join(gene_names)
+        
+        id_handle = self.qual[seqname_col_label]
+        try:
+            org_name = self.qual['organism']
+        except:
+            org_name = 'undetermined organism'
+        descr_handle = org_name + ' ' + gene_names_str +' DNA.'
+
+        return SeqRecord(self.seq, id=id_handle, name=org_name, 
+            description=descr_handle)
 
 
 class MetaChecks:
@@ -392,23 +527,23 @@ class MetaChecks:
         self.lst_of_dcts = lst_of_dcts
     
     def label_present(self, label):
-        ''' Check if each (!) list of dictionary keys of a list of dictionaries
-        encompass the element <label> at least once.
+        ''' This function checks if each (!) list of dictionary keys of a 
+        list of dictionaries encompass the element <label> at least once.
         
         Examples:
 
-                >>> lst_of_dcts = [{'foo': 'foobarqux', 'bar': 'foobarqux', 
-                'qux': 'foobarqux'}, {'foo': 'foobarbaz', 'bar': 'foobarbaz', 
-                'baz': 'foobarbaz'}]
+                >>> lst_of_dcts = [{'foo': 'foobar', 'bar': 'foobar', 
+                'qux': 'foobar'}, {'foo': 'foobar', 'bar': 'foobar', 
+                'baz': 'foobar'}]
         
             Example 1: # Positive confirmation
                 >>> label = 'foo'
-                >>> MetaQualChecks(lst_of_dcts).label_present(label)
+                >>> MetaChecks(lst_of_dcts).label_present(label)
                 Out: True
                 
             Example 2: # Negative confirmation
                 >>> label = 'qux'
-                >>> MetaQualChecks(lst_of_dcts).label_present(label)
+                >>> MetaChecks(lst_of_dcts).label_present(label)
                 Out: MyException: csv-file does not contain a column 
                 labelled "qux"
         '''
@@ -419,10 +554,27 @@ class MetaChecks:
         return True
     
     def valid_INSDC_quals(self):
-        ''' Check if field labels are part of list "allowed_INSDC_qualifiers".
+        ''' This function checks if every (!) dictionary key in a list of 
+        dictionaries is a valid INSDC qualifier.
         
-        Since all dictionaries have the same set of keys, it is sufficient to 
-        check only the first dictionary. '''
+        Examples:
+        
+            Example 1: # Positive confirmation
+                >>> lst_of_dcts = [{'allele': 'foobar', 'altitude': 'foobar', 
+                'anticodon': 'foobar'}, {'trans_splicing': 'foobar', 
+                'type_material': 'foobar', 'variety': 'foobar'}]
+                >>> MetaChecks(lst_of_dcts).valid_INSDC_quals()
+                Out: True
+                
+            Example 2: # Negative confirmation
+                >>> lst_of_dcts = [{'allele': 'foobar', 
+                'MyInvalidQual_1': 'foobar', 'anticodon': 'foobar'}, 
+                {'MyInvalidQual_2': 'foobar', 'type_material': 'foobar', 
+                'variety': 'foobar'}]
+                >>> MetaChecks(lst_of_dcts).valid_INSDC_quals()
+                Out: MyException: The following are invalid INSDC 
+                qualifiers: `MyInvalidQual_1, MyInvalidQual_2`       
+        '''
         
         # Valid feature table qualifiers as defined by the International
         # Nucleotide Sequence Database Collection (INSDC)
@@ -448,14 +600,17 @@ class MetaChecks:
         'sub_strain','tag_peptide','tissue_lib','tissue_type','transgenic',
         'translation','transl_except','transl_table','trans_splicing',
         'type_material','variety']
-
-        keys_present = self.lst_of_dcts[0].keys()
+        
+        from itertools import chain
+        keys_present = list(chain.from_iterable([dct.keys() for dct in 
+            self.lst_of_dcts]))
         not_valid = [k for k in keys_present if k not in \
             valid_INSDC_quals]
         if not_valid:
             return MyException('The following are invalid INSDC qualifiers: '\
-                '`%s`' % (not_valid))
+                '`%s`' % (', '.join(not_valid)))
         return True
+
 
 #############
 # FUNCTIONS #

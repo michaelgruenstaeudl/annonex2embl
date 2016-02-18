@@ -8,12 +8,14 @@ tool
 # IMPORT OPERATIONS #
 #####################
 
+import Bio # Do not remove; important for assertIsInstance
 import unittest
-import CustomOps as COps
+import CustomOps as CO
 
 from Bio.Seq import Seq
 from Bio.Alphabet import generic_dna
 from Bio.SeqFeature import FeatureLocation
+from Bio import SeqFeature
 
 ###############
 # AUTHOR INFO #
@@ -21,9 +23,9 @@ from Bio.SeqFeature import FeatureLocation
 
 __author__ = 'Michael Gruenstaeudl, PhD <mi.gruenstaeudl@gmail.com>'
 __copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
-__info__ = 'Submission Preparation Tool for Sequences of Phylogenetic'\
+__info__ = 'Submission Preparation Tool for Sequences of Phylogenetic '\
            'Datasets (SPTSPD)'
-__version__ = "2016.02.17.1900"
+__version__ = '2016.02.18.1100'
 
 #############
 # DEBUGGING #
@@ -50,7 +52,7 @@ class AnnoChecksTestCases(unittest.TestCase):
         
         extract = Seq("ATGGCCTAA", generic_dna)
         location = FeatureLocation(0, 8)
-        self.assertTrue(COps.AnnoChecks(extract,
+        self.assertTrue(CO.AnnoChecks(extract,
             location).for_unittest())    
     
     def test_AnnoChecks_example_2(self):
@@ -61,7 +63,7 @@ class AnnoChecksTestCases(unittest.TestCase):
         
         extract = Seq("ATGTAATAA", generic_dna)
         location = FeatureLocation(0, 8)
-        self.assertTrue(COps.AnnoChecks(extract,
+        self.assertTrue(CO.AnnoChecks(extract,
             location).for_unittest())
 
     def test_AnnoChecks_example_3(self):
@@ -72,7 +74,7 @@ class AnnoChecksTestCases(unittest.TestCase):
         
         extract = Seq("AAGTAA", generic_dna)
         location = FeatureLocation(0, 5)
-        self.assertRaises(COps.AnnoChecks(extract,
+        self.assertRaises(CO.AnnoChecks(extract,
             location).for_unittest())
 
 
@@ -88,7 +90,7 @@ class DegapButMaintainAnnoTestCases(unittest.TestCase):
         charsets = {"gene_1":[0,1],"gene_2":[2,3,4]}
         out_ideal = ('ATGC', {'gene_1': [0, 1], 'gene_2': [2, 3]})
 
-        out_actual = COps.DegapButMaintainAnno(seq, charsets).degap()
+        out_actual = CO.DegapButMaintainAnno(seq, charsets).degap()
         self.assertTupleEqual(out_actual, out_ideal)
 
     def test_DegapButMaintainAnno_example_2(self):
@@ -100,7 +102,7 @@ class DegapButMaintainAnnoTestCases(unittest.TestCase):
         charsets = {"gene1":[0,1,2,3], "gene2":[4,5,6,7]}
         out_ideal = ('AATT', {'gene1': [0, 1], 'gene2': [2, 3]})
 
-        out_actual = COps.DegapButMaintainAnno(seq, charsets).degap()
+        out_actual = CO.DegapButMaintainAnno(seq, charsets).degap()
         self.assertTupleEqual(out_actual, out_ideal)
        
     def test_DegapButMaintainAnno_example_3(self):
@@ -112,7 +114,7 @@ class DegapButMaintainAnnoTestCases(unittest.TestCase):
         charsets = {"gene1":[0,1,2], "gene2":[3,4], "gene3":[5,6,7]}
         out_ideal = ('AATT', {'gene1': [0, 1], 'gene2': [], 'gene3': [2, 3]})
 
-        out_actual = COps.DegapButMaintainAnno(seq, charsets).degap()
+        out_actual = CO.DegapButMaintainAnno(seq, charsets).degap()
         self.assertTupleEqual(out_actual, out_ideal)
 
     def test_DegapButMaintainAnno_example_4(self):
@@ -126,7 +128,7 @@ class DegapButMaintainAnnoTestCases(unittest.TestCase):
         charsets = {"gene1":[0,1,2,3,4], "gene2":[4,5,6,7]}
         out_ideal = ('AATT', {'gene1': [0, 1, 2], 'gene2': [2, 3]})
 
-        out_actual = COps.DegapButMaintainAnno(seq, charsets).degap()
+        out_actual = CO.DegapButMaintainAnno(seq, charsets).degap()
         self.assertTupleEqual(out_actual, out_ideal)
 
     def test_DegapButMaintainAnno_example_5(self):
@@ -139,7 +141,7 @@ class DegapButMaintainAnnoTestCases(unittest.TestCase):
         charsets = {"gene1":[0,1,2,3,4], "gene2":[4,5,6,7]}
         out_ideal = ('AATT', {'gene1': [0, 1], 'gene2': [2, 3]})
 
-        out_actual = COps.DegapButMaintainAnno(seq, charsets).degap()
+        out_actual = CO.DegapButMaintainAnno(seq, charsets).degap()
         self.assertTupleEqual(out_actual, out_ideal)
 
     def test_DegapButMaintainAnno_example_6(self):
@@ -152,52 +154,102 @@ class DegapButMaintainAnnoTestCases(unittest.TestCase):
         charsets = {"gene2":[4,5,6,7], "gene1":[0,1,2,3]}
         out_ideal = ('ATGC', {'gene1': [0, 1], 'gene2': [2, 3]})
 
-        out_actual = COps.DegapButMaintainAnno(seq, charsets).degap()
+        out_actual = CO.DegapButMaintainAnno(seq, charsets).degap()
         self.assertTupleEqual(out_actual, out_ideal)    
 
 
-class GenerateFeatureLocationTestCases(unittest.TestCase):
-    ''' Tests for class `GenerateFeatureLocation` '''
+class GenerateFeatLocTestCases(unittest.TestCase):
+    ''' Tests for class `GenerateFeatLoc` '''
 
-    def test_GenerateFeatureLocation_example_1(self):
-        ''' Test to evaluate example 1 of GenerateFeatureLocation.exact
+    def test_GenerateFeatLoc_example_1(self):
+        ''' Test to evaluate example 1 of GenerateFeatLoc.exact
 
         This test evaluates an exact feature location.
         '''
         start_pos = 1
         stop_pos = 12
 
-        out = COps.GenerateFeatureLocation(start_pos, stop_pos).exact()
-        self.assertIsInstance(out, FeatureLocation)
+        out = CO.GenerateFeatLoc(start_pos, stop_pos).exact()
+        self.assertIsInstance(out, Bio.SeqFeature.FeatureLocation)
+
+
+class GenerateSeqFeatureTestCases(unittest.TestCase):
+    ''' Tests for class `GenerateSeqFeature` '''
+
+    def test_GenerateSeqFeature_source_feat_example_1(self):
+        ''' Test to evaluate example 1 of GenerateSeqFeature().source_feat()
+
+        This test evaluates the correct generation of the SeqFeature `source`.
+        '''
+        feat_len = 500
+        quals = {'isolate': 'taxon_B', 'country': 'Ecuador'}
+        transl_table = 11
+
+        out = CO.GenerateSeqFeature().source_feat(feat_len, quals, 
+                                                  transl_table)
+        self.assertIsInstance(out, Bio.SeqFeature.SeqFeature)
+
+    def test_GenerateSeqFeature_regular_feat_example_1(self):
+        ''' Test to evaluate example 1 of GenerateSeqFeature().regular_feat()
+
+        This test evaluates the correct generation of a regular SeqFeature.
+        '''
+        
+        feat_name = 'psbI_CDS'
+        feat_range = [2, 3, 4, 5]
+
+        out = CO.GenerateSeqFeature().regular_feat(feat_name, feat_range)
+        self.assertIsInstance(out, Bio.SeqFeature.SeqFeature)
 
 
 class MetaChecksTestCases(unittest.TestCase):
     ''' Tests for class `MetaChecks` '''
     
-    def test_MetaChecks_example_1(self):
+    def test_MetaChecks_label_present_example_1(self):
         ''' Test to evaluate example 1 of MetaChecks.label_present
 
-        This test evaluates a positive confirmation.
+        This test seeks a positive evaluation.
         '''
         
         lst_of_dcts = [{'foo': 'foobarqux', 'bar': 'foobarqux', 
             'qux': 'foobarqux'}, {'foo': 'foobarbaz', 'bar': 'foobarbaz', 
             'baz': 'foobarbaz'}]
         label = 'foo'
-        self.assertTrue(COps.MetaChecks(lst_of_dcts).label_present(label)) 
+        self.assertTrue(CO.MetaChecks(lst_of_dcts).label_present(label)) 
     
-    def test_MetaChecks_example_2(self):
+    def test_MetaChecks_label_present_example_2(self):
         ''' Test to evaluate example 2 of MetaChecks.label_present
 
-        This test evaluates a negative confirmation.
+        This test seeks a negative evaluation.
         '''
         
         lst_of_dcts = [{'foo': 'foobarqux', 'bar': 'foobarqux', 
             'qux': 'foobarqux'}, {'foo': 'foobarbaz', 'bar': 'foobarbaz', 
             'baz': 'foobarbaz'}]
         label = 'qux'
-        self.assertRaises(COps.MetaChecks(lst_of_dcts).label_present(label)) 
-               
+        self.assertRaises(CO.MetaChecks(lst_of_dcts).label_present(label)) 
+
+    def test_MetaChecks_valid_INSDC_quals_example_3(self):
+        ''' Test to evaluate example 3 of MetaChecks.valid_INSDC_quals
+
+        This test seeks a positive evaluation.
+        '''
+        
+        lst_of_dcts = [{'allele': 'foobar', 'altitude': 'foobar', 
+            'anticodon': 'foobar'}, {'trans_splicing': 'foobar', 
+            'type_material': 'foobar', 'variety': 'foobar'}]
+        self.assertTrue(CO.MetaChecks(lst_of_dcts).valid_INSDC_quals())
+
+    def test_MetaChecks_valid_INSDC_quals_example_4(self):
+        ''' Test to evaluate example 4 of MetaChecks.valid_INSDC_quals
+
+        This test seeks a negative evaluation.
+        '''
+        
+        lst_of_dcts = [{'allele': 'foobar', 'MyInvalidQual_1': 'foobar',
+            'anticodon': 'foobar'}, {'MyInvalidQual_2': 'foobar',
+            'type_material': 'foobar', 'variety': 'foobar'}]
+        self.assertRaises(CO.MetaChecks(lst_of_dcts).valid_INSDC_quals()) 
 
 #############
 # FUNCTIONS #
