@@ -130,30 +130,6 @@ def parse_nexus_file(path_to_nex):
     return (charsets_full, alignment_full)
 
 
-def check_quality_of_qualifiers(qualifiers_full, seqname_col_label):
-    ''' This function conducts a series of quality checks on the qualifiers 
-    list (a list of dictionaries).
-
-    TODO:
-        (i) Check if sequence_names are also in .nex-file
-        (ii) Have all metadata conform to basic ASCII standards (not 
-            extended ASCII)!
-    '''
-    
-    qual_checks = CO.MetaChecks(qualifiers_full)
-# i. Check if qualifier matrix (and, hence, each! entry) contains a column 
-#    labelled by <seqname_col_label>
-    try:
-        qual_checks.label_present(seqname_col_label)
-    except MyException as e:
-        sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
-# ii. Check if column names constitute valid INSDC feature table qualifiers 
-#    (http://www.insdc.org/files/feature_table.html#7.3.1)
-    try:
-        qual_checks.valid_INSDC_quals()
-    except MyException as e:
-        sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
-
 def transl_and_check_quality_of_transl(feature, transl_table, seq_record):
     ''' This function conducts a translation of a coding region and checks the
     quality of said translation.
@@ -206,7 +182,12 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label,
             'Parsing .csv-file unsuccessful.'))
             
 # STEP 04: Do quality checks on input data
-    check_quality_of_qualifiers(qualifiers_full, seqname_col_label)
+    try:
+        CO.CheckCoord().check_quality_of_qualifiers(qualifiers_full,
+                                                    seqname_col_label)
+    except MyException as e:
+        sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
+
 
 # STEP 05: Create a full SeqRecord for each sequence of the alignment.
     for seq_name in alignment_full.keys():

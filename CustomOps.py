@@ -180,6 +180,64 @@ class AnnoChecks:
             return False
 
 
+class CheckCoord:
+    ''' This class contains functions to coordinate different checks. '''
+        
+    def __init__(self):
+        pass
+
+    def check_quality_of_qualifiers(self, label, lst_of_dcts):
+        ''' This function conducts a series of quality checks on the qualifiers 
+        list (a list of dictionaries).
+        
+        First (label_present), it checks if a qualifier matrix (and, hence, each 
+        entry) contains a column labelled with <seqname_col_label>.
+        Second (valid_INSDC_quals), it checks if column names constitute valid 
+        INSDC feature table qualifiers.
+            
+        Args:
+            label (str):  a string; example: 'isolate'
+            lst_of_dcts (list): a list of dictionaries; example: 
+                                [{'isolate': 'taxon_A', 'country': 'Ecuador'},
+                                 {'isolate': 'taxon_B', 'country': 'Peru'}] 
+        Returns:
+            -
+        Raises:
+            -
+
+        Examples:
+            Example 1: # Positive evaluation
+                >>> label = 'isolate'
+                >>> lst_of_dcts = [{'isolate': 'taxon_A', 'country': 'Ecuador'},
+                                   {'isolate': 'taxon_B', 'country': 'Peru'}]
+                >>> CheckCoord().check_quality_of_qualifiers(label, lst_of_dcts)
+                Out: True
+
+            Example 2: # Negative evaluation
+                >>> label = 'sequence_name'
+                >>> lst_of_dcts = [{'isolate': 'taxon_A', 'country': 'Ecuador'},
+                                   {'isolate': 'taxon_B', 'country': 'Peru'}]
+                >>> CheckCoord().check_quality_of_qualifiers(label, lst_of_dcts)
+                Out: MyException: 'csv-file does not contain a column labelled `sequence_name`'
+    
+        TODO:
+            (i) Check if sequence_names are also in .nex-file
+            (ii) Have all metadata conform to basic ASCII standards (not 
+                extended ASCII)!
+        '''
+
+        qual_checks = MetaChecks(lst_of_dcts)
+        try:
+            qual_checks.label_present(label)
+        except MyException as e:
+            raise e
+        try:
+            qual_checks.valid_INSDC_quals()
+        except MyException as e:
+            raise e
+        return True
+
+
 class DegapButMaintainAnno:
     ''' This class contains functions to degap DNA sequences while maintaining 
     annotations. 
@@ -531,25 +589,38 @@ class MetaChecks:
         list of dictionaries encompass the element <label> at least once.
         
         Examples:
-
+       
+            Example 1: # Evaluates the situation where the label is  
+                         present in ALL key lists.
                 >>> lst_of_dcts = [{'foo': 'foobar', 'bar': 'foobar', 
                 'qux': 'foobar'}, {'foo': 'foobar', 'bar': 'foobar', 
                 'baz': 'foobar'}]
-        
-            Example 1: # Positive confirmation
                 >>> label = 'foo'
                 >>> MetaChecks(lst_of_dcts).label_present(label)
                 Out: True
                 
-            Example 2: # Negative confirmation
+            Example 2: # Evaluates the situation where the label is not 
+                         present in EACH key list.
+                >>> lst_of_dcts = [{'foo': 'foobar', 'bar': 'foobar', 
+                'qux': 'foobar'}, {'foo': 'foobar', 'bar': 'foobar', 
+                'baz': 'foobar'}]
                 >>> label = 'qux'
                 >>> MetaChecks(lst_of_dcts).label_present(label)
-                Out: MyException: csv-file does not contain a column 
-                labelled "qux"
+                Out: MyException: csv-file does not contain a column labelled `qux`
+                            
+            Example 3: # Evaluates the situation where the label is not 
+                         present in ANY key list.
+                >>> lst_of_dcts = [{'foo': 'foobar', 'bar': 'foobar', 
+                'qux': 'foobar'}, {'foo': 'foobar', 'bar': 'foobar', 
+                'baz': 'foobar'}]
+                >>> label = 'norf'
+                >>> MetaChecks(lst_of_dcts).label_present(label)
+                Out: MyException: csv-file does not contain a column labelled `norf`
         '''
 
         if not all(label in dct.keys() for dct in self.lst_of_dcts):
-            return MyException('csv-file does not contain a column '\
+            #raise ValueError('csv-file does not contain a column '\
+            raise MyException('csv-file does not contain a column '\
                 'labelled `%s`' % (label))
         return True
     
@@ -559,14 +630,14 @@ class MetaChecks:
         
         Examples:
         
-            Example 1: # Positive confirmation
+            Example 1: # No invalid qualifiers present
                 >>> lst_of_dcts = [{'allele': 'foobar', 'altitude': 'foobar', 
                 'anticodon': 'foobar'}, {'trans_splicing': 'foobar', 
                 'type_material': 'foobar', 'variety': 'foobar'}]
                 >>> MetaChecks(lst_of_dcts).valid_INSDC_quals()
                 Out: True
                 
-            Example 2: # Negative confirmation
+            Example 2: # Invalid qualifiers are very much present.
                 >>> lst_of_dcts = [{'allele': 'foobar', 
                 'MyInvalidQual_1': 'foobar', 'anticodon': 'foobar'}, 
                 {'MyInvalidQual_2': 'foobar', 'type_material': 'foobar', 
@@ -607,7 +678,8 @@ class MetaChecks:
         not_valid = [k for k in keys_present if k not in \
             valid_INSDC_quals]
         if not_valid:
-            return MyException('The following are invalid INSDC qualifiers: '\
+            #raise ValueError('The following are invalid INSDC qualifiers: '\
+            raise MyException('The following are invalid INSDC qualifiers: '\
                 '`%s`' % (', '.join(not_valid)))
         return True
 

@@ -11,6 +11,7 @@ tool
 import Bio # Do not remove; important for assertIsInstance
 import unittest
 import CustomOps as CO
+from CustomOps import MyException
 
 from Bio.Seq import Seq
 from Bio.Alphabet import generic_dna
@@ -41,6 +42,9 @@ __version__ = '2016.02.18.1100'
 ###########
 # CLASSES #
 ###########
+
+#class MyException(Exception):
+#    pass
 
 class AnnoChecksTestCases(unittest.TestCase):
     ''' Tests for class `AnnoChecks` '''
@@ -208,7 +212,8 @@ class MetaChecksTestCases(unittest.TestCase):
     def test_MetaChecks_label_present_example_1(self):
         ''' Test to evaluate example 1 of MetaChecks.label_present
 
-        This test seeks a positive evaluation.
+        This test evaluates the situation where the label is present in ALL 
+        key lists.
         '''
         
         lst_of_dcts = [{'foo': 'foobarqux', 'bar': 'foobarqux', 
@@ -220,19 +225,38 @@ class MetaChecksTestCases(unittest.TestCase):
     def test_MetaChecks_label_present_example_2(self):
         ''' Test to evaluate example 2 of MetaChecks.label_present
 
-        This test seeks a negative evaluation.
+        This test evaluates the situation where the label is not present in 
+        EACH key list.
         '''
         
         lst_of_dcts = [{'foo': 'foobarqux', 'bar': 'foobarqux', 
             'qux': 'foobarqux'}, {'foo': 'foobarbaz', 'bar': 'foobarbaz', 
             'baz': 'foobarbaz'}]
         label = 'qux'
-        self.assertRaises(CO.MetaChecks(lst_of_dcts).label_present(label)) 
+        with self.assertRaises(MyException):
+        #with self.assertRaises(ValueError):
+            CO.MetaChecks(lst_of_dcts).label_present(label)
+    
+    def test_MetaChecks_label_present_example_3(self):
+        ''' Test to evaluate example 3 of MetaChecks.label_present
 
-    def test_MetaChecks_valid_INSDC_quals_example_3(self):
-        ''' Test to evaluate example 3 of MetaChecks.valid_INSDC_quals
+        This test evaluates the situation where the label is not present in 
+        ANY key list.
+        '''
+        
+        lst_of_dcts = [{'foo': 'foobarqux', 'bar': 'foobarqux', 
+            'qux': 'foobarqux'}, {'foo': 'foobarbaz', 'bar': 'foobarbaz', 
+            'baz': 'foobarbaz'}]
+        label = 'norf'
+        with self.assertRaises(MyException):
+        #with self.assertRaises(ValueError):
+            CO.MetaChecks(lst_of_dcts).label_present(label)
 
-        This test seeks a positive evaluation.
+    def test_MetaChecks_valid_INSDC_quals_example_1(self):
+        ''' Test to evaluate example 1 of MetaChecks.valid_INSDC_quals
+
+        This test evaluates the situation where no invalid qualifiers are
+        present.
         '''
         
         lst_of_dcts = [{'allele': 'foobar', 'altitude': 'foobar', 
@@ -240,16 +264,20 @@ class MetaChecksTestCases(unittest.TestCase):
             'type_material': 'foobar', 'variety': 'foobar'}]
         self.assertTrue(CO.MetaChecks(lst_of_dcts).valid_INSDC_quals())
 
-    def test_MetaChecks_valid_INSDC_quals_example_4(self):
-        ''' Test to evaluate example 4 of MetaChecks.valid_INSDC_quals
+    def test_MetaChecks_valid_INSDC_quals_example_2(self):
+        ''' Test to evaluate example 2 of MetaChecks.valid_INSDC_quals
 
-        This test seeks a negative evaluation.
+        This test evaluates the situation where invalid qualifiers are very 
+        much present.
         '''
         
         lst_of_dcts = [{'allele': 'foobar', 'MyInvalidQual_1': 'foobar',
             'anticodon': 'foobar'}, {'MyInvalidQual_2': 'foobar',
             'type_material': 'foobar', 'variety': 'foobar'}]
-        self.assertRaises(CO.MetaChecks(lst_of_dcts).valid_INSDC_quals()) 
+        with self.assertRaises(MyException):
+        #with self.assertRaises(ValueError):
+            CO.MetaChecks(lst_of_dcts).valid_INSDC_quals()
+            
 
 #############
 # FUNCTIONS #
