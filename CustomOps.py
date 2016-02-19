@@ -470,7 +470,7 @@ class GenerateSeqFeature:
     def __init__(self):
         pass
     
-    def source_feat(self, feat_len, quals, transl_table):
+    def source_feat(self, feature_len, quals, transl_table):
         ''' This function generates the SeqFeature `source` for a SeqRecord.
 
         The SeqFeature `source` is critical for submissions to EMBL or GenBank, 
@@ -479,7 +479,7 @@ class GenerateSeqFeature:
         for subsequent CDS features.
             
         Args:
-            feat_len (int): length of the feature; example: 500
+            feature_len (int): length of the feature; example: 500
             quals (dict):   a dictionary of qualifiers; example: 
                             {'isolate': 'taxon_B', 'country': 'Ecuador'}
             transl_table (int): an integer; example: 11 (for bacterial code)
@@ -490,7 +490,7 @@ class GenerateSeqFeature:
             
         Examples:
             Example 1: # Default evaluation
-                >>> feat_len = 500
+                >>> feature_len = 500
                 >>> quals = {'isolate': 'taxon_B', 'country': 'Ecuador'}
                 >>> transl_table = 11
                 >>> GenerateSeqFeature().source_feat(feat_len, quals, transl_table)
@@ -499,18 +499,23 @@ class GenerateSeqFeature:
         
         from Bio import SeqFeature
     
-        feature_loc = GenerateFeatLoc(0, feat_len).exact()
+        feature_loc = GenerateFeatLoc(0, feature_len).exact()
         source_feature = SeqFeature.SeqFeature(feature_loc, id='source',
             type='source', qualifiers=quals)
         source_feature.qualifiers["transl_table"]=transl_table
         return source_feature
     
-    def regular_feat(self, feat_name, feat_range):
+    def regular_feat(self, feature_name, feature_type, feature_range,
+                     feature_product=None):
         ''' This function generates a regular SeqFeature for a SeqRecord.
             
         Args:
-            feat_name (str):  a string; example: 'psbI_CDS'
+            feat_name (str):  usually a gene symbol; example: 'matK'
+            feat_type (str):  an identifier as to the type of feature, 
+                              example: 'intron'
             feat_range (list): a list of indices; example: [2, 3, 4, 5]
+            feature_product (str): the product of the feature in question;
+                                   example: 'maturase K'
         Returns:
             SeqFeature (obj):   A SeqFeature object
         Raises:
@@ -524,27 +529,35 @@ class GenerateSeqFeature:
             a database)
             
         Examples:
-            Example 1: # Default evaluation
-                >>> feat_name = 'psbI_CDS'
-                >>> feat_range = [2, 3, 4, 5]
-                >>> GenerateSeqFeature().regular_feat(feat_name, feat_range)
+            Example 1: #  Evaluates the correct generation of a regular, 
+            non-coding SeqFeature.
+                >>> feature_name = 'psbI'
+                >>> feature_type = 'intron'
+                >>> feature_range = [2, 3, 4, 5]
+                >>> GenerateSeqFeature().regular_feat(feature_name, feature_type,
+                    feature_range)
                 Out: SeqFeature(FeatureLocation(ExactPosition(2), ExactPosition(6)), type='cds')
         '''
         from Bio import SeqFeature
         
         # a. Define the locations of the charsets
-        start_pos = feat_range[0]
-        stop_pos = feat_range[-1]+1
+        start_pos = feature_range[0]
+        stop_pos = feature_range[-1]+1
         feature_loc = GenerateFeatLoc(start_pos, stop_pos).exact()
         # b. Define the annotation type
         anno_types = ['cds', 'gene', 'rrna', 'trna']
-        kw_present = [kw for kw in anno_types if kw in feat_name.lower()]
-        if kw_present:
-            feat_type = kw_present[0]
+        feature_type = feature_type.lower()
+        if feature_type in anno_types:
+            feature_type = feature_type
         else:
-            feat_type = 'misc_feature'
-        seq_feature = SeqFeature.SeqFeature(feature_loc, id=feat_name,
-            type=feat_type, qualifiers={'note':feat_name})
+            feature_type = 'misc_feature'
+        # c. Generate qualifiers
+        qualifiers={'note':feature_name}
+        # d. Include product, if a coding feature
+        if feature_product and feature_type == 'cds':
+            qualifiers['product'] = feature_product
+        seq_feature = SeqFeature.SeqFeature(feature_loc, id=feature_name,
+            type=feature_type, qualifiers=qualifiers)
         return seq_feature
 
 
@@ -723,6 +736,148 @@ class MetaChecks:
             raise MyException('The following are invalid INSDC qualifiers: '\
                 '`%s`' % (', '.join(not_valid)))
         return True
+
+
+class GetEntrezInfo:
+    ''' This class contains functions to obtain gene information from gene
+    symbols. '''
+
+    def __init__(self, email_addr):
+        self.email_addr = email_addr
+
+    @staticmethod
+    def _id_lookup(gene_sym, retmax=10):
+        ''' An internal static function to convert a gene symbol to an Entrez ID 
+        via ESearch.
+    
+        Args:
+            gene_sym (str): a gene symbol; example: 'psbI'
+        Returns:
+            entrez_id_list (list): a list of Entrez IDs; example: ['26835430',
+                            '26833718', '26833393', ...]
+        Raises:
+            none
+
+        Examples:
+            Example 1: # Default behaviour
+                >>> gene_sym = 'psbI'
+                >>> _id_lookup(gene_sym)
+                Out: ['26835430', '26833718', '26833393', ...]
+        '''
+        from Bio import Entrez
+        
+        query_term = gene_sym + ' [sym]'
+        try:
+            esearch_records = Entrez.esearch(db='gene', term=query_term,
+                retmax = retmax, retmod='xml')
+        except:
+            raise MyException('An error occurred while retrieving data from '\
+                '%s.' % ('ESearch'))
+        parsed_records = Entrez.read(esearch_records)
+        entrez_id_list = parsed_records['IdList']
+        return entrez_id_list
+
+    @staticmethod
+    def _gene_product_lookup(entrez_id_list):
+        ''' An internal static function to convert a list of Entrez IDs to a
+        list of Entrez gene records via EPost and ESummary.
+    
+        Args:
+            entrez_id_list (list): a list of Entrez IDs; example: ['26835430',
+                                   '26833718', '26833393', ...]
+        Returns:
+            entrez_rec_list (list): a list of Entrez gene records
+        Raises:
+            none
+
+        Examples:
+            Example 1: # Default behaviour
+                >>> entrez_id_list = ['26835430', '26833718', '26833393']
+                >>> _record_lookup(entrez_id_list)
+                Out: ???
+        '''
+        from Bio import Entrez
+     
+        epost_query = Entrez.epost('gene', id=','.join(entrez_id_list))
+        try:
+            epost_results = Entrez.read(epost_query)
+        except:
+            raise MyException('An error occurred while retrieving data from '\
+                '%s.' % ('EPost'))
+        webenv = epost_results['WebEnv']
+        query_key = epost_results['QueryKey']
+        try:
+            esummary_records = Entrez.esummary(db='gene', webenv=webenv,
+                query_key=query_key)
+        except:
+            raise MyException('An error occurred while retrieving data from '\
+                '%s.' % ('ESummary'))
+        entrez_rec_list = Entrez.read(esummary_records)
+        return entrez_rec_list
+
+    @staticmethod
+    def _parse_gene_products(entrez_rec_list):
+        ''' An internal static function to parse out relevant information from .
+    
+        Args:
+            entrez_rec_list (list): a list of Entrez gene records
+        Returns:
+            gene_info_list (list): a list of dictionaries
+        Raises:
+            none
+
+        Examples:
+            Example 1: # Default behaviour
+                >>> entrez_rec_list = []
+                >>> _parse_records(entrez_rec_list)
+        '''
+
+        try:
+            documentSummarySet = entrez_rec_list['DocumentSummarySet']
+            docs = documentSummarySet['DocumentSummary']
+        except:
+            raise MyException('An error occurred while parsing the data from '\
+                '%s.' % ('ESummary'))
+
+        list_gene_product = [doc['Description'] for doc in docs]
+        #list_gene_symbol = [doc['NomenclatureSymbol'] for doc in docs]
+        #list_gene_name = [doc['Name'] for doc in docs]
+        
+        # Avoiding that spurious first hit biases gene_product
+        from collections import Counter
+        gene_product = Counter(list_gene_product).most_common()[0][0]
+    
+        return gene_product
+
+
+    def obtain_gene_product(self, gene_sym):
+        ''' This function performs something.
+        
+        Examples:
+        
+            Example 1: # Default behaviour
+                >>> gene_sym = 'psbI'
+                >>> GetGeneInfo()._entrezid_lookup(gene_sym)
+                Out: ['26835430', '26833718', '26833393', ...]
+            
+        '''
+
+        from Bio import Entrez
+        Entrez.email = self.email_addr
+
+        try:
+            entrez_id_list = GetEntrezInfo._id_lookup(gene_sym)
+        except MyException as e:
+            raise e
+        try:
+            entrez_rec_list = GetEntrezInfo._gene_product_lookup(entrez_id_list)
+        except MyException as e:
+            raise e
+        try:
+            gene_product = GetEntrezInfo._parse_gene_products(entrez_rec_list)
+        except MyException as e:
+            raise e
+        return gene_product
 
 
 #############

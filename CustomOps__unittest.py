@@ -218,24 +218,27 @@ class GenerateSeqFeatureTestCases(unittest.TestCase):
 
         This test evaluates the correct generation of the SeqFeature `source`.
         '''
-        feat_len = 500
+        feature_len = 500
         quals = {'isolate': 'taxon_B', 'country': 'Ecuador'}
         transl_table = 11
 
-        out = CO.GenerateSeqFeature().source_feat(feat_len, quals, 
+        out = CO.GenerateSeqFeature().source_feat(feature_len, quals, 
                                                   transl_table)
         self.assertIsInstance(out, Bio.SeqFeature.SeqFeature)
 
     def test_GenerateSeqFeature_regular_feat_example_1(self):
         ''' Test to evaluate example 1 of GenerateSeqFeature().regular_feat()
 
-        This test evaluates the correct generation of a regular SeqFeature.
+        This test evaluates the correct generation of a regular, non-coding 
+        SeqFeature.
         '''
         
-        feat_name = 'psbI_CDS'
-        feat_range = [2, 3, 4, 5]
+        feature_name = 'psbI'
+        feature_type = 'intron'
+        feature_range = [2, 3, 4, 5]
 
-        out = CO.GenerateSeqFeature().regular_feat(feat_name, feat_range)
+        out = CO.GenerateSeqFeature().regular_feat(feature_name, feature_type,
+            feature_range)
         self.assertIsInstance(out, Bio.SeqFeature.SeqFeature)
 
 

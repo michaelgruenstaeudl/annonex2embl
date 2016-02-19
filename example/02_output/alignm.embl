@@ -16,7 +16,8 @@ FT                   /organism="Barnadesia ciliata"
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
 FT                   /transl_table=11
 FT   cds             3..17
-FT                   /note="psbI_CDS"
+FT                   /note="psbI"
+FT                   /product="photosystem II protein I"
 FT                   /translation="MNPE*"
 XX
 SQ   Sequence 19 BP; 8 A; 4 C; 3 G; 4 T; 0 other;
@@ -40,7 +41,8 @@ FT                   /organism="Barnadesia aculeata"
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
 FT                   /transl_table=11
 FT   cds             3..11
-FT                   /note="psbI_CDS"
+FT                   /note="psbI"
+FT                   /product="photosystem II protein I"
 FT                   /translation="MR*"
 XX
 SQ   Sequence 13 BP; 5 A; 3 C; 2 G; 3 T; 0 other;
@@ -64,7 +66,8 @@ FT                   /organism="Barnadesia aculeata"
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
 FT                   /transl_table=11
 FT   cds             3..17
-FT                   /note="psbI_CDS"
+FT                   /note="psbI"
+FT                   /product="photosystem II protein I"
 FT                   /translation="MNRE*"
 XX
 SQ   Sequence 19 BP; 8 A; 3 C; 4 G; 4 T; 0 other;
@@ -88,7 +91,8 @@ FT                   /organism="Barnadesia ciliata"
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
 FT                   /transl_table=11
 FT   cds             3..11
-FT                   /note="psbI_CDS"
+FT                   /note="psbI"
+FT                   /product="photosystem II protein I"
 FT                   /translation="MG*"
 XX
 SQ   Sequence 13 BP; 6 A; 2 C; 3 G; 2 T; 0 other;
