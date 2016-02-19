@@ -24,10 +24,11 @@ from Bio import SeqIO
 #from Bio.Alphabet import generic_dna
 
 #from Bio.Seq import Seq
-#from Bio import SeqFeature
+from Bio import SeqFeature
 
 
 import CustomOps as CO
+from CustomOps import MyException
 
 import argparse
 import sys
@@ -58,9 +59,6 @@ import pdb
 ###########
 # CLASSES #
 ###########
-
-class MyException(Exception):
-    pass
 
 """
 class GetGeneInfo:
@@ -130,31 +128,6 @@ def parse_nexus_file(path_to_nex):
     return (charsets_full, alignment_full)
 
 
-def transl_and_check_quality_of_transl(feature, transl_table, seq_record):
-    ''' This function conducts a translation of a coding region and checks the
-    quality of said translation.
-    
-    TODO:
-        (i) Adjust code of AnnoChecks.check() so that the start position of a 
-            subsequent feature is also adjusted.                
-        (ii) Adjust the location position in code of AnnoChecks.check() so 
-            that the stop codon is also included.
-        (iii) SHOULD EXAMPLE 2 NOT RESULT IN A FEATURE LOCATION THAT ENDS 
-            AT ExactPosition(5), I.E. AFTER THE STOP CODON ???
-    '''
-
-    if feature.type.lower() == 'cds': # Check if feature coding region
-        extract = feature.extract(seq_record)
-        try:
-            transl, loc = CO.AnnoChecks(extract.seq, feature.location, 
-                feature.type, seq_record.id, transl_table).check()
-            feature.qualifiers["translation"] = transl
-            feature.location = loc
-        except MyException as e:
-            sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
-        return feature
-
-
 ########
 # MAIN #
 ########
@@ -180,11 +153,11 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label,
     except:
         sys.exit('%s SPTSPD ERROR: %s' % ('\n',
             'Parsing .csv-file unsuccessful.'))
-            
+
 # STEP 04: Do quality checks on input data
     try:
-        CO.CheckCoord().check_quality_of_qualifiers(qualifiers_full,
-                                                    seqname_col_label)
+        CO.CheckCoord().quality_of_qualifiers(qualifiers_full,
+                                              seqname_col_label)
     except MyException as e:
         sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
 
@@ -221,9 +194,16 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label,
             seq_record.features.append(seq_feature)
 
 # STEP 07: Translate and check quality of translation
-        for feature in seq_record.features:
-            feature = transl_and_check_quality_of_transl(feature,
-                transl_table, seq_record)
+        for indx, feature in enumerate(seq_record.features):
+            if feature.type.lower() == 'cds': # Check if feature coding region
+                try:
+                    feature = CO.CheckCoord().transl_and_quality_of_transl( \
+                        seq_record, feature, transl_table)
+                except MyException as e:
+                    print('%s SPTSPD WARNING: %s' % ('\n', e))
+                    print(' Feature "%s" of sequence "%s" is not saved into '\
+                        'output.' % (feature.id, seq_record.id))
+                    seq_record.features.pop(indx)
 
 # STEP 08: Save completed record to list "out_records"
         out_records.append(seq_record)

@@ -43,9 +43,6 @@ __version__ = '2016.02.18.1100'
 # CLASSES #
 ###########
 
-#class MyException(Exception):
-#    pass
-
 class AnnoChecksTestCases(unittest.TestCase):
     ''' Tests for class `AnnoChecks` '''
     
@@ -55,9 +52,11 @@ class AnnoChecksTestCases(unittest.TestCase):
         This test evaluates the default behaviour of the function. '''
         
         extract = Seq("ATGGCCTAA", generic_dna)
-        location = FeatureLocation(0, 8)
-        self.assertTrue(CO.AnnoChecks(extract,
-            location).for_unittest())    
+        loc = FeatureLocation(0, 8)
+        feature = SeqFeature.SeqFeature(loc, id='foobar', type='cds')
+        record_id = 'foobar'
+        self.assertTrue(CO.AnnoChecks(extract, feature,
+            record_id).for_unittest())    
     
     def test_AnnoChecks_example_2(self):
         ''' Test to evaluate example 2 of AnnoChecks.check
@@ -66,9 +65,11 @@ class AnnoChecksTestCases(unittest.TestCase):
         present in the input sequence. '''
         
         extract = Seq("ATGTAATAA", generic_dna)
-        location = FeatureLocation(0, 8)
-        self.assertTrue(CO.AnnoChecks(extract,
-            location).for_unittest())
+        loc = FeatureLocation(0, 8)
+        feature = SeqFeature.SeqFeature(loc, id='foobar', type='cds')
+        record_id = 'foobar'
+        self.assertTrue(CO.AnnoChecks(extract, feature,
+            record_id).for_unittest())
 
     def test_AnnoChecks_example_3(self):
         ''' Test to evaluate example 3 of AnnoChecks.check
@@ -77,9 +78,41 @@ class AnnoChecksTestCases(unittest.TestCase):
         start with a Methionine. '''
         
         extract = Seq("AAGTAA", generic_dna)
-        location = FeatureLocation(0, 5)
-        self.assertRaises(CO.AnnoChecks(extract,
-            location).for_unittest())
+        loc = FeatureLocation(0, 5)
+        feature = SeqFeature.SeqFeature(loc, id='foobar', type='cds')
+        record_id = 'foobar'
+        with self.assertRaises(MyException):
+            CO.AnnoChecks(extract, feature, record_id).for_unittest()
+
+
+class CheckCoordTestCases(unittest.TestCase):
+    ''' Tests for class `CheckCoord` '''
+    
+    def test_CheckCoord_example_1(self):
+        ''' Test to evaluate example 1 of CheckCoord().quality_of_qualifiers()
+
+        This test evaluates the situation where the input label is among the
+        keys of the list of dictionaries.
+        '''
+        
+        label = 'isolate'
+        lst_of_dcts = [{'isolate': 'taxon_A', 'country': 'Ecuador'},
+                       {'isolate': 'taxon_B', 'country': 'Peru'}]
+        self.assertTrue(CO.CheckCoord().quality_of_qualifiers(lst_of_dcts,
+                        label))
+
+    def test_CheckCoord_example_2(self):
+        ''' Test to evaluate example 2 of CheckCoord().quality_of_qualifiers()
+
+        This test evaluates the situation where the input label is NOT among
+        the keys of the list of dictionaries.
+        '''
+        
+        label = 'sequence_name'
+        lst_of_dcts = [{'isolate': 'taxon_A', 'country': 'Ecuador'},
+                       {'isolate': 'taxon_B', 'country': 'Peru'}]
+        with self.assertRaises(MyException):
+            CO.CheckCoord().quality_of_qualifiers(lst_of_dcts, label)
 
 
 class DegapButMaintainAnnoTestCases(unittest.TestCase):
@@ -234,7 +267,6 @@ class MetaChecksTestCases(unittest.TestCase):
             'baz': 'foobarbaz'}]
         label = 'qux'
         with self.assertRaises(MyException):
-        #with self.assertRaises(ValueError):
             CO.MetaChecks(lst_of_dcts).label_present(label)
     
     def test_MetaChecks_label_present_example_3(self):
@@ -249,7 +281,6 @@ class MetaChecksTestCases(unittest.TestCase):
             'baz': 'foobarbaz'}]
         label = 'norf'
         with self.assertRaises(MyException):
-        #with self.assertRaises(ValueError):
             CO.MetaChecks(lst_of_dcts).label_present(label)
 
     def test_MetaChecks_valid_INSDC_quals_example_1(self):
@@ -275,7 +306,6 @@ class MetaChecksTestCases(unittest.TestCase):
             'anticodon': 'foobar'}, {'MyInvalidQual_2': 'foobar',
             'type_material': 'foobar', 'variety': 'foobar'}]
         with self.assertRaises(MyException):
-        #with self.assertRaises(ValueError):
             CO.MetaChecks(lst_of_dcts).valid_INSDC_quals()
             
 

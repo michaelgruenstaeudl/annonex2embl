@@ -21,7 +21,7 @@ __version__ = '2016.02.18.1100'
 # DEBUGGING #
 #############
 
-#import pdb
+import pdb
 #pdb.set_trace()
 
 ####################
@@ -57,13 +57,11 @@ class AnnoChecks:
         MyException
     '''
 
-    def __init__(self, extract, location, feature_type="foobar", 
-                 record_id="foobar", transl_table=11):
-        self.e = extract
-        self.l = location
-        self.f = feature_type
-        self.i = record_id
-        self.t = transl_table
+    def __init__(self, extract, feature, record_id, transl_table=11):
+        self.extract = extract
+        self.feature = feature
+        self.record_id = record_id
+        self.transl_table = transl_table
 
     @staticmethod
     def _transl(extract, transl_table, to_stop=False, cds=False):
@@ -145,23 +143,28 @@ class AnnoChecks:
         from Bio.SeqFeature import FeatureLocation
 
         try:
-            transl_out = AnnoChecks._transl(self.e, self.t, cds=True)
-            feat_loc = self.l
+            transl_out = AnnoChecks._transl(self.extract, self.transl_table,
+                cds=True)
+            feat_loc = self.feature.location
         except:
-            if not AnnoChecks._check_protein_start(self.e, self.t):
-                return MyException('Feature `%s` of sequence `%s` does not '\
-                'start with a Methionine.' % (self.f, self.i))
+            if not AnnoChecks._check_protein_start(self.extract, 
+                self.transl_table):
+                raise MyException('Feature "%s" of sequence "%s" does not '\
+                    'start with a Methionine (ATG).' % (self.feature.id,
+                                                        self.record_id))
             else:
                 try:
-                    without_internalStop = AnnoChecks._transl(self.e, self.t)
-                    with_internalStop = AnnoChecks._transl(self.e, self.t,
-                        to_stop=True)
+                    without_internalStop = AnnoChecks._transl(self.extract,
+                        self.transl_table)
+                    with_internalStop = AnnoChecks._transl(self.extract,
+                        self.transl_table, to_stop=True)
                     transl_out = with_internalStop
-                    feat_loc = AnnoChecks._adjust_feat_loc(self.l, 
+                    feat_loc = AnnoChecks._adjust_feat_loc(self.feature.location, 
                         with_internalStop, without_internalStop)
                 except:
-                    return MyException('Translation of feature `%s` of '\
-                    'sequence `%s` unsuccessful.' % (self.f, self.i))
+                    raise MyException('Translation of feature `%s` of '\
+                        'sequence `%s` unsuccessful.' % (self.feature.id,
+                                                         self.record_id))
         transl_out = transl_out + "*"
         return (transl_out, feat_loc)
     
@@ -170,14 +173,16 @@ class AnnoChecks:
         from Bio.SeqFeature import FeatureLocation
 
         try:
-            transl_out, feat_loc = AnnoChecks(self.e, self.l, self.f, self.i,
-                self.t).check()
+            transl_out, feat_loc = AnnoChecks(self.extract, self.feature,
+                self.record_id, self.transl_table).check()
             if isinstance(transl_out, Seq) and isinstance(feat_loc, 
                 FeatureLocation):
                 return True
             return False
-        except ValueError: # Keep 'ValueError'; don't replace with 'MyException'
-            return False
+        #except ValueError: # Keep 'ValueError'; don't replace with 'MyException'
+        #    return False
+        except MyException as e:
+            raise e
 
 
 class CheckCoord:
@@ -186,7 +191,7 @@ class CheckCoord:
     def __init__(self):
         pass
 
-    def check_quality_of_qualifiers(self, label, lst_of_dcts):
+    def quality_of_qualifiers(self, lst_of_dcts, label):
         ''' This function conducts a series of quality checks on the qualifiers 
         list (a list of dictionaries).
         
@@ -201,24 +206,24 @@ class CheckCoord:
                                 [{'isolate': 'taxon_A', 'country': 'Ecuador'},
                                  {'isolate': 'taxon_B', 'country': 'Peru'}] 
         Returns:
-            -
+            True, unless exception
         Raises:
-            -
+            passed exception
 
         Examples:
-            Example 1: # Positive evaluation
+            Example 1: # Label is among keys of list of dicts
                 >>> label = 'isolate'
                 >>> lst_of_dcts = [{'isolate': 'taxon_A', 'country': 'Ecuador'},
                                    {'isolate': 'taxon_B', 'country': 'Peru'}]
-                >>> CheckCoord().check_quality_of_qualifiers(label, lst_of_dcts)
+                >>> CheckCoord().quality_of_qualifiers(lst_of_dcts, label)
                 Out: True
 
-            Example 2: # Negative evaluation
+            Example 2: # Label is NOT among keys of list of dicts
                 >>> label = 'sequence_name'
                 >>> lst_of_dcts = [{'isolate': 'taxon_A', 'country': 'Ecuador'},
                                    {'isolate': 'taxon_B', 'country': 'Peru'}]
-                >>> CheckCoord().check_quality_of_qualifiers(label, lst_of_dcts)
-                Out: MyException: 'csv-file does not contain a column labelled `sequence_name`'
+                >>> CheckCoord().quality_of_qualifiers(lst_of_dcts, label)
+                Out: MyException: csv-file does not contain a column labelled `sequence_name`
     
         TODO:
             (i) Check if sequence_names are also in .nex-file
@@ -236,6 +241,44 @@ class CheckCoord:
         except MyException as e:
             raise e
         return True
+    
+    def transl_and_quality_of_transl(self, seq_record, feature, transl_table):
+        ''' This function conducts a translation of a coding region and checks 
+        the quality of said translation.
+            
+        Args:
+            seq_record (obj):   foobar; example: 'foobar'
+            feature (obj):      foobar; example: 'foobar'
+            transl_table (int): 
+
+        Returns:
+            True, unless exception
+        Raises:
+            feature
+
+        Examples:
+            Example 1: # 
+
+            Example 2: # 
+
+        TODO:
+            (i) Adjust code of AnnoChecks.check() so that the start position of a 
+                subsequent feature is also adjusted.                
+            (ii) Adjust the location position in code of AnnoChecks.check() so 
+                that the stop codon is also included.
+            (iii) SHOULD EXAMPLE 2 NOT RESULT IN A FEATURE LOCATION THAT ENDS 
+                AT ExactPosition(5), I.E. AFTER THE STOP CODON ???
+        '''
+
+        extract = feature.extract(seq_record)
+        try:
+            transl, loc = AnnoChecks(extract.seq, feature, seq_record.id, 
+                                     transl_table).check()
+            feature.qualifiers["translation"] = transl
+            feature.location = loc
+        except MyException as e:
+            raise e
+        return feature
 
 
 class DegapButMaintainAnno:
@@ -457,8 +500,8 @@ class GenerateSeqFeature:
         from Bio import SeqFeature
     
         feature_loc = GenerateFeatLoc(0, feat_len).exact()
-        source_feature = SeqFeature.SeqFeature(feature_loc, type='source',
-            qualifiers=quals)
+        source_feature = SeqFeature.SeqFeature(feature_loc, id='source',
+            type='source', qualifiers=quals)
         source_feature.qualifiers["transl_table"]=transl_table
         return source_feature
     
@@ -500,8 +543,8 @@ class GenerateSeqFeature:
             feat_type = kw_present[0]
         else:
             feat_type = 'misc_feature'
-        seq_feature = SeqFeature.SeqFeature(feature_loc, type=feat_type, 
-                                            qualifiers={'note':feat_name})
+        seq_feature = SeqFeature.SeqFeature(feature_loc, id=feat_name,
+            type=feat_type, qualifiers={'note':feat_name})
         return seq_feature
 
 
@@ -619,7 +662,6 @@ class MetaChecks:
         '''
 
         if not all(label in dct.keys() for dct in self.lst_of_dcts):
-            #raise ValueError('csv-file does not contain a column '\
             raise MyException('csv-file does not contain a column '\
                 'labelled `%s`' % (label))
         return True
@@ -678,7 +720,6 @@ class MetaChecks:
         not_valid = [k for k in keys_present if k not in \
             valid_INSDC_quals]
         if not_valid:
-            #raise ValueError('The following are invalid INSDC qualifiers: '\
             raise MyException('The following are invalid INSDC qualifiers: '\
                 '`%s`' % (', '.join(not_valid)))
         return True
