@@ -7,7 +7,7 @@ EMBL Submission Preparation Tool for Sequences of Multiple Sequence Alignments
 (EMBL-SPTSMSA)
 """
 # CURRENT DESIGN:
-# Charset-definitions in .nex-file must indicate annotation type (e.g. 'cds', 
+# Charset-definitions in .nex-file must indicate annotation type (e.g. 'CDS', 
 # 'gene', 'rrna', 'trna') in their names.
 # 
 # INPUT: .nex, .csv
@@ -26,9 +26,11 @@ from Bio import SeqIO
 #from Bio.Seq import Seq
 from Bio import SeqFeature
 
-
-import CustomOps as CO
-from CustomOps import MyException
+from lib import MyExceptions as ME
+from lib import ParseCharsetNames as PCN
+from lib import CheckCoords as CC
+from lib import DegappingOps as DgOps
+from lib import GenerationOps as GnOps
 
 import argparse
 import sys
@@ -76,16 +78,6 @@ def replace_fileending(fn, new_end):
     ''' This function replaces the file ending (e.g. ".csv") with a different 
     ending. '''
     return fn[:fn.rfind('.')] + new_end
-
-
-def parse_charset_name(charset_name):
-    ''' This function parses the charset_name specification. '''
-    try:
-        charset_sym, charset_type = charset_name.split('_')
-    except:
-        sys.exit('%s SPTSPD ERROR: The charset_name "%s" does not follow '\
-            'the outlined specifications.' % ('\n', charset_name))
-    return (charset_sym, charset_type)
 
 
 def parse_csv_file(path_to_csv):
@@ -146,19 +138,21 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label,
 
 # STEP 04: Do quality checks on input data
     try:
-        CO.CheckCoord().quality_of_qualifiers(qualifiers_full,
+        CC.CheckCoord().quality_of_qualifiers(qualifiers_full,
                                               seqname_col_label)
-    except MyException as e:
+    except ME.MyException as e:
         sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
 
-# STEP 05: Obtain official gene names and gene products 
-    product_dict = {}
+# STEP 05: Parse out feature key, obtain official gene name and gene product 
+    charset_dict = {}
     for charset_name in charsets_full.keys():
-        charset_sym, charset_type = parse_charset_name(charset_name)
-        entrez_handle = CO.GetEntrezInfo(email_addr)
-        if charset_type.lower() == 'cds':
-            charset_product = entrez_handle.obtain_gene_product(charset_sym)
-            product_dict[charset_name] = charset_product
+        try:
+            charset_sym, charset_type, charset_product = PCN.ParseCharsetName(
+                charset_name, email_addr).parse()
+        except ME.MyException as e:
+            sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
+        charset_dict[charset_name] = (charset_sym, charset_type,
+            charset_product)
 
 # STEP 06: Create a full SeqRecord for each sequence of the alignment.
     for seq_name in alignment_full.keys():
@@ -169,17 +163,17 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label,
             if d[seqname_col_label] == seq_name][0]
 
 # ii. Generate the basic SeqRecord (i.e., without features or annotations)
-        seq_record = CO.GenerateSeqRecord(current_seq,
+        seq_record = GnOps.GenerateSeqRecord(current_seq,
             current_quals).base_record(seqname_col_label, charsets_full)
 
 # iii. Degap the sequence while maintaing correct annotations, which has to 
 #      occur before (!) the SeqFeature 'source' is generated.
 #      Note: Charsets are identical across all sequences.
-        degap_handle = CO.DegapButMaintainAnno(seq_record.seq, charsets_full)
+        degap_handle = DgOps.DegapButMaintainAnno(seq_record.seq, charsets_full)
         seq_record.seq, degapped_charsets = degap_handle.degap()
             
 # iv. Generate SeqFeature 'source' and append to features list
-        source_feature = CO.GenerateSeqFeature().source_feat(len(seq_record),
+        source_feature = GnOps.GenerateSeqFeature().source_feat(len(seq_record),
             current_quals, transl_table)
         seq_record.features.append(source_feature)
 
@@ -188,23 +182,19 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label,
 #          full to the list "SeqRecord.features"
         for charset_name, charset_range in degapped_charsets.items():
 # i. Assign a gene product to a gene name
-            charset_sym, charset_type = parse_charset_name(charset_name)
-            if charset_type.lower() == 'cds':
-                charset_product = product_dict[charset_name]
-            else:
-                charset_product = None
+            charset_sym, charset_type, charset_product = charset_dict[charset_name]
 # ii. Generate a regular SeqFeature and append to seq_record.features
-            seq_feature = CO.GenerateSeqFeature().regular_feat(charset_sym,
+            seq_feature = GnOps.GenerateSeqFeature().regular_feat(charset_sym,
                 charset_type, charset_range, charset_product)
             seq_record.features.append(seq_feature)
 
 # STEP 08: Translate and check quality of translation
         for indx, feature in enumerate(seq_record.features):
-            if feature.type.lower() == 'cds': # Check if feature coding region
+            if feature.type == 'CDS' or feature.type == 'gene': # Check if feature coding region
                 try:
-                    feature = CO.CheckCoord().transl_and_quality_of_transl( \
+                    feature = CC.CheckCoord().transl_and_quality_of_transl( \
                         seq_record, feature, transl_table)
-                except MyException as e:
+                except ME.MyException as e:
                     print('%s SPTSPD WARNING: %s' % ('\n', e))
                     print(' Feature "%s" of sequence "%s" is not saved into '\
                         'output.' % (feature.id, seq_record.id))
