@@ -1,11 +1,21 @@
 #!/usr/bin/env python
-"""
-Submission Preparation Tool for Sequences of Phylogenetic Datasets
-(SPTSPD)
+'''
+Submission Preparation Tool for Sequences of Phylogenetic Datasets (SPTSPD)
 
 EMBL Submission Preparation Tool for Sequences of Multiple Sequence Alignments
 (EMBL-SPTSMSA)
-"""
+
+(a) Annotations
+    Annotations are specified in the NEXUS file following format: 
+    
+    BEGIN SETS;
+    CharSet [gene symbol]_[feature key] = [charset range];
+    END;
+    
+    Only a single `gene symbol` and a single `feature key` must be specified per 
+    line.
+
+'''
 # CURRENT DESIGN:
 # Charset-definitions in .nex-file must indicate annotation type (e.g. 'CDS', 
 # 'gene', 'rrna', 'trna') in their names.
@@ -19,7 +29,6 @@ EMBL Submission Preparation Tool for Sequences of Multiple Sequence Alignments
 # IMPORT OPERATIONS #
 #####################
 
-
 from Bio import SeqIO
 #from Bio.Alphabet import generic_dna
 
@@ -27,14 +36,14 @@ from Bio import SeqIO
 from Bio import SeqFeature
 
 from lib import MyExceptions as ME
-from lib import ParsingOps as PrOps
 from lib import CheckingOps as CkOps
 from lib import DegappingOps as DgOps
 from lib import GenerationOps as GnOps
+from lib import ParsingOps as PrOps
+from lib import IOOps as IOOps
 
 import argparse
 import sys
-
 
 ###############
 # AUTHOR INFO #
@@ -57,54 +66,17 @@ import pdb
 # GLOBAL VARIABLES #
 ####################
 
-
 ###########
 # CLASSES #
 ###########
-
 
 #############
 # FUNCTIONS #
 #############
 
-def extract_filename(in_path):
-    ''' This function splits a the path from path+filename. '''
-    import os
-    path, fn =  os.path.split(in_path)
-    return fn
-
-
-def replace_fileending(fn, new_end):
-    ''' This function replaces the file ending (e.g. ".csv") with a different 
-    ending. '''
-    return fn[:fn.rfind('.')] + new_end
-
-
-def parse_csv_file(path_to_csv):
-    ''' This function parses a csv file. '''
-    from csv import DictReader
-    
-    reader = DictReader(open(path_to_csv, 'rb'), delimiter=',', quotechar='"',
-        skipinitialspace=True)
-    qualifiers_full = list(reader)
-    return qualifiers_full
-
-
-def parse_nexus_file(path_to_nex):
-    ''' This function parses a nexus file. '''
-    from Bio.Nexus import Nexus
-    
-    aln = Nexus.Nexus()
-    aln.read(path_to_nex)
-    charsets_full = aln.charsets
-    alignment_full = aln.matrix
-    return (charsets_full, alignment_full)
-
-
 ########
 # TODO #
 ########
-
 '''
 TODO:
     (i) Inlcude a function to check internet connectivity.
@@ -114,62 +86,60 @@ TODO:
 # MAIN #
 ########
 
-def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label,
+def main(path_to_nex, path_to_csv, email_addr, out_format, seqname_col,
          transl_table):
 
 # STEP 01: Prepare output files
-    in_fn = extract_filename(path_to_nex)
-    out_fn = replace_fileending(in_fn, ".embl")  # Define output filename
-    out_records = []                             # Initialize output list
+    in_fn = IOOps.Inp().extract_fn(path_to_nex)
+    out_fn = IOOps.Inp().repl_fileend(in_fn, out_format) # Define output filename
+    out_records = []                                     # Initialize output list
 
 # STEP 02: Parse data from .nex-file
     try:
-        charsets_full, alignment_full = parse_nexus_file(path_to_nex)
-    except:
-        sys.exit('%s SPTSPD ERROR: %s' % ('\n',
-            'Parsing of .nex-file unsuccessful.'))
+        charsets, alignm = IOOps.Inp().parse_nexus_file(path_to_nex)
+    except ME.MyException as e:
+        sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
 
 # STEP 03: Parse data from .csv-file
     try:
-        qualifiers_full = parse_csv_file(path_to_csv)
-    except:
-        sys.exit('%s SPTSPD ERROR: %s' % ('\n',
-            'Parsing .csv-file unsuccessful.'))
+        qualifiers = IOOps.Inp().parse_csv_file(path_to_csv)
+    except ME.MyException as e:
+        sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
 
 # STEP 04: Do quality checks on input data
     try:
-        CkOps.CheckCoord().quality_of_qualifiers(qualifiers_full,
-                                              seqname_col_label)
+        CkOps.CheckCoord().quality_of_qualifiers(qualifiers, seqname_col)
     except ME.MyException as e:
         sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
 
 # STEP 05: Parse out feature key, obtain official gene name and gene product 
     charset_dict = {}
-    for charset_name in charsets_full.keys():
+    for charset_name in charsets.keys():
         try:
             charset_sym, charset_type, charset_product = PrOps.ParseCharsetName(
                 charset_name, email_addr).parse()
         except ME.MyException as e:
             sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
+        
         charset_dict[charset_name] = (charset_sym, charset_type,
             charset_product)
 
 # STEP 06: Create a full SeqRecord for each sequence of the alignment.
-    for seq_name in alignment_full.keys():
+    for seq_name in alignm.keys():
         
 # i. Select current sequences and current qualifiers
-        current_seq = alignment_full[seq_name]
-        current_quals = [d for d in qualifiers_full\
-            if d[seqname_col_label] == seq_name][0]
+        current_seq = alignm[seq_name]
+        current_quals = [d for d in qualifiers\
+            if d[seqname_col] == seq_name][0]
 
 # ii. Generate the basic SeqRecord (i.e., without features or annotations)
         seq_record = GnOps.GenerateSeqRecord(current_seq,
-            current_quals).base_record(seqname_col_label, charsets_full)
+            current_quals).base_record(seqname_col, charsets)
 
 # iii. Degap the sequence while maintaing correct annotations, which has to 
 #      occur before (!) the SeqFeature 'source' is generated.
 #      Note: Charsets are identical across all sequences.
-        degap_handle = DgOps.DegapButMaintainAnno(seq_record.seq, charsets_full)
+        degap_handle = DgOps.DegapButMaintainAnno(seq_record.seq, charsets)
         seq_record.seq, degapped_charsets = degap_handle.degap()
             
 # iv. Generate SeqFeature 'source' and append to features list
@@ -205,7 +175,7 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label,
 
 # STEP 10: Export all out_records as single file in embl-format
     outp_handle = open(out_fn, 'w')
-    SeqIO.write(out_records, outp_handle, outformat)
+    SeqIO.write(out_records, outp_handle, out_format)
     outp_handle.close()
 
 
@@ -226,7 +196,7 @@ if __name__ == '__main__':
         help='Your email address',
         default='mi.gruenstaeudl@gmail.com', required=True)
     parser.add_argument('-f', '--outformat', 
-        help='Available arguments: embl, genbank', 
+        help='Available arguments: embl, gb', 
         default='embl', required=False)
     parser.add_argument('-l', '--label',
         help='Which xxx the column specifying the sequence names is labelled with.',

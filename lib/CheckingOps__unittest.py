@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 '''
-Unit Tests for Custom operations module for EMBL submission preparation
-tool
+Unit Tests for the classes of the module `CheckingOps`
 '''
 
 #####################

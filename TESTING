@@ -4,8 +4,17 @@
 echo "python -m unittest discover -s ./lib/ -p '*__unittest.py'"
 
 ## TESTING SCRIPT ITSELF
-python2 SPTSPD.py -n example/01_input/alignm.nex -c example/01_input/metadata.csv -e mi.gruenstaeudl@gmail.com
+
+## Test 1
+python2 SPTSPD.py -n example/01_input/Test1_ALIGNM.nex -c example/01_input/Test1_META.csv -e mi.gruenstaeudl@gmail.com
 echo ""
 echo "Differences between current output and template:"
-diff alignm.embl example/02_output/alignm.embl
-rm alignm.embl
+diff Test1_ALIGNM.embl example/02_output/Test1_ALIGNM.embl
+rm Test1_ALIGNM.embl
+
+## Test 2
+python2 SPTSPD.py -n example/01_input/Amaranths_ITS_subset_ALIGN.nex -c example/01_input/Amaranths_ITS_subset_META.csv -e mi.gruenstaeudl@gmail.com
+echo ""
+echo "Differences between current output and template:"
+diff Amaranths_ITS_subset_ALIGN.embl example/02_output/Amaranths_ITS_subset_ALIGN.embl
+rm Amaranths_ITS_subset_ALIGN.embl

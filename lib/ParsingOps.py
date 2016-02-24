@@ -61,13 +61,20 @@ class GetEntrezInfo:
                 Out: ['26835430', '26833718', '26833393', ...]
         '''
         from Bio import Entrez
+
+        if not gene_sym:
+            raise ME.MyException('No gene symbol detected.')
+        
+        if '_' in gene_sym:
+            raise ME.MyException('Gene symbol `%s` contains an underscore, '
+            'which is not allowed.' % (gene_sym))
         
         query_term = gene_sym + ' [sym]'
         try:
             esearch_records = Entrez.esearch(db='gene', term=query_term,
                 retmax = retmax, retmod='xml')
         except:
-            raise MyException('An error occurred while retrieving data from '\
+            raise ME.MyException('An error occurred while retrieving data from '\
                 '%s.' % ('ESearch'))
         parsed_records = Entrez.read(esearch_records)
         entrez_id_list = parsed_records['IdList']
@@ -98,7 +105,7 @@ class GetEntrezInfo:
         try:
             epost_results = Entrez.read(epost_query)
         except:
-            raise MyException('An error occurred while retrieving data from '\
+            raise ME.MyException('An error occurred while retrieving data from '\
                 '%s.' % ('EPost'))
         webenv = epost_results['WebEnv']
         query_key = epost_results['QueryKey']
@@ -106,7 +113,7 @@ class GetEntrezInfo:
             esummary_records = Entrez.esummary(db='gene', webenv=webenv,
                 query_key=query_key)
         except:
-            raise MyException('An error occurred while retrieving data from '\
+            raise ME.MyException('An error occurred while retrieving data from '\
                 '%s.' % ('ESummary'))
         entrez_rec_list = Entrez.read(esummary_records)
         return entrez_rec_list
@@ -132,7 +139,7 @@ class GetEntrezInfo:
             documentSummarySet = entrez_rec_list['DocumentSummarySet']
             docs = documentSummarySet['DocumentSummary']
         except:
-            raise MyException('An error occurred while parsing the data from '\
+            raise ME.MyException('An error occurred while parsing the data from '\
                 '%s.' % ('ESummary'))
 
         list_gene_product = [doc['Description'] for doc in docs]
@@ -163,22 +170,31 @@ class GetEntrezInfo:
 
         try:
             entrez_id_list = GetEntrezInfo._id_lookup(gene_sym)
-        except MyException as e:
+        except ME.MyException as e:
             raise e
         try:
             entrez_rec_list = GetEntrezInfo._gene_product_lookup(entrez_id_list)
-        except MyException as e:
+        except ME.MyException as e:
             raise e
         try:
             gene_product = GetEntrezInfo._parse_gene_products(entrez_rec_list)
-        except MyException as e:
+        except ME.MyException as e:
             raise e
         return gene_product
 
 
 
 class ParseCharsetName:
-    ''' This class contains functions to parse charset names. '''
+    ''' This class contains functions to parse charset names. 
+        
+    Args:
+        charset_name (str): a string that represents a charset name; example: 
+                            "psbI_CDS"
+        email_addr (dict):  your email address; example: 
+                            "mi.gruenstaeudl@gmail.com"
+    Raises:
+        currently nothing
+    '''
 
     def __init__(self, charset_name, email_addr):
         self.charset_name = charset_name
@@ -204,10 +220,10 @@ class ParseCharsetName:
         fk_present = [fk for fk in INSDC_feature_keys 
             if fk in charset_name]
         if not fk_present:
-            raise MyException('%s SPTSPD ERROR: No feature key '\
+            raise ME.MyException('%s SPTSPD ERROR: No feature key '\
             'encountered in the name of charset "%s".' % ('\n', charset_name))
         if len(fk_present) > 1:
-            raise MyException('%s SPTSPD ERROR: More than one feature key '\
+            raise ME.MyException('%s SPTSPD ERROR: More than one feature key '\
             'encountered in the name of charset "%s".' % ('\n', charset_name))
         charset_type = fk_present[0]
         return charset_type
@@ -220,7 +236,7 @@ class ParseCharsetName:
         try:
             charset_sym = charset_name.strip(charset_type)
         except:
-            raise MyException('%s SPTSPD ERROR: No charset symbol encountered '\
+            raise ME.MyException('%s SPTSPD ERROR: No charset symbol encountered '\
             'in the name of charset "%s".' % ('\n', charset_name))
         charset_sym = charset_sym.strip('_')
         charset_sym = charset_sym.rstrip('_') # Remove trailing underscores
@@ -228,29 +244,25 @@ class ParseCharsetName:
 
     def parse(self):
         ''' This function parses the charset_name.
-        
-        Examples:
-        
-            Example 1: # Foo bar
-                >>> foo
-                >>> bar
-                Out:
-            
+
+        Returns:
+            tupl.   The return consists of three strings in the order 
+                    "charset_sym, charset_type, charset_product"            
         '''
         try:
             charset_type = ParseCharsetName._extract_charset_type(self.charset_name)
-        except MyException as e:
+        except ME.MyException as e:
             raise e
         try:
             charset_sym = ParseCharsetName._extract_charset_sym(self.charset_name,
                 charset_type)
-        except MyException as e:
+        except ME.MyException as e:
             raise e
         entrez_handle = GetEntrezInfo(self.email_addr)
         if charset_type == 'CDS' or charset_type == 'gene':
             try:
                 charset_product = entrez_handle.obtain_gene_product(charset_sym)
-            except MyException as e:
+            except ME.MyException as e:
                 raise e
         else:
             charset_product = None

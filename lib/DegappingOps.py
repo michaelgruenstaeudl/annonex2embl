@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 '''
-Custom operations for EMBL submission preparation tool
+Classes to degap sequences but maintain annotations
 '''
 
 #####################
@@ -71,44 +71,6 @@ class DegapButMaintainAnno:
         "degap_legacy".
         Source: http://stackoverflow.com/questions/35233714/
         maintaining-overlapping-annotations-while-removing-dashes-from-string
-        
-            Examples:
-            
-            Example 1: # Contains an internal gap
-                >>> seq = "ATG-C"
-                >>> charsets = {"gene_1":[0,1],"gene_2":[2,3,4]}
-                >>> DegapButMaintainAnno(seq, annot).degap()
-                Out: ('ATGC', {'gene_1': [0, 1], 'gene_2': [2, 3]})
-            
-            Example 2: # Contains start and end gaps
-                >>> seq = "AA----TT"
-                >>> charsets = {"gene1":[0,1,2,3], "gene2":[4,5,6,7]}
-                >>> DegapButMaintainAnno(seq, annot).degap()
-                Out: ('AATT', {'gene1': [0, 1], 'gene2': [2, 3]})
-                    
-            Example 3: # Entire genes missing
-                >>> seq = "AA----TT"
-                >>> charsets = {"gene1":[0,1,2], "gene2":[3,4], "gene3":[5,6,7]}
-                >>> DegapButMaintainAnno(seq, annot).degap()
-                Out: ('AATT', {'gene1': [0, 1], 'gene2': [], 'gene3': [2, 3]})
-                      
-            Example 4: # Overlapping genes with internal gaps
-                >>> seq = "A--AT--T"
-                >>> charsets = {"gene1":[0,1,2,3,4], "gene2":[4,5,6,7]}
-                >>> DegapButMaintainAnno(seq, charsets).degap()
-                Out: ('AATT', {'gene1': [0, 1, 2], 'gene2': [2, 3]})
-                    
-            Example 5: # Overlapping genes with start and end gaps
-                >>> seq = "AA----TT"
-                >>> charsets = {"gene1":[0,1,2,3,4], "gene2":[4,5,6,7]}
-                >>> DegapButMaintainAnno(seq, charsets).degap()
-                Out: ('AATT', {'gene1': [0, 1], 'gene2': [2, 3]})
-                        
-            Example 6: # Contains start and end gaps; incorrect charset order
-                >>> seq = "AT----GC"
-                >>> charsets = {"gene2":[4,5,6,7], "gene1":[0,1,2,3]}
-                >>> DegapButMaintainAnno(seq, annot).degap()
-                Out: ('ATGC', {'gene1': [0, 1], 'gene2': [2, 3]})
         '''
         from copy import copy
         
