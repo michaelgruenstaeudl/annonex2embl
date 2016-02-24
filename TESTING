@@ -1,0 +1,11 @@
+#!/bin/bash
+
+## UNITTESTING
+echo "python -m unittest discover -s ./lib/ -p '*__unittest.py'"
+
+## TESTING SCRIPT ITSELF
+python2 SPTSPD.py -n example/01_input/alignm.nex -c example/01_input/metadata.csv -e mi.gruenstaeudl@gmail.com
+echo ""
+echo "Differences between current output and template:"
+diff alignm.embl example/02_output/alignm.embl
+rm alignm.embl

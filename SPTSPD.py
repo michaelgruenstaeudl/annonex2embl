@@ -27,8 +27,8 @@ from Bio import SeqIO
 from Bio import SeqFeature
 
 from lib import MyExceptions as ME
-from lib import ParseCharsetNames as PCN
-from lib import CheckCoords as CC
+from lib import ParsingOps as PrOps
+from lib import CheckingOps as CkOps
 from lib import DegappingOps as DgOps
 from lib import GenerationOps as GnOps
 
@@ -138,7 +138,7 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label,
 
 # STEP 04: Do quality checks on input data
     try:
-        CC.CheckCoord().quality_of_qualifiers(qualifiers_full,
+        CkOps.CheckCoord().quality_of_qualifiers(qualifiers_full,
                                               seqname_col_label)
     except ME.MyException as e:
         sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
@@ -147,7 +147,7 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label,
     charset_dict = {}
     for charset_name in charsets_full.keys():
         try:
-            charset_sym, charset_type, charset_product = PCN.ParseCharsetName(
+            charset_sym, charset_type, charset_product = PrOps.ParseCharsetName(
                 charset_name, email_addr).parse()
         except ME.MyException as e:
             sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
@@ -192,7 +192,7 @@ def main(path_to_nex, path_to_csv, email_addr, outformat, seqname_col_label,
         for indx, feature in enumerate(seq_record.features):
             if feature.type == 'CDS' or feature.type == 'gene': # Check if feature coding region
                 try:
-                    feature = CC.CheckCoord().transl_and_quality_of_transl( \
+                    feature = CkOps.CheckCoord().transl_and_quality_of_transl( \
                         seq_record, feature, transl_table)
                 except ME.MyException as e:
                     print('%s SPTSPD WARNING: %s' % ('\n', e))

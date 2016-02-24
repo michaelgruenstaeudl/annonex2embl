@@ -12,7 +12,7 @@ import Bio # Do not remove; important for assertIsInstance
 import unittest
 
 import MyExceptions as ME
-import CheckCoords as CC
+import CheckingOps as CkOps
 
 from Bio.Seq import Seq
 from Bio.Alphabet import generic_dna
@@ -53,11 +53,11 @@ class AnnoChecksTestCases(unittest.TestCase):
 
         This test evaluates the default behaviour of the function. '''
         
-        extract = Seq("ATGGCCTAA", generic_dna)
+        extract = Seq("ATGTAGTAA", generic_dna)
         loc = FeatureLocation(0, 8)
         feature = SeqFeature.SeqFeature(loc, id='foobar', type='CDS')
         record_id = 'foobar'
-        self.assertTrue(CC.AnnoCheck(extract, feature,
+        self.assertTrue(CkOps.AnnoCheck(extract, feature,
             record_id).for_unittest())
     
     def test_AnnoChecks_example_2(self):
@@ -70,7 +70,7 @@ class AnnoChecksTestCases(unittest.TestCase):
         loc = FeatureLocation(0, 8)
         feature = SeqFeature.SeqFeature(loc, id='foobar', type='CDS')
         record_id = 'foobar'
-        self.assertTrue(CC.AnnoCheck(extract, feature,
+        self.assertTrue(CkOps.AnnoCheck(extract, feature,
             record_id).for_unittest())
 
     def test_AnnoChecks_example_3(self):
@@ -84,7 +84,7 @@ class AnnoChecksTestCases(unittest.TestCase):
         feature = SeqFeature.SeqFeature(loc, id='foobar', type='CDS')
         record_id = 'foobar'
         with self.assertRaises(ME.MyException):
-            CC.AnnoCheck(extract, feature, record_id).for_unittest()
+            CkOps.AnnoCheck(extract, feature, record_id).for_unittest()
 
 
 class CheckCoordTestCases(unittest.TestCase):
@@ -100,7 +100,7 @@ class CheckCoordTestCases(unittest.TestCase):
         label = 'isolate'
         lst_of_dcts = [{'isolate': 'taxon_A', 'country': 'Ecuador'},
                        {'isolate': 'taxon_B', 'country': 'Peru'}]
-        self.assertTrue(CC.CheckCoord().quality_of_qualifiers(lst_of_dcts,
+        self.assertTrue(CkOps.CheckCoord().quality_of_qualifiers(lst_of_dcts,
                         label))
 
     def test_CheckCoord_example_2(self):
@@ -114,7 +114,7 @@ class CheckCoordTestCases(unittest.TestCase):
         lst_of_dcts = [{'isolate': 'taxon_A', 'country': 'Ecuador'},
                        {'isolate': 'taxon_B', 'country': 'Peru'}]
         with self.assertRaises(ME.MyException):
-            CC.CheckCoord().quality_of_qualifiers(lst_of_dcts, label)
+            CkOps.CheckCoord().quality_of_qualifiers(lst_of_dcts, label)
 
 
 class MetaCheckTestCases(unittest.TestCase):
@@ -131,7 +131,7 @@ class MetaCheckTestCases(unittest.TestCase):
             'qux': 'foobarqux'}, {'foo': 'foobarbaz', 'bar': 'foobarbaz', 
             'baz': 'foobarbaz'}]
         label = 'foo'
-        self.assertTrue(CC.MetaCheck(lst_of_dcts).label_present(label)) 
+        self.assertTrue(CkOps.MetaCheck(lst_of_dcts).label_present(label)) 
     
     def test_MetaCheck_label_present_example_2(self):
         ''' Test to evaluate example 2 of MetaCheck.label_present
@@ -145,7 +145,7 @@ class MetaCheckTestCases(unittest.TestCase):
             'baz': 'foobarbaz'}]
         label = 'qux'
         with self.assertRaises(ME.MyException):
-            CC.MetaCheck(lst_of_dcts).label_present(label)
+            CkOps.MetaCheck(lst_of_dcts).label_present(label)
     
     def test_MetaCheck_label_present_example_3(self):
         ''' Test to evaluate example 3 of MetaCheck.label_present
@@ -159,7 +159,7 @@ class MetaCheckTestCases(unittest.TestCase):
             'baz': 'foobarbaz'}]
         label = 'norf'
         with self.assertRaises(ME.MyException):
-            CC.MetaCheck(lst_of_dcts).label_present(label)
+            CkOps.MetaCheck(lst_of_dcts).label_present(label)
 
     def test_MetaCheck_valid_INSDC_quals_example_1(self):
         ''' Test to evaluate example 1 of MetaCheck.valid_INSDC_quals
@@ -171,7 +171,7 @@ class MetaCheckTestCases(unittest.TestCase):
         lst_of_dcts = [{'allele': 'foobar', 'altitude': 'foobar', 
             'anticodon': 'foobar'}, {'trans_splicing': 'foobar', 
             'type_material': 'foobar', 'variety': 'foobar'}]
-        self.assertTrue(CC.MetaCheck(lst_of_dcts).valid_INSDC_quals())
+        self.assertTrue(CkOps.MetaCheck(lst_of_dcts).valid_INSDC_quals())
 
     def test_MetaCheck_valid_INSDC_quals_example_2(self):
         ''' Test to evaluate example 2 of MetaCheck.valid_INSDC_quals
@@ -184,7 +184,7 @@ class MetaCheckTestCases(unittest.TestCase):
             'anticodon': 'foobar'}, {'MyInvalidQual_2': 'foobar',
             'type_material': 'foobar', 'variety': 'foobar'}]
         with self.assertRaises(ME.MyException):
-            CC.MetaCheck(lst_of_dcts).valid_INSDC_quals()
+            CkOps.MetaCheck(lst_of_dcts).valid_INSDC_quals()
 
 #############
 # FUNCTIONS #

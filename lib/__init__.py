@@ -1,1 +1,1 @@
-__all__=['CheckCoords', 'DegappingOps', 'GenerationOps', 'MyExceptions', 'ParseCharsetNames']
+__all__=['CheckingOps', 'DegappingOps', 'GenerationOps', 'MyExceptions', 'ParsingOps']
