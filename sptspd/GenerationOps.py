@@ -13,10 +13,9 @@ import MyExceptions as ME
 # AUTHOR INFO #
 ###############
 
-__author__ = 'Michael Gruenstaeudl, PhD <mi.gruenstaeudl@gmail.com>'
+__author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
-__info__ = 'Submission Preparation Tool for Sequences of Phylogenetic '\
-           'Datasets (SPTSPD)'
+__info__ = 'nex2embl'
 __version__ = '2016.02.18.1100'
 
 #############
@@ -161,7 +160,7 @@ class GenerateSeqFeature:
         feature_loc = GenerateFeatLoc(start_pos, stop_pos).exact()
         # b. Define the annotation type
         if feature_type not in INSDC_feature_keys:
-            raise ME.MyException('%s SPTSPD ERROR: Internal error: Name of '\
+            raise ME.MyException('%s nex2embl ERROR: Internal error: Name of '\
                 'feature key not passed correctly.')
         # c. Generate qualifiers
         qualifiers={'note':feature_name}

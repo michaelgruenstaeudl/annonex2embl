@@ -16,10 +16,9 @@ import ParsingOps as PrOps
 # AUTHOR INFO #
 ###############
 
-__author__ = 'Michael Gruenstaeudl, PhD <mi.gruenstaeudl@gmail.com>'
+__author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
-__info__ = 'Submission Preparation Tool for Sequences of Phylogenetic '\
-           'Datasets (SPTSPD)'
+__info__ = 'nex2embl'
 __version__ = '2016.02.24.1900'
 
 #############

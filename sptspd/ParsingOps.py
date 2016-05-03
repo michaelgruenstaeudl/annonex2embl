@@ -13,10 +13,9 @@ import MyExceptions as ME
 # AUTHOR INFO #
 ###############
 
-__author__ = 'Michael Gruenstaeudl, PhD <mi.gruenstaeudl@gmail.com>'
+__author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
-__info__ = 'Submission Preparation Tool for Sequences of Phylogenetic '\
-           'Datasets (SPTSPD)'
+__info__ = 'nex2embl'
 __version__ = '2016.02.18.1100'
 
 #############
@@ -220,10 +219,10 @@ class ParseCharsetName:
         fk_present = [fk for fk in INSDC_feature_keys 
             if fk in charset_name]
         if not fk_present:
-            raise ME.MyException('%s SPTSPD ERROR: No feature key '\
+            raise ME.MyException('%s nex2embl ERROR: No feature key '\
             'encountered in the name of charset "%s".' % ('\n', charset_name))
         if len(fk_present) > 1:
-            raise ME.MyException('%s SPTSPD ERROR: More than one feature key '\
+            raise ME.MyException('%s nex2embl ERROR: More than one feature key '\
             'encountered in the name of charset "%s".' % ('\n', charset_name))
         charset_type = fk_present[0]
         return charset_type
@@ -236,7 +235,7 @@ class ParseCharsetName:
         try:
             charset_sym = charset_name.strip(charset_type)
         except:
-            raise ME.MyException('%s SPTSPD ERROR: No charset symbol encountered '\
+            raise ME.MyException('%s nex2embl ERROR: No charset symbol encountered '\
             'in the name of charset "%s".' % ('\n', charset_name))
         charset_sym = charset_sym.strip('_')
         charset_sym = charset_sym.rstrip('_') # Remove trailing underscores

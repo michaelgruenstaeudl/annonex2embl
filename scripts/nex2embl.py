@@ -1,10 +1,5 @@
 #!/usr/bin/env python
 '''
-Submission Preparation Tool for Sequences of Phylogenetic Datasets (SPTSPD)
-
-EMBL Submission Preparation Tool for Sequences of Multiple Sequence Alignments
-(EMBL-SPTSMSA)
-
 (a) Annotations
     Annotations are specified in the NEXUS file following format: 
     
@@ -42,18 +37,16 @@ from lib import GenerationOps as GnOps
 from lib import ParsingOps as PrOps
 from lib import IOOps as IOOps
 
-import argparse
 import sys
 
 ###############
 # AUTHOR INFO #
 ###############
 
-__author__ = 'Michael Gruenstaeudl, PhD <mi.gruenstaeudl@gmail.com>'
+__author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
-__info__ = 'Submission Preparation Tool for Sequences of Phylogenetic '\
-           'Datasets (SPTSPD)'
-__version__ = '2016.02.18.1100'
+__info__ = 'nex2embl'
+__version__ = '2016.05.03.1900'
 
 #############
 # DEBUGGING #
@@ -79,20 +72,18 @@ import pdb
 ########
 '''
 TODO:
-    (i) Inlcude a function to check internet connectivity.
+    (i) Include a function to check internet connectivity.
 '''
 
 ########
 # MAIN #
 ########
 
-def main(path_to_nex, path_to_csv, email_addr, out_format, seqname_col,
-         transl_table):
+def nex2embl(path_to_nex, path_to_csv, email_addr, path_to_outfile,
+             out_format, seqname_col, transl_table):
 
-# STEP 01: Prepare output files
-    in_fn = IOOps.Inp().extract_fn(path_to_nex)
-    out_fn = IOOps.Inp().repl_fileend(in_fn, out_format) # Define output filename
-    out_records = []                                     # Initialize output list
+# STEP 01: Initialize output list
+    out_records = []
 
 # STEP 02: Parse data from .nex-file
     try:
@@ -174,7 +165,7 @@ def main(path_to_nex, path_to_csv, email_addr, out_format, seqname_col,
         out_records.append(seq_record)
 
 # STEP 10: Export all out_records as single file in embl-format
-    outp_handle = open(out_fn, 'w')
+    outp_handle = open(path_to_outfile, 'w')
     SeqIO.write(out_records, outp_handle, out_format)
     outp_handle.close()
 
@@ -184,30 +175,61 @@ def main(path_to_nex, path_to_csv, email_addr, out_format, seqname_col,
 ############
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="  --  ".join([__author__,
-        __copyright__, __info__, __version__]))
-    parser.add_argument('-n', '--nexus', 
-        help='/path_to_input/test.nex',
-        default='/home/michael_science/Desktop/test.nex', required=True)
-    parser.add_argument('-c', '--csv', 
-        help='/path_to_input/test.csv',
-        default='/home/michael_science/Desktop/test.csv', required=True)
-    parser.add_argument('-e', '--email', 
-        help='Your email address',
-        default='mi.gruenstaeudl@gmail.com', required=True)
-    parser.add_argument('-f', '--outformat', 
-        help='Available arguments: embl, gb', 
-        default='embl', required=False)
-    parser.add_argument('-l', '--label',
-        help='Which xxx the column specifying the sequence names is labelled with.',
-        default='isolate', required=False)
-    parser.add_argument('-t', '--table',
-        help='Which translation table coding regions shall be translate with.'\
-        'For details, see: http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi',
-        default='11', required=False)
-    parser.add_argument('-V', '--version', 
-        help='Print version information and exit', 
-        action='version', version='%(prog)s ' + __version__)
+    import argparse
+    parser = argparse.ArgumentParser(description="  --  ".join([__author__, __copyright__, __info__, __version__]))
+    
+    # Required
+    parser.add_argument('-n',
+                        '--nexus',
+                        help='absolute path to infile; infile in NEXUS format; Example: /path_to_input/test.nex',
+                        default='/home/username/Desktop/test.nex',
+                        required=True)
+
+    parser.add_argument('-c',
+                        '--csv',
+                        help='absolute path to infile; infile in CSV format; Example: /path_to_input/test.csv',
+                        default='/home/username/Desktop/test.csv',
+                        required=True)
+
+    parser.add_argument('-e',
+                        '--email',
+                        help='Your email address',
+                        default='my.username@gmail.com',
+                        required=True)
+
+    parser.add_argument('-o',
+                        '--outfile',
+                        help='absolute path to outfile; outfile in EMBL format; Example: /path_to_output/test.embl',
+                        default='/home/username/Desktop/test.embl',
+                        required=True)
+
+    # Optional
+    parser.add_argument('-f',
+                        '--outformat',
+                        help='Available arguments: embl, gb', 
+                        default='embl',
+                        required=False)
+
+    parser.add_argument('-l',
+                        '--label',
+                        metavar='column specifying sequence names',
+                        help='Name of column that specifies the sequence names.',
+                        default='isolate',
+                        required=False)
+
+    parser.add_argument('-t',
+                        '--table',
+                        metavar='translation table',
+                        help='Number of the translation table to translate coding regions with.'\
+                        'For details, see: http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi',
+                        default='11',
+                        required=False)
+
+    parser.add_argument('--version', 
+                        help='Print version information and exit',
+                        action='version',
+                        version='%(prog)s ' + __version__)
+
     args = parser.parse_args()
 
 # Include selection on topology of submission (linear [default] or circular)
@@ -216,4 +238,4 @@ if __name__ == '__main__':
 # MAIN #
 ########
 
-main(args.nexus, args.csv, args.email, args.outformat, args.label, args.table)
+    nex2embl(args.nexus, args.csv, args.email, args.outfile, args.outformat, args.label, args.table)
