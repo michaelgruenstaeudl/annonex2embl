@@ -9,6 +9,13 @@ Unit Tests for the classes of the module `GenerationOps`
 
 import Bio # Do not remove; important for assertIsInstance
 import unittest
+
+# Add specific directory to sys.path in order to import its modules
+# NOTE: THIS RELATIVE IMPORTING IS AMATEURISH.
+# NOTE: COULD THE FOLLOWING IMPORT BE REPLACED WITH 'import annonex2embl'?
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
+
 import GenerationOps as GnOps
 
 from Bio.Seq import Seq

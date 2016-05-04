@@ -70,7 +70,7 @@ class AnnoCheck:
             cds=cds)
         return transl
 
-    @staticmethod            
+    @staticmethod
     def _check_protein_start(extract, transl_table):
         ''' An internal static function to translate a coding region and check
         if it starts with a methionine. '''
@@ -78,7 +78,7 @@ class AnnoCheck:
         transl = extract.translate(table=transl_table)
         return transl.startswith("M")
 
-    @staticmethod    
+    @staticmethod
     def _adjust_feat_loc(location, with_internalStop, without_internalStop):
         ''' An internal static function to adjust the feature location if an
         internal stop codon were present. '''

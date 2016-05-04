@@ -1,31 +1,38 @@
-#import os
+import os
 import glob
-#import multiprocessing # Why is this line necessary?
-from setuptools import setup#, find_packages
+import unittest
+from setuptools import setup, find_packages
 
-#def read(fname):
-#    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
+def my_test_suite():
+    test_loader = unittest.TestLoader()
+    test_suite = test_loader.discover('tests', pattern='*_test.py')
+    return test_suite
 
 setup(
-    name='sptspd',
+    name='annonex2embl',
     version='0.1',
-    description='My current mystery project',
-    #long_description=read('README.md'),
-    #packages = find_packages(),
+    description='Converts annotated DNA sequence alignments in NEXUS format to EMBL submission files',
+    long_description=read('README.rst'),
+    classifiers=[
+        'Development Status :: 1 - Planning',
+        'License :: OSI Approved :: GNU General Public License (GPLv3)',
+        'Programming Language :: Python :: 2.7',
+        'Intended Audience :: Science/Research',
+        'Topic :: Scientific/Engineering :: Bio-Informatics'
+        ],
+    keywords='EMBL DNA sequence submission',
+    url='https://github.com/michaelgruenstaeudl/SPTSPD',
     author='Michael Gruenstaeudl',
     author_email='m.gruenstaeudl@fu-berlin.de',
-    #url='https://github.com/michaelgruenstaeudl/SPTSPD',
-    scripts=glob.glob('scripts/*'),
-    #test_suite='nose.collector',
-    #tests_require=['nose >= 1.3', 'mock'],
     license='GPLv3',
-    packages=['sptspd'],
-    #classifiers=[
-    #    "License :: OSI Approved :: GNU General Public License (GPLv3)",
-    #    "Programming Language :: Python",
-    #    "Development Status :: 1 - Planning",
-    #    "Intended Audience :: Science/Research",
-    #    "Topic :: Scientific/Engineering :: Bio-Informatics",
-    #    ],
+    packages=['annonex2embl'], # So that the subfolder 'annonex2embl' is read immediately.
+    #packages = find_packages(),
+    install_requires=['biopython'],
+    scripts=glob.glob('scripts/*'),
+    test_suite='setup.my_test_suite',
+    include_package_data=True,
     zip_safe=False
 )

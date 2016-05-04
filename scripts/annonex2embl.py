@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 '''
 (a) Annotations
     Annotations are specified in the NEXUS file following format: 
@@ -30,14 +30,19 @@ from Bio import SeqIO
 #from Bio.Seq import Seq
 from Bio import SeqFeature
 
-from lib import MyExceptions as ME
-from lib import CheckingOps as CkOps
-from lib import DegappingOps as DgOps
-from lib import GenerationOps as GnOps
-from lib import ParsingOps as PrOps
-from lib import IOOps as IOOps
+# Add specific directory to sys.path in order to import its modules
+# NOTE: THIS RELATIVE IMPORTING IS AMATEURISH.
+# NOTE: COULD THE FOLLOWING IMPORT BE REPLACED WITH 'import annonex2embl'?
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
 
-import sys
+import MyExceptions as ME
+import CheckingOps as CkOps
+import DegappingOps as DgOps
+import GenerationOps as GnOps
+import ParsingOps as PrOps
+import IOOps as IOOps
+
 
 ###############
 # AUTHOR INFO #
@@ -79,7 +84,7 @@ TODO:
 # MAIN #
 ########
 
-def nex2embl(path_to_nex, path_to_csv, email_addr, path_to_outfile,
+def annonex2embl(path_to_nex, path_to_csv, email_addr, path_to_outfile,
              out_format, seqname_col, transl_table):
 
 # STEP 01: Initialize output list
@@ -238,4 +243,4 @@ if __name__ == '__main__':
 # MAIN #
 ########
 
-    nex2embl(args.nexus, args.csv, args.email, args.outfile, args.outformat, args.label, args.table)
+    annonex2embl(args.nexus, args.csv, args.email, args.outfile, args.outformat, args.label, args.table)

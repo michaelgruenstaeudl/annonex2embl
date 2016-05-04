@@ -1,0 +1,121 @@
+ID   taxon_B; ; ; DNA; ; UNC; 19 BP.
+XX
+AC   taxon_B;
+XX
+DE   Barnadesia ciliata psbI CDS DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..19
+FT                   /country="Ecuador: Zaruma"
+FT                   /isolate="taxon_B"
+FT                   /note="Authority: (I.C.Chung) Harling"
+FT                   /organism="Barnadesia ciliata"
+FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
+FT                   /transl_table=11
+FT   CDS             3..17
+FT                   /note="psbI"
+FT                   /product="photosystem II protein I"
+FT                   /translation="MNPE*"
+XX
+SQ   Sequence 19 BP; 8 A; 4 C; 3 G; 4 T; 0 other;
+     aaatgaatcc tgagtaacc                                                     19
+//
+ID   taxon_C; ; ; DNA; ; UNC; 13 BP.
+XX
+AC   taxon_C;
+XX
+DE   Barnadesia aculeata psbI CDS DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..13
+FT                   /country="Ecuador: Central Andes"
+FT                   /isolate="taxon_C"
+FT                   /note="Authority: (Benth.) I.C.Chung"
+FT                   /organism="Barnadesia aculeata"
+FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
+FT                   /transl_table=11
+FT   CDS             3..11
+FT                   /note="psbI"
+FT                   /product="photosystem II protein I"
+FT                   /translation="MR*"
+XX
+SQ   Sequence 13 BP; 5 A; 3 C; 2 G; 3 T; 0 other;
+     aaatgcgtta acc                                                           13
+//
+ID   taxon_A; ; ; DNA; ; UNC; 19 BP.
+XX
+AC   taxon_A;
+XX
+DE   Barnadesia aculeata psbI CDS DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..19
+FT                   /country="Ecuador: Central Andes"
+FT                   /isolate="taxon_A"
+FT                   /note="Authority: (Benth.) I.C.Chung"
+FT                   /organism="Barnadesia aculeata"
+FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
+FT                   /transl_table=11
+FT   CDS             3..17
+FT                   /note="psbI"
+FT                   /product="photosystem II protein I"
+FT                   /translation="MNRE*"
+XX
+SQ   Sequence 19 BP; 8 A; 3 C; 4 G; 4 T; 0 other;
+     aaatgaatcg tgagtaacc                                                     19
+//
+ID   taxon_D; ; ; DNA; ; UNC; 13 BP.
+XX
+AC   taxon_D;
+XX
+DE   Barnadesia ciliata psbI CDS DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..13
+FT                   /country="Ecuador: Zaruma"
+FT                   /isolate="taxon_D"
+FT                   /note="Authority: (I.C.Chung) Harling"
+FT                   /organism="Barnadesia ciliata"
+FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
+FT                   /transl_table=11
+FT   CDS             3..11
+FT                   /note="psbI"
+FT                   /product="photosystem II protein I"
+FT                   /translation="MG*"
+XX
+SQ   Sequence 13 BP; 6 A; 2 C; 3 G; 2 T; 0 other;
+     aaatgggata acc                                                           13
+//
+ID   taxon_E; ; ; DNA; ; UNC; 25 BP.
+XX
+AC   taxon_E;
+XX
+DE   Barnadesia aculeata psbI CDS DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..25
+FT                   /country="Ecuador: Central Andes"
+FT                   /isolate="taxon_E"
+FT                   /note="Authority: (Benth.) I.C.Chung"
+FT                   /organism="Barnadesia aculeata"
+FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
+FT                   /transl_table=11
+XX
+SQ   Sequence 25 BP; 10 A; 5 C; 6 G; 4 T; 0 other;
+     aaaagaatcc tggacgtgag taacc                                              25
+//
