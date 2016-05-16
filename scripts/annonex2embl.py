@@ -87,26 +87,26 @@ TODO:
 def annonex2embl(path_to_nex, path_to_csv, email_addr, path_to_outfile,
              out_format, seqname_col, transl_table):
 
-# STEP 01: Initialize output list
-    out_records = []
+# STEP 01: Open outfile
+    outp_handle = open(path_to_outfile, 'a')
 
 # STEP 02: Parse data from .nex-file
     try:
         charsets, alignm = IOOps.Inp().parse_nexus_file(path_to_nex)
     except ME.MyException as e:
-        sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
+        sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
 
 # STEP 03: Parse data from .csv-file
     try:
         qualifiers = IOOps.Inp().parse_csv_file(path_to_csv)
     except ME.MyException as e:
-        sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
+        sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
 
 # STEP 04: Do quality checks on input data
     try:
         CkOps.CheckCoord().quality_of_qualifiers(qualifiers, seqname_col)
     except ME.MyException as e:
-        sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
+        sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
 
 # STEP 05: Parse out feature key, obtain official gene name and gene product 
     charset_dict = {}
@@ -115,7 +115,7 @@ def annonex2embl(path_to_nex, path_to_csv, email_addr, path_to_outfile,
             charset_sym, charset_type, charset_product = PrOps.ParseCharsetName(
                 charset_name, email_addr).parse()
         except ME.MyException as e:
-            sys.exit('%s SPTSPD ERROR: %s' % ('\n', e))
+            sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
         
         charset_dict[charset_name] = (charset_sym, charset_type,
             charset_product)
@@ -161,17 +161,18 @@ def annonex2embl(path_to_nex, path_to_csv, email_addr, path_to_outfile,
                     feature = CkOps.CheckCoord().transl_and_quality_of_transl( \
                         seq_record, feature, transl_table)
                 except ME.MyException as e:
-                    print('%s SPTSPD WARNING: %s' % ('\n', e))
+                    print('%s annonex2embl WARNING: %s' % ('\n', e))
                     print(' Feature "%s" of sequence "%s" is not saved into '\
                         'output.' % (feature.id, seq_record.id))
                     seq_record.features.pop(indx)
 
-# STEP 09: Save completed record to list "out_records"
-        out_records.append(seq_record)
+# STEP 09: Write each completed record to file
+        try:
+            SeqIO.write(seq_record, outp_handle, out_format)
+        except:
+            sys.exit('%s annonex2embl ERROR: Problem with %s. Did not write to file.' % ('\n', seq_name))
 
-# STEP 10: Export all out_records as single file in embl-format
-    outp_handle = open(path_to_outfile, 'w')
-    SeqIO.write(out_records, outp_handle, out_format)
+# STEP 10: Close outfile
     outp_handle.close()
 
 
