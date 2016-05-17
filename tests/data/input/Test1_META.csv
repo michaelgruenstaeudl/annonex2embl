@@ -1,6 +1,3 @@
 isolate, organism, note, country, specimen_voucher
-taxon_A, "Barnadesia aculeata", "Authority: (Benth.) I.C.Chung", "Ecuador: Central Andes", "MEXU: J.L. Villasenor R. s.n."
-taxon_B, "Barnadesia ciliata", "Authority: (I.C.Chung) Harling", "Ecuador: Zaruma", "MEXU: J.L. Villasenor R. s.n."
-taxon_C, "Barnadesia aculeata", "Authority: (Benth.) I.C.Chung", "Ecuador: Central Andes", "MEXU: J.L. Villasenor R. s.n."
-taxon_D, "Barnadesia ciliata", "Authority: (I.C.Chung) Harling", "Ecuador: Zaruma", "MEXU: J.L. Villasenor R. s.n."
-taxon_E, "Barnadesia aculeata", "Authority: (Benth.) I.C.Chung", "Ecuador: Central Andes", "MEXU: J.L. Villasenor R. s.n."
+Taxon_1, "Barnadesia aculeata", "Authority: (Benth.) I.C.Chung", "Ecuador: Central Andes", "MEXU: J.L. Villasenor R. s.n."
+Taxon_2, "Barnadesia ciliata", "Authority: (I.C.Chung) Harling", "Ecuador: Zaruma", "MEXU: J.L. Villasenor R. s.n."

@@ -26,9 +26,9 @@
 
 from Bio import SeqIO
 #from Bio.Alphabet import generic_dna
-
 #from Bio.Seq import Seq
 from Bio import SeqFeature
+from collections import OrderedDict
 
 # Add specific directory to sys.path in order to import its modules
 # NOTE: THIS RELATIVE IMPORTING IS AMATEURISH.
@@ -122,7 +122,7 @@ def annonex2embl(path_to_nex, path_to_csv, email_addr, path_to_outfile,
 
 # STEP 06: Create a full SeqRecord for each sequence of the alignment.
     for seq_name in alignm.keys():
-        
+
 # i. Select current sequences and current qualifiers
         current_seq = alignm[seq_name]
         current_quals = [d for d in qualifiers\
@@ -137,7 +137,7 @@ def annonex2embl(path_to_nex, path_to_csv, email_addr, path_to_outfile,
 #      Note: Charsets are identical across all sequences.
         degap_handle = DgOps.DegapButMaintainAnno(seq_record.seq, charsets)
         seq_record.seq, degapped_charsets = degap_handle.degap()
-            
+
 # iv. Generate SeqFeature 'source' and append to features list
         source_feature = GnOps.GenerateSeqFeature().source_feat(len(seq_record),
             current_quals, transl_table)
@@ -153,6 +153,11 @@ def annonex2embl(path_to_nex, path_to_csv, email_addr, path_to_outfile,
             seq_feature = GnOps.GenerateSeqFeature().regular_feat(charset_sym,
                 charset_type, charset_range, charset_product)
             seq_record.features.append(seq_feature)
+# iii. Sort all seq_record.features except the first one (which 
+#      constitutes the source feature) by the start position
+        sorted_features = sorted(seq_record.features[1:],
+            key=lambda x: x.location.start.position)
+        seq_record.features = [seq_record.features[0]] + sorted_features
 
 # STEP 08: Translate and check quality of translation
         for indx, feature in enumerate(seq_record.features):
