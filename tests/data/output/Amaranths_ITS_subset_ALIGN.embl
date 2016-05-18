@@ -16,16 +16,16 @@ FT                   /note="Authority: (Benth.) I.C.Chung"
 FT                   /organism="Lagrezia_sp"
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
 FT                   /transl_table=11
-FT   misc_RNA        33..281
-FT                   /note="ITS1"
-FT   rRNA            669..706
-FT                   /note="28S"
 FT   rRNA            1..32
 FT                   /note="18S"
-FT   misc_RNA        436..668
-FT                   /note="ITS2"
+FT   misc_RNA        33..281
+FT                   /note="ITS1"
 FT   rRNA            282..435
 FT                   /note="5.8S"
+FT   misc_RNA        436..668
+FT                   /note="ITS2"
+FT   rRNA            669..706
+FT                   /note="28S"
 XX
 SQ   Sequence 706 BP; 148 A; 197 C; 211 G; 150 T; 0 other;
      tttccgtagg tgaacctgcg gaaggatcat tgtcgaaacc tgcccagcag aacgaccagc        60
@@ -59,16 +59,16 @@ FT                   /note="Authority: (I.C.Chung) Harling"
 FT                   /organism="Celosia_argentea"
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
 FT                   /transl_table=11
-FT   misc_RNA        33..278
-FT                   /note="ITS1"
-FT   rRNA            644..681
-FT                   /note="28S"
 FT   rRNA            1..32
 FT                   /note="18S"
-FT   misc_RNA        432..643
-FT                   /note="ITS2"
+FT   misc_RNA        33..278
+FT                   /note="ITS1"
 FT   rRNA            279..431
 FT                   /note="5.8S"
+FT   misc_RNA        432..643
+FT                   /note="ITS2"
+FT   rRNA            644..681
+FT                   /note="28S"
 XX
 SQ   Sequence 681 BP; 156 A; 173 C; 189 G; 163 T; 0 other;
      tttccgtagg tgaacctgcg gaaggatcat tgtcgaaacc tgcccagcag aaccaccagc        60
@@ -102,16 +102,16 @@ FT                   /note="Authority: (Benth.) I.C.Chung"
 FT                   /organism="Kyphocarpa_trichinoides"
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
 FT                   /transl_table=11
-FT   misc_RNA        33..262
-FT                   /note="ITS1"
-FT   rRNA            621..658
-FT                   /note="28S"
 FT   rRNA            1..32
 FT                   /note="18S"
-FT   misc_RNA        418..620
-FT                   /note="ITS2"
+FT   misc_RNA        33..262
+FT                   /note="ITS1"
 FT   rRNA            263..417
 FT                   /note="5.8S"
+FT   misc_RNA        418..620
+FT                   /note="ITS2"
+FT   rRNA            621..658
+FT                   /note="28S"
 XX
 SQ   Sequence 658 BP; 157 A; 166 C; 183 G; 152 T; 0 other;
      tttccgtagg tgaacctgcg gaaggatcat tgtcgaaacc tgcatagcag aacgaccagc        60
