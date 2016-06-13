@@ -41,7 +41,7 @@ class AnnoCheck:
     Args:
         extract (obj):      a sequence object; example: Seq('ATGGAGTAA', 
                             IUPACAmbiguousDNA())
-        location (obj):     a location object; example: FeatureLocation(
+        loc_object (obj):   a location object; example: FeatureLocation(
                             ExactPosition(0), ExactPosition(8))
         feature_type (str): a string detailing the type of the feature;
                             example: "CDS"
@@ -79,15 +79,16 @@ class AnnoCheck:
         return transl.startswith("M")
 
     @staticmethod
-    def _adjust_feat_loc(location, with_internalStop, without_internalStop):
+    def _adjust_feat_loc(loc_object, with_internalStop, without_internalStop):
         ''' An internal static function to adjust the feature location if an
         internal stop codon were present. '''
         if len(without_internalStop) > len(with_internalStop):
-            start_pos = location.start
+            start_pos = loc_object.start
             stop_pos = start_pos + (len(with_internalStop) * 3)
-            feat_loc = GnOps.GenerateFeatLoc(start_pos, stop_pos).exact()
+            loc_range = range(start_pos, stop_pos)
+            feat_loc = GnOps.GenerateFeatLoc(loc_range).exact()
         if len(without_internalStop) == len(with_internalStop):
-            feat_loc = location
+            feat_loc = loc_object
         return feat_loc
 
     def check(self):
@@ -112,8 +113,8 @@ class AnnoCheck:
         from Bio.SeqFeature import FeatureLocation
 
         try:
-            transl_out = AnnoCheck._transl(self.extract, self.transl_table,
-                cds=True)
+            transl_out = AnnoCheck._transl(self.extract,
+                self.transl_table, cds=True)
             feat_loc = self.feature.location
         except:
             if not AnnoCheck._check_protein_start(self.extract, 
@@ -243,6 +244,7 @@ class CheckCoord:
         try:
             transl, loc = AnnoCheck(extract.seq, feature, seq_record.id, 
                                      transl_table).check()
+            #pdb.set_trace()
             feature.qualifiers["translation"] = transl
             feature.location = loc
         except ME.MyException as e:

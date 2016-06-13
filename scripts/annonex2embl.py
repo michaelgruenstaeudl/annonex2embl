@@ -39,6 +39,8 @@ import pdb
 # TODO #
 ########
 
+''' Include selection on topology of submission (linear [default] or circular) '''
+
 ############
 # ARGPARSE #
 ############
@@ -100,8 +102,6 @@ if __name__ == '__main__':
                         version='%(prog)s ' + __version__)
 
     args = parser.parse_args()
-
-# Include selection on topology of submission (linear [default] or circular)
 
 ########
 # MAIN #

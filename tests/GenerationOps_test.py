@@ -55,10 +55,9 @@ class GenerateFeatLocTestCases(unittest.TestCase):
 
         This test evaluates an exact feature location.
         '''
-        start_pos = 1
-        stop_pos = 12
+        charset_range = range(0,13)
 
-        out = GnOps.GenerateFeatLoc(start_pos, stop_pos).exact()
+        out = GnOps.GenerateFeatLoc(charset_range).exact()
         self.assertIsInstance(out, Bio.SeqFeature.FeatureLocation)
 
 class GenerateSeqFeatureTestCases(unittest.TestCase):
@@ -69,12 +68,12 @@ class GenerateSeqFeatureTestCases(unittest.TestCase):
 
         This test evaluates the correct generation of the SeqFeature `source`.
         '''
-        feature_len = 500
+        charset_range = range(0,501)
         quals = {'isolate': 'taxon_B', 'country': 'Ecuador'}
         transl_table = 11
 
-        out = GnOps.GenerateSeqFeature().source_feat(feature_len, quals, 
-                                                  transl_table)
+        out = GnOps.GenerateSeqFeature().source_feat(charset_range,
+            quals, transl_table)
         self.assertIsInstance(out, Bio.SeqFeature.SeqFeature)
 
     def test_GenerateSeqFeature_regular_feat_example_1(self):
@@ -86,10 +85,11 @@ class GenerateSeqFeatureTestCases(unittest.TestCase):
         
         feature_name = 'psbI'
         feature_type = 'intron'
-        feature_range = [2, 3, 4, 5]
+        charset_range = [2, 3, 4, 5]
+        feature_loc = GnOps.GenerateFeatLoc(charset_range).exact()
 
-        out = GnOps.GenerateSeqFeature().regular_feat(feature_name, feature_type,
-            feature_range)
+        out = GnOps.GenerateSeqFeature().regular_feat(feature_name,
+            feature_type, feature_loc)
         self.assertIsInstance(out, Bio.SeqFeature.SeqFeature)
 
 #############

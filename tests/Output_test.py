@@ -25,7 +25,7 @@ import subprocess
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2016.05.17.1100'
+__version__ = '2016.06.10.1600'
 
 #############
 # DEBUGGING #
@@ -93,10 +93,13 @@ class OutputTestCases(unittest.TestCase):
         ## Check if actual output exists
         if os.path.isfile(actual_outp_abs_path):
             actual_str = open(actual_outp_abs_path).read()
+            
             ## Important: Remove actual output so that lines from 
             ## subsequent tests are not appended, rendering actual and 
             ## expected different!
             os.remove(actual_outp_abs_path)
+            # (But keeping output can be helpful when generating new test files.)
+
         else:
             print 'annonex2embl TESTING ERROR: actual_str not found.'
 

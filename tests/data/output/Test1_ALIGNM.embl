@@ -1,4 +1,4 @@
-ID   Taxon_2; ; ; DNA; ; UNC; 24 BP.
+ID   Taxon_2; ; ; DNA; ; UNC; 26 BP.
 XX
 AC   Taxon_2;
 XX
@@ -8,7 +8,7 @@ OS   .
 OC   .
 XX
 FH   Key             Location/Qualifiers
-FT   source          1..24
+FT   source          1..26
 FT                   /country="Ecuador: Zaruma"
 FT                   /isolate="Taxon_2"
 FT                   /note="Authority: (I.C.Chung) Harling"
@@ -24,10 +24,10 @@ FT                   /note="foo"
 FT                   /product="forkhead box i1"
 FT                   /translation="MI*"
 XX
-SQ   Sequence 24 BP; 9 A; 4 C; 3 G; 8 T; 0 other;
-     taaatgatat agagtcccct ttaa                                               24
+SQ   Sequence 26 BP; 9 A; 5 C; 4 G; 8 T; 0 other;
+     taaatgatat agagtcccct ttaacg                                             26
 //
-ID   Taxon_1; ; ; DNA; ; UNC; 36 BP.
+ID   Taxon_1; ; ; DNA; ; UNC; 38 BP.
 XX
 AC   Taxon_1;
 XX
@@ -37,7 +37,7 @@ OS   .
 OC   .
 XX
 FH   Key             Location/Qualifiers
-FT   source          1..36
+FT   source          1..38
 FT                   /country="Ecuador: Central Andes"
 FT                   /isolate="Taxon_1"
 FT                   /note="Authority: (Benth.) I.C.Chung"
@@ -53,6 +53,6 @@ FT                   /note="foo"
 FT                   /product="forkhead box i1"
 FT                   /translation="MDI*"
 XX
-SQ   Sequence 36 BP; 13 A; 5 C; 7 G; 11 T; 0 other;
-     taaatggata tatagagtca gcattccgga ctttaa                                  36
+SQ   Sequence 38 BP; 13 A; 6 C; 8 G; 11 T; 0 other;
+     taaatggata tatagagtca gcattccgga ctttaacg                                38
 //
