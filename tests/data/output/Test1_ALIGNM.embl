@@ -15,14 +15,14 @@ FT                   /note="Authority: (I.C.Chung) Harling"
 FT                   /organism="Barnadesia ciliata"
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
 FT                   /transl_table=11
-FT   gene            4..9
+FT   gene            join(4..9,14..16,19..24)
 FT                   /note="foo"
 FT                   /product="forkhead box i1"
-FT                   /translation="MI*"
-FT   CDS             4..9
+FT                   /translation="MIVL*"
+FT   CDS             join(4..9,14..16,19..24)
 FT                   /note="foo"
 FT                   /product="forkhead box i1"
-FT                   /translation="MI*"
+FT                   /translation="MIVL*"
 XX
 SQ   Sequence 26 BP; 9 A; 5 C; 4 G; 8 T; 0 other;
      taaatgatat agagtcccct ttaacg                                             26
@@ -44,14 +44,14 @@ FT                   /note="Authority: (Benth.) I.C.Chung"
 FT                   /organism="Barnadesia aculeata"
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
 FT                   /transl_table=11
-FT   gene            4..12
+FT   gene            4..9
 FT                   /note="foo"
 FT                   /product="forkhead box i1"
-FT                   /translation="MDI*"
-FT   CDS             4..12
+FT                   /translation="MI*"
+FT   CDS             4..9
 FT                   /note="foo"
 FT                   /product="forkhead box i1"
-FT                   /translation="MDI*"
+FT                   /translation="MI*"
 XX
 SQ   Sequence 38 BP; 13 A; 6 C; 8 G; 11 T; 0 other;
      taaatggata tatagagtca gcattccgga ctttaacg                                38

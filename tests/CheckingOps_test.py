@@ -19,11 +19,6 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
 import MyExceptions as ME
 import CheckingOps as CkOps
 
-from Bio.Seq import Seq
-from Bio.Alphabet import generic_dna
-from Bio.SeqFeature import FeatureLocation
-from Bio import SeqFeature
-
 ###############
 # AUTHOR INFO #
 ###############
@@ -37,7 +32,7 @@ __version__ = '2016.02.18.1100'
 # DEBUGGING #
 #############
 
-#import pdb
+import pdb
 #pdb.set_trace()
 
 ####################
@@ -56,9 +51,13 @@ class AnnoChecksTestCases(unittest.TestCase):
         ''' Test to evaluate example 1 of AnnoChecks.check
 
         This test evaluates the default behaviour of the function. '''
+        from Bio.Seq import Seq
+        from Bio.Alphabet import generic_dna
+        from Bio.SeqFeature import FeatureLocation
+        from Bio import SeqFeature
         
         extract = Seq("ATGTAGTAA", generic_dna)
-        loc = FeatureLocation(0, 8)
+        loc = FeatureLocation(0, 9) # Stop_pos must be +1
         feature = SeqFeature.SeqFeature(loc, id='foobar', type='CDS')
         record_id = 'foobar'
         self.assertTrue(CkOps.AnnoCheck(extract, feature,
@@ -69,9 +68,13 @@ class AnnoChecksTestCases(unittest.TestCase):
 
         This test evaluates the situation where an internal stop codon is 
         present in the input sequence. '''
+        from Bio.Seq import Seq
+        from Bio.Alphabet import generic_dna
+        from Bio.SeqFeature import FeatureLocation
+        from Bio import SeqFeature
         
         extract = Seq("ATGTAATAA", generic_dna)
-        loc = FeatureLocation(0, 8)
+        loc = FeatureLocation(0, 9) # Stop_pos must be +1
         feature = SeqFeature.SeqFeature(loc, id='foobar', type='CDS')
         record_id = 'foobar'
         self.assertTrue(CkOps.AnnoCheck(extract, feature,
@@ -82,9 +85,13 @@ class AnnoChecksTestCases(unittest.TestCase):
 
         This test evaluates the situation where the input sequence does not 
         start with a Methionine. '''
+        from Bio.Seq import Seq
+        from Bio.Alphabet import generic_dna
+        from Bio.SeqFeature import FeatureLocation
+        from Bio import SeqFeature
         
         extract = Seq("AAGTAA", generic_dna)
-        loc = FeatureLocation(0, 5)
+        loc = FeatureLocation(0, 6) # Stop_pos must be +1
         feature = SeqFeature.SeqFeature(loc, id='foobar', type='CDS')
         record_id = 'foobar'
         with self.assertRaises(ME.MyException):

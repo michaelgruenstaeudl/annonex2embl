@@ -30,7 +30,7 @@ from Bio import SeqFeature
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2016.02.18.1100'
+__version__ = '2016.06.13.1600'
 
 #############
 # DEBUGGING #
@@ -51,14 +51,25 @@ class GenerateFeatLocTestCases(unittest.TestCase):
     ''' Tests for class `GenerateFeatLoc` '''
 
     def test_GenerateFeatLoc_example_1(self):
-        ''' Test to evaluate example 1 of GenerateFeatLoc.exact
+        ''' Test to evaluate example 1 of GenerateFeatLoc.make_location
 
-        This test evaluates an exact feature location.
+        This test evaluates the function 'make_location'.
         '''
-        charset_range = range(0,13)
+        charset_range = range(1,139)
 
-        out = GnOps.GenerateFeatLoc(charset_range).exact()
-        self.assertIsInstance(out, Bio.SeqFeature.FeatureLocation)
+        out = GnOps.GenerateFeatLoc(charset_range).make_location()
+        self.assertIsInstance(out, Bio.SeqFeature.FeatureLocation) # FeatureLocation
+
+
+    def test_GenerateFeatLoc_example_2(self):
+        ''' Test to evaluate example 2 of GenerateFeatLoc.make_location
+
+        This test evaluates the function 'make_location'.
+        '''
+        charset_range = range(1,37) + [134] + range(136,138)
+
+        out = GnOps.GenerateFeatLoc(charset_range).make_location()
+        self.assertIsInstance(out, Bio.SeqFeature.CompoundLocation) # CompoundLocation
 
 class GenerateSeqFeatureTestCases(unittest.TestCase):
     ''' Tests for class `GenerateSeqFeature` '''
@@ -68,11 +79,11 @@ class GenerateSeqFeatureTestCases(unittest.TestCase):
 
         This test evaluates the correct generation of the SeqFeature `source`.
         '''
-        charset_range = range(0,501)
+        full_len = 509
         quals = {'isolate': 'taxon_B', 'country': 'Ecuador'}
         transl_table = 11
 
-        out = GnOps.GenerateSeqFeature().source_feat(charset_range,
+        out = GnOps.GenerateSeqFeature().source_feat(full_len,
             quals, transl_table)
         self.assertIsInstance(out, Bio.SeqFeature.SeqFeature)
 
@@ -82,11 +93,10 @@ class GenerateSeqFeatureTestCases(unittest.TestCase):
         This test evaluates the correct generation of a regular, non-coding 
         SeqFeature.
         '''
-        
         feature_name = 'psbI'
         feature_type = 'intron'
         charset_range = [2, 3, 4, 5]
-        feature_loc = GnOps.GenerateFeatLoc(charset_range).exact()
+        feature_loc = GnOps.GenerateFeatLoc(charset_range).make_location()
 
         out = GnOps.GenerateSeqFeature().regular_feat(feature_name,
             feature_type, feature_loc)

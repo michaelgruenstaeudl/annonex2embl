@@ -86,7 +86,7 @@ class AnnoCheck:
             start_pos = loc_object.start
             stop_pos = start_pos + (len(with_internalStop) * 3)
             loc_range = range(start_pos, stop_pos)
-            feat_loc = GnOps.GenerateFeatLoc(loc_range).exact()
+            feat_loc = GnOps.GenerateFeatLoc(loc_range).make_location()
         if len(without_internalStop) == len(with_internalStop):
             feat_loc = loc_object
         return feat_loc

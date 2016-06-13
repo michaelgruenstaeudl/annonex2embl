@@ -55,6 +55,11 @@ import pdb
 '''
 TODO:
     (i) Include a function to check internet connectivity.
+
+    Pseudocode for fuzzy operators:
+    Test if fuzzy operators exist
+      If yes: apply fuzzy operators
+
 '''
 
 #############
@@ -121,9 +126,8 @@ def annonex2embl(path_to_nex,
         seq_record.seq, charsets_degapped = degap_handle.degap()
 
 # iv.  Generate SeqFeature 'source' and append to features list
-        full_index = range(0, len(seq_record))
         source_feature = GnOps.GenerateSeqFeature().source_feat(
-            full_index, current_quals, transl_table)
+            len(seq_record), current_quals, transl_table)
         seq_record.features.append(source_feature)
 
 # v.   Populate the feature keys with the charset information
@@ -132,8 +136,7 @@ def annonex2embl(path_to_nex,
         for charset_name, charset_range in charsets_degapped.items():
 
 # v.1       Convert charset_range into Location Object
-            #location_object = GnOps.LocParser(charset_range)
-            location_object = GnOps.GenerateFeatLoc(charset_range).exact()
+            location_object = GnOps.GenerateFeatLoc(charset_range).make_location()
 
 # v.2       Assign a gene product to a gene name
             charset_sym, charset_type, charset_product = charset_dict[charset_name]
@@ -169,6 +172,7 @@ def annonex2embl(path_to_nex,
 
 # STEP 07: Close outfile
     outp_handle.close()
+
 
 ########
 # MAIN #
