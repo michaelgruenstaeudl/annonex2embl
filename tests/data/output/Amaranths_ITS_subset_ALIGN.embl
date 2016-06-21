@@ -1,46 +1,3 @@
-ID   Lagrezia_sp__AC896_ITS; ; ; DNA; ; UNC; 706 BP.
-XX
-AC   Lagrezia_sp__AC896_ITS;
-XX
-DE   Lagrezia_sp 28S rRNA and 5.8S rRNA and ITS2 misc RNA and 18S rRNA and ITS1
-DE   misc RNA DNA.
-XX
-OS   .
-OC   .
-XX
-FH   Key             Location/Qualifiers
-FT   source          1..706
-FT                   /country="Ecuador: Central Andes"
-FT                   /isolate="Lagrezia_sp__AC896_ITS"
-FT                   /note="Authority: (Benth.) I.C.Chung"
-FT                   /organism="Lagrezia_sp"
-FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
-FT                   /transl_table=11
-FT   rRNA            1..32
-FT                   /note="18S"
-FT   misc_RNA        33..281
-FT                   /note="ITS1"
-FT   rRNA            282..435
-FT                   /note="5.8S"
-FT   misc_RNA        436..668
-FT                   /note="ITS2"
-FT   rRNA            669..706
-FT                   /note="28S"
-XX
-SQ   Sequence 706 BP; 148 A; 197 C; 211 G; 150 T; 0 other;
-     tttccgtagg tgaacctgcg gaaggatcat tgtcgaaacc tgcccagcag aacgaccagc        60
-     gaacatgtta atcaacctgg gggtgggggg tgctcgtgcg gagccttttg gccgagtcga       120
-     gcccctcccc cccaagtcag gggtgcactc gcaagggtgc ctcctggcac aataacgaac       180
-     cccggcgcgg tatgcgccaa ggaacatcaa tgctagtgtg cctatcctgt gctcggtttt       240
-     ccgtagcacg gatgtggcac ccagtcttat taataaaacg actctcggca acggatatct       300
-     tggctctcgc atcgatgaag aacgtagcga aatgcgatac ttggtgtgaa ttgcagaatc       360
-     ccgtgaacca tcgagttttt gaacgcaagt tgcgcccgat cctttgggta agggcacgtc       420
-     tgcctgggcg tcacgcatag cgtctccccc accccgccaa gctgcgggaa ggggcgagga       480
-     ggatggcctc ccgtgcctca ccgggcgtgg ttggcctaaa ttgggagccc gtggttacga       540
-     actgcctcgg cgattggtgg aatacgtggc cttgtgccta gcatgaaatc gagccgtgag       600
-     cacgtagcct gcgtggactc gcaggaccct gagtaagttg ttgcctttcg gcgacaacta       660
-     aaacctttgc gaccccaggt caggcgggac tacccgctga gtttaa                      706
-//
 ID   Celosia_argentea_AC1092_ITS; ; ; DNA; ; UNC; 681 BP.
 XX
 AC   Celosia_argentea_AC1092_ITS;
@@ -125,4 +82,47 @@ SQ   Sequence 658 BP; 157 A; 166 C; 183 G; 152 T; 0 other;
      ctggcgtgga tggcctaaat aaggagcctt gggtaatgag attccacggc gattggtggt       540
      atacaaggcc attgcctagg aaacatcgcg tcgtgtatca catacccttg ttgtggcctc       600
      gtaggatcct aaaaaccttt gcgaccccag gtcaggcggg gttacccgct gagtttaa         658
+//
+ID   Lagrezia_sp__AC896_ITS; ; ; DNA; ; UNC; 706 BP.
+XX
+AC   Lagrezia_sp__AC896_ITS;
+XX
+DE   Lagrezia_sp 28S rRNA and 5.8S rRNA and ITS2 misc RNA and 18S rRNA and ITS1
+DE   misc RNA DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..706
+FT                   /country="Ecuador: Central Andes"
+FT                   /isolate="Lagrezia_sp__AC896_ITS"
+FT                   /note="Authority: (Benth.) I.C.Chung"
+FT                   /organism="Lagrezia_sp"
+FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
+FT                   /transl_table=11
+FT   rRNA            1..32
+FT                   /note="18S"
+FT   misc_RNA        33..281
+FT                   /note="ITS1"
+FT   rRNA            282..435
+FT                   /note="5.8S"
+FT   misc_RNA        436..668
+FT                   /note="ITS2"
+FT   rRNA            669..706
+FT                   /note="28S"
+XX
+SQ   Sequence 706 BP; 148 A; 197 C; 211 G; 150 T; 0 other;
+     tttccgtagg tgaacctgcg gaaggatcat tgtcgaaacc tgcccagcag aacgaccagc        60
+     gaacatgtta atcaacctgg gggtgggggg tgctcgtgcg gagccttttg gccgagtcga       120
+     gcccctcccc cccaagtcag gggtgcactc gcaagggtgc ctcctggcac aataacgaac       180
+     cccggcgcgg tatgcgccaa ggaacatcaa tgctagtgtg cctatcctgt gctcggtttt       240
+     ccgtagcacg gatgtggcac ccagtcttat taataaaacg actctcggca acggatatct       300
+     tggctctcgc atcgatgaag aacgtagcga aatgcgatac ttggtgtgaa ttgcagaatc       360
+     ccgtgaacca tcgagttttt gaacgcaagt tgcgcccgat cctttgggta agggcacgtc       420
+     tgcctgggcg tcacgcatag cgtctccccc accccgccaa gctgcgggaa ggggcgagga       480
+     ggatggcctc ccgtgcctca ccgggcgtgg ttggcctaaa ttgggagccc gtggttacga       540
+     actgcctcgg cgattggtgg aatacgtggc cttgtgccta gcatgaaatc gagccgtgag       600
+     cacgtagcct gcgtggactc gcaggaccct gagtaagttg ttgcctttcg gcgacaacta       660
+     aaacctttgc gaccccaggt caggcgggac tacccgctga gtttaa                      706
 //

@@ -60,13 +60,20 @@ class GenerateFeatLoc:
         return FeatureLocation(start_exact, stop_exact)
 
     @staticmethod
-    def _extract_contiguous(csrange):
+    def _extract_contiguous_subsets(compound_integer_range):
         ''' An internal static function to extract all contiguous
-        integer ranges from compoung range. '''
+        integer ranges from compound integer range.
+        
+        Examples:
+            Example 1:
+            >>> compound_integer_range = [1,2,3,7,8,9]
+            >>> _extract_contiguous_subsets(compound_integer_range)
+            Out: [[1, 2, 3], [7, 8, 9]]
+        '''
         from operator import itemgetter
         from itertools import groupby
         outlist = []
-        for k, g in groupby(enumerate(csrange), lambda (i,x):i-x):
+        for k, g in groupby(enumerate(compound_integer_range), lambda (i,x):i-x):
             outlist.append(map(itemgetter(1), g))
         return outlist
 
@@ -84,7 +91,7 @@ class GenerateFeatLoc:
                 ExactPosition(4)), FeatureLocation(ExactPosition(7),
                 ExactPosition(9))], 'join')
         '''
-        contiguous_ranges = GenerateFeatLoc._extract_contiguous(
+        contiguous_ranges = GenerateFeatLoc._extract_contiguous_subsets(
             self.csrange)
         # Convert each contiguous range into an exact feature location
         for i,r in enumerate(contiguous_ranges):

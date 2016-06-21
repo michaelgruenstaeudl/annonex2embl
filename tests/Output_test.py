@@ -61,9 +61,10 @@ class OutputTestCases(unittest.TestCase):
         ''' Assert that the actual and the expected output are 
         identical. If they are not, show their difference. '''
         
-        infile_nex = 'Test1_ALIGNM.nex'
-        infile_csv = 'Test1_META.csv'
-        expected_outp = 'Test1_ALIGNM.embl'
+        
+        infile_nex = 'TestData_1.nex'
+        infile_csv = 'TestData_1.csv'
+        expected_outp = 'TestData_1.embl'
         
         ## Name of this function
         my_name = sys._getframe().f_code.co_name

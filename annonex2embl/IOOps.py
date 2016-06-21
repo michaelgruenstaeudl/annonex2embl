@@ -22,7 +22,7 @@ __version__ = '2016.02.24.1900'
 # DEBUGGING #
 #############
 
-#import pdb
+import pdb
 #pdb.set_trace()
 
 ####################

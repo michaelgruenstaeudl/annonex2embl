@@ -17,7 +17,7 @@ import GenerationOps as GnOps
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2016.02.18.1100'
+__version__ = '2016.06.21.2300'
 
 #############
 # DEBUGGING #
@@ -79,16 +79,22 @@ class AnnoCheck:
         return transl.startswith("M")
 
     @staticmethod
-    def _adjust_feat_loc(loc_object, with_internalStop, without_internalStop):
+    def _adjust_feat_loc(location_object, transl_with_internStop, transl_without_internStop):
         ''' An internal static function to adjust the feature location if an
         internal stop codon were present. '''
-        if len(without_internalStop) > len(with_internalStop):
-            start_pos = loc_object.start
-            stop_pos = start_pos + (len(with_internalStop) * 3)
-            loc_range = range(start_pos, stop_pos)
-            feat_loc = GnOps.GenerateFeatLoc(loc_range).make_location()
-        if len(without_internalStop) == len(with_internalStop):
-            feat_loc = loc_object
+
+        if len(transl_without_internStop) > len(transl_with_internStop):
+            # 1. Unnest the nested lists
+            contiguous_subsets = [range(e.start.position,
+                e.end.position) for e in location_object.parts]
+            compound_integer_range = sum(contiguous_subsets, [])
+            # 2. Adjust location range
+            len_with_internStop = len(transl_with_internStop) * 3
+            adjusted_range = compound_integer_range[:len_with_internStop]
+            # 3. Establish location            
+            feat_loc = GnOps.GenerateFeatLoc(adjusted_range).make_location()
+        if len(transl_without_internStop) == len(transl_with_internStop):
+            feat_loc = location_object
         return feat_loc
 
     def check(self):
@@ -135,7 +141,7 @@ class AnnoCheck:
                     raise ME.MyException('Translation of feature `%s` of '\
                         'sequence `%s` unsuccessful.' % (self.feature.id,
                                                          self.record_id))
-        transl_out = transl_out + "*"
+        #transl_out = transl_out + "*"
         return (transl_out, feat_loc)
     
     def for_unittest(self):
