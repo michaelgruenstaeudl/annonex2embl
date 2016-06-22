@@ -158,6 +158,7 @@ def annonex2embl(path_to_nex,
         seq_record.features = [seq_record.features[0]] + sorted_features
 
 # 6.7. Translate and check quality of translation
+        removal_list = []
         for indx, feature in enumerate(seq_record.features):
             # Check if feature is a coding region
             if feature.type == 'CDS' or feature.type == 'gene':
@@ -165,10 +166,15 @@ def annonex2embl(path_to_nex,
                     feature = CkOps.CheckCoord().transl_and_quality_of_transl( \
                         seq_record, feature, transl_table)
                 except ME.MyException as e:
-                    print('%s annonex2embl WARNING: %s' % ('\n', e))
-                    print(' Feature "%s" of sequence "%s" is not saved into '\
-                        'output.' % (feature.id, seq_record.id))
-                    seq_record.features.pop(indx)
+                    print('%s annonex2embl WARNING: %s Feature `%s` '\
+                        '(type: `%s`) of sequence `%s` is not saved to '\
+                        'output.' % ('\n', e, feature.id, feature.type,
+                        seq_record.id))
+                    removal_list.append(indx)
+        # TFL removes the objects in reverse order, as each removal
+        # shifts the indices of subsequent objects to the left
+        for indx in sorted(removal_list, reverse=True):
+            seq_record.features.pop(indx)
 
 # 6.8. Introduce fuzzy ends
         for feature in seq_record.features:
@@ -189,7 +195,7 @@ def annonex2embl(path_to_nex,
         try:
             SeqIO.write(seq_record, outp_handle, out_format)
         except:
-            sys.exit('%s annonex2embl ERROR: Problem with %s. Did not write to file.' % ('\n', seq_name))
+            sys.exit('%s annonex2embl ERROR: Problem with `%s`. Did not write to file.' % ('\n', seq_name))
 
 # 7. Close outfile
     outp_handle.close()

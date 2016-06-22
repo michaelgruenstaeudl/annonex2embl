@@ -74,12 +74,9 @@ class AnnoCheck:
         # Adjustment for non-start codons given the necessary use of
         # cds=True in TPL.
         if not extract.startswith(start_codon):
-            # 1. Convert the first three bases of extract into Bio.Seq.Seq
-            # first_aa = first_codon_seq.translate(table=transl_table, to_stop=to_stop, cds=False)
-            # transl[0] = first_aa
-            
-            # CONTINUE HERE
-            
+            first_codon_seq = extract[0:3]
+            first_aa = first_codon_seq.translate(table=transl_table, to_stop=to_stop, cds=False)
+            transl = first_aa + transl[1:]
         return transl
 
     @staticmethod
@@ -130,32 +127,36 @@ class AnnoCheck:
         from Bio.Seq import Seq
         from Bio.SeqFeature import FeatureLocation
 
-        pdb.set_trace()
-
         try:
             # Note: TFL must contain "cds=True"; don't delete it
             transl_out = AnnoCheck._transl(self.extract,
                 self.transl_table, cds=True)
             feat_loc = self.feature.location
         except:
-            if not AnnoCheck._check_protein_start(self.extract, 
-                self.transl_table):
-                raise ME.MyException('Feature "%s" of sequence "%s" does not '\
-                    'start with a Methionine (ATG).' % (self.feature.id,
-                                                        self.record_id))
-            else:
-                try:
-                    without_internalStop = AnnoCheck._transl(self.extract,
-                        self.transl_table)
-                    with_internalStop = AnnoCheck._transl(self.extract,
-                        self.transl_table, to_stop=True)
-                    transl_out = with_internalStop
-                    feat_loc = AnnoCheck._adjust_feat_loc(self.feature.location, 
-                        with_internalStop, without_internalStop)
-                except:
-                    raise ME.MyException('Translation of feature `%s` of '\
-                        'sequence `%s` unsuccessful.' % (self.feature.id,
-                                                         self.record_id))
+            # Legacycode:
+            #if not AnnoCheck._check_protein_start(self.extract, 
+            #    self.transl_table):
+            #    raise ME.MyException('Feature "%s" of sequence "%s" does not '\
+            #        'start with a Methionine (ATG).' % (self.feature.id,
+            #                                            self.record_id))
+            #else:
+            try:
+                without_internalStop = AnnoCheck._transl(self.extract,
+                    self.transl_table)
+                with_internalStop = AnnoCheck._transl(self.extract,
+                    self.transl_table, to_stop=True)
+                transl_out = with_internalStop
+                feat_loc = AnnoCheck._adjust_feat_loc(self.feature.location, 
+                    with_internalStop, without_internalStop)
+            except:
+                raise ME.MyException('Translation of feature `%s` of '\
+                    'sequence `%s` is unsuccessful.' % (self.feature.id,
+                    self.record_id))
+        if len(transl_out) < 2:
+            raise ME.MyException('Translation of feature `%s` of '\
+                'sequence `%s` indicates a protein length of only a '\
+                'single amino acid.' % (self.feature.id, self.record_id))
+        
         #transl_out = transl_out + "*"
         return (transl_out, feat_loc)
     

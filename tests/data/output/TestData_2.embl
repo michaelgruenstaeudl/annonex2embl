@@ -18,11 +18,11 @@ FT                   /transl_table=11
 FT   gene            join(<4..12,17..25,28..36)
 FT                   /note="foo"
 FT                   /product="forkhead box i1"
-FT                   /translation="MDIVSIGL"
+FT                   /translation="LDIVSIGL"
 FT   CDS             join(<4..12,17..25,28..36)
 FT                   /note="foo"
 FT                   /product="forkhead box i1"
-FT                   /translation="MDIVSIGL"
+FT                   /translation="LDIVSIGL"
 XX
 SQ   Sequence 38 BP; 12 A; 7 C; 8 G; 11 T; 0 other;
      taactggata tatagagtca gcattccgga ctttaacg                                38
@@ -73,14 +73,6 @@ FT                   /note="Tax.Authority: Author_3"
 FT                   /organism="Taxon six"
 FT                   /specimen_voucher="Herbarium_2: Collection#"
 FT                   /transl_table=11
-FT   gene            4..6
-FT                   /note="foo"
-FT                   /product="forkhead box i1"
-FT                   /translation="M"
-FT   CDS             4..6
-FT                   /note="foo"
-FT                   /product="forkhead box i1"
-FT                   /translation="M"
 XX
 SQ   Sequence 31 BP; 11 A; 5 C; 5 G; 10 T; 0 other;
      taaatgtaat atagagtccc tgactttaac g                                       31

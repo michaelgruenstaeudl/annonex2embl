@@ -56,7 +56,7 @@ class AnnoChecksTestCases(unittest.TestCase):
         from Bio.SeqFeature import FeatureLocation
         from Bio import SeqFeature
         
-        extract = Seq("ATGTAGTAA", generic_dna)
+        extract = Seq("ATGATATAA", generic_dna)
         loc = FeatureLocation(0, 9) # Stop_pos must be +1
         feature = SeqFeature.SeqFeature(loc, id='foobar', type='CDS')
         record_id = 'foobar'
@@ -66,15 +66,15 @@ class AnnoChecksTestCases(unittest.TestCase):
     def test_AnnoChecks_example_2(self):
         ''' Test to evaluate example 2 of AnnoChecks.check
 
-        This test evaluates the situation where an internal stop codon is 
-        present in the input sequence. '''
+        This test evaluates the situation where an internal stop 
+        codon exists in the input sequence. '''
         from Bio.Seq import Seq
         from Bio.Alphabet import generic_dna
         from Bio.SeqFeature import FeatureLocation
         from Bio import SeqFeature
         
-        extract = Seq("ATGTAATAA", generic_dna)
-        loc = FeatureLocation(0, 9) # Stop_pos must be +1
+        extract = Seq("ATGATATAATAA", generic_dna)
+        loc = FeatureLocation(0, 12) # Stop_pos must be +1
         feature = SeqFeature.SeqFeature(loc, id='foobar', type='CDS')
         record_id = 'foobar'
         self.assertTrue(CkOps.AnnoCheck(extract, feature,
@@ -83,14 +83,31 @@ class AnnoChecksTestCases(unittest.TestCase):
     def test_AnnoChecks_example_3(self):
         ''' Test to evaluate example 3 of AnnoChecks.check
 
-        This test evaluates the situation where the input sequence does not 
-        start with a Methionine. '''
+        This test evaluates the situation where the input sequence
+        does not start with a methionin. '''
         from Bio.Seq import Seq
         from Bio.Alphabet import generic_dna
         from Bio.SeqFeature import FeatureLocation
         from Bio import SeqFeature
         
-        extract = Seq("AAGTAA", generic_dna)
+        extract = Seq("AAGATATAA", generic_dna)
+        loc = FeatureLocation(0, 9) # Stop_pos must be +1
+        feature = SeqFeature.SeqFeature(loc, id='foobar', type='CDS')
+        record_id = 'foobar'
+        self.assertTrue(CkOps.AnnoCheck(extract, feature,
+            record_id).for_unittest())
+
+    def test_AnnoChecks_example_4(self):
+        ''' Test to evaluate example 4 of AnnoChecks.check
+
+        This test evaluates the situation where the input sequence only codes 
+        for a single aminoacid. '''
+        from Bio.Seq import Seq
+        from Bio.Alphabet import generic_dna
+        from Bio.SeqFeature import FeatureLocation
+        from Bio import SeqFeature
+        
+        extract = Seq("ATGTAA", generic_dna)
         loc = FeatureLocation(0, 6) # Stop_pos must be +1
         feature = SeqFeature.SeqFeature(loc, id='foobar', type='CDS')
         record_id = 'foobar'
