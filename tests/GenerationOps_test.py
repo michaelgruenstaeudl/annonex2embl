@@ -53,9 +53,10 @@ class GenerateFeatLocTestCases(unittest.TestCase):
     def test_GenerateFeatLoc_example_1(self):
         ''' Test to evaluate example 1 of GenerateFeatLoc.make_location
 
-        This test evaluates the function 'make_location'.
+        This test evaluates the function 'make_location' using
+        FeatureLocations.
         '''
-        charset_range = range(1,139)
+        charset_range = range(1,8)
 
         out = GnOps.GenerateFeatLoc().make_location(charset_range)
         self.assertIsInstance(out, Bio.SeqFeature.FeatureLocation) # FeatureLocation
@@ -63,9 +64,10 @@ class GenerateFeatLocTestCases(unittest.TestCase):
     def test_GenerateFeatLoc_example_2(self):
         ''' Test to evaluate example 2 of GenerateFeatLoc.make_location
 
-        This test evaluates the function 'make_location'.
+        This test evaluates the function 'make_location' using
+        CompoundLocations.
         '''
-        charset_range = range(1,37) + [134] + range(136,138)
+        charset_range = [1,2,3,7,8]
 
         out = GnOps.GenerateFeatLoc().make_location(charset_range)
         self.assertIsInstance(out, Bio.SeqFeature.CompoundLocation) # CompoundLocation
@@ -80,11 +82,24 @@ class GenerateFeatLocTestCases(unittest.TestCase):
         end_pos = SeqFeature.ExactPosition(9)
         location_object = SeqFeature.FeatureLocation(start_pos, end_pos)
 
-        new_loc = GnOps.GenerateFeatLoc().make_start_fuzzy(location_object)
-        out = new_loc.start
-        self.assertIsInstance(out, Bio.SeqFeature.BeforePosition)
+        out = GnOps.GenerateFeatLoc().make_start_fuzzy(location_object)
+        self.assertIsInstance(out, Bio.SeqFeature.FeatureLocation) # FeatureLocation
+        self.assertIsInstance(out.start, Bio.SeqFeature.BeforePosition) # Fuzzy Start
 
     def test_GenerateFeatLoc_example_4(self):
+        ''' Test to evaluate the function GenerateFeatLoc.make_start_fuzzy()
+
+        This test evaluates if start FeatureLocations are made fuzzy.
+        '''
+        from Bio import SeqFeature
+        charset_range = [1,2,3,7,8]
+        location_object = GnOps.GenerateFeatLoc().make_location(charset_range)
+
+        out = GnOps.GenerateFeatLoc().make_start_fuzzy(location_object)
+        self.assertIsInstance(out, Bio.SeqFeature.CompoundLocation) # CompoundLocation
+        self.assertIsInstance(out.parts[0].start, Bio.SeqFeature.BeforePosition) # Fuzzy Start
+
+    def test_GenerateFeatLoc_example_5(self):
         ''' Test to evaluate the function GenerateFeatLoc.make_end_fuzzy()
 
         This test evaluates if end FeatureLocations are made fuzzy.
@@ -94,9 +109,22 @@ class GenerateFeatLocTestCases(unittest.TestCase):
         end_pos = SeqFeature.ExactPosition(9)
         location_object = SeqFeature.FeatureLocation(start_pos, end_pos)
 
-        new_loc = GnOps.GenerateFeatLoc().make_end_fuzzy(location_object)
-        out = new_loc.end
-        self.assertIsInstance(out, Bio.SeqFeature.AfterPosition)
+        out = GnOps.GenerateFeatLoc().make_end_fuzzy(location_object)
+        self.assertIsInstance(out, Bio.SeqFeature.FeatureLocation) # FeatureLocation
+        self.assertIsInstance(out.end, Bio.SeqFeature.AfterPosition) # Fuzzy End
+
+    def test_GenerateFeatLoc_example_6(self):
+        ''' Test to evaluate the function GenerateFeatLoc.make_end_fuzzy()
+
+        This test evaluates if end FeatureLocations are made fuzzy.
+        '''
+        from Bio import SeqFeature
+        charset_range = [1,2,3,7,8]
+        location_object = GnOps.GenerateFeatLoc().make_location(charset_range)
+
+        out = GnOps.GenerateFeatLoc().make_start_fuzzy(location_object)
+        self.assertIsInstance(out, Bio.SeqFeature.CompoundLocation) # CompoundLocation
+        self.assertIsInstance(out.parts[0].start, Bio.SeqFeature.BeforePosition) # Fuzzy End
 
 
 class GenerateSeqFeatureTestCases(unittest.TestCase):

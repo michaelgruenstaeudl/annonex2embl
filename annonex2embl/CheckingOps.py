@@ -30,6 +30,9 @@ import pdb
 # GLOBAL VARIABLES #
 ####################
 
+start_codon = "ATG"
+stop_codons = ["TAG", "TAA", "TGA"] # amber, ochre, opal
+
 ###########
 # CLASSES #
 ###########
@@ -68,6 +71,15 @@ class AnnoCheck:
         from Bio.Seq import Seq
         transl = extract.translate(table=transl_table, to_stop=to_stop,
             cds=cds)
+        # Adjustment for non-start codons given the necessary use of
+        # cds=True in TPL.
+        if not extract.startswith(start_codon):
+            # 1. Convert the first three bases of extract into Bio.Seq.Seq
+            # first_aa = first_codon_seq.translate(table=transl_table, to_stop=to_stop, cds=False)
+            # transl[0] = first_aa
+            
+            # CONTINUE HERE
+            
         return transl
 
     @staticmethod
@@ -118,7 +130,10 @@ class AnnoCheck:
         from Bio.Seq import Seq
         from Bio.SeqFeature import FeatureLocation
 
+        pdb.set_trace()
+
         try:
+            # Note: TFL must contain "cds=True"; don't delete it
             transl_out = AnnoCheck._transl(self.extract,
                 self.transl_table, cds=True)
             feat_loc = self.feature.location

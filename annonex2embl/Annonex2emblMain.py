@@ -38,12 +38,15 @@ __version__ = '2016.06.21.2200'
 # DEBUGGING #
 #############
 
-#import pdb
+import pdb
 #pdb.set_trace()
 
 ####################
 # GLOBAL VARIABLES #
 ####################
+
+start_codon = "ATG"
+stop_codons = ["TAG", "TAA", "TGA"] # amber, ochre, opal
 
 ###########
 # CLASSES #
@@ -56,9 +59,7 @@ __version__ = '2016.06.21.2200'
 TODO:
     (i) Include a function to check internet connectivity.
 
-    Pseudocode for fuzzy operators:
-    Test if fuzzy operators exist
-      If yes: apply fuzzy operators
+    (ii) Functionality for making ends fuzzy.
 
 '''
 
@@ -73,16 +74,6 @@ def annonex2embl(path_to_nex,
                  out_format='embl',
                  seqname_col='isolate',
                  transl_table='11'):
-
-    ''' Example:
-annonex2embl("/home/michael_science/git/michaelgruenstaeudl_annonex2embl/tests/data/input/TestData_2.nex",
-             "/home/michael_science/git/michaelgruenstaeudl_annonex2embl/tests/data/input/TestData_2.csv",
-             "mi.gruenstaeudl@gmail.com",
-             "/home/michael_science/git/michaelgruenstaeudl_annonex2embl/tests/data/output/TestData_2.embl",
-             out_format='embl',
-             seqname_col='isolate',
-             transl_table='11')
-    '''
 
 # 1. Open outfile
     outp_handle = open(path_to_outfile, 'a')
@@ -154,6 +145,8 @@ annonex2embl("/home/michael_science/git/michaelgruenstaeudl_annonex2embl/tests/d
             charset_sym, charset_type, charset_product = charset_dict[charset_name]
 
 # 6.5.3. Generate a regular SeqFeature and append to seq_record.features
+#        Note: The position indices for the stop codon are truncated in 
+#              this step.
             seq_feature = GnOps.GenerateSeqFeature().regular_feat(charset_sym,
                 charset_type, location_object, charset_product)
             seq_record.features.append(seq_feature)
@@ -166,7 +159,8 @@ annonex2embl("/home/michael_science/git/michaelgruenstaeudl_annonex2embl/tests/d
 
 # 6.7. Translate and check quality of translation
         for indx, feature in enumerate(seq_record.features):
-            if feature.type == 'CDS' or feature.type == 'gene': # Check if feature is a coding region
+            # Check if feature is a coding region
+            if feature.type == 'CDS' or feature.type == 'gene':
                 try:
                     feature = CkOps.CheckCoord().transl_and_quality_of_transl( \
                         seq_record, feature, transl_table)
@@ -176,11 +170,22 @@ annonex2embl("/home/michael_science/git/michaelgruenstaeudl_annonex2embl/tests/d
                         'output.' % (feature.id, seq_record.id))
                     seq_record.features.pop(indx)
 
-# x.x. Introduce fuzzy ends
-        # Conduct if statements regarding start and stop codons
-        # Insert a fuzzy end either at the start or at the end.
+# 6.8. Introduce fuzzy ends
+        for feature in seq_record.features:
+            # Check if feature is a coding region
+            if feature.type == 'CDS' or feature.type == 'gene':
+                # Note: Don't use "feature.extract(seq_record.seq)" in TFL,
+                #       as stop codon was truncated from feature under 
+                #       Step 6.5.3.
+                coding_seq = ''.join([seq_record.seq[i] for i in charset_range])
+                if not coding_seq.startswith(start_codon):
+                    feature.location = GnOps.GenerateFeatLoc(
+                        ).make_start_fuzzy(feature.location)
+                if all([not coding_seq.endswith(c) for c in stop_codons]):
+                    feature.location = GnOps.GenerateFeatLoc(
+                        ).make_end_fuzzy(feature.location)
 
-# 6.8. Write each completed record to file
+# 6.9. Write each completed record to file
         try:
             SeqIO.write(seq_record, outp_handle, out_format)
         except:

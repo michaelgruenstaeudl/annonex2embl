@@ -83,7 +83,14 @@ class GenerateFeatLoc:
             -
             
         Examples:
-            Example 1: # Default feature location
+            Example 1:
+                >>> csrange = range(1,8)
+                >>> csrange
+                Out: [1, 2, 3, 4, 5, 6, 7]
+                >>> GenerateFeatLoc().make_location(csrange)
+                Out: FeatureLocation(ExactPosition(1), ExactPosition(8))
+                
+            Example 2:
                 >>> csrange = [1,2,3,7,8]
                 >>> csrange
                 Out: [1, 2, 3, 7, 8]
@@ -118,13 +125,31 @@ class GenerateFeatLoc:
                 >>> new_loc = GenerateFeatLoc().make_start_fuzzy(location_object)
                 >>> new_loc
                 Out: FeatureLocation(BeforePosition(5), ExactPosition(9))
+
+            Example 2:
+                >>> from Bio import SeqFeature
+                >>> csrange = [1,2,3,7,8]
+                >>> location_object = GenerateFeatLoc().make_location(csrange)
+                >>> location_object
+                Out: CompoundLocation([FeatureLocation(ExactPosition(1),
+                ExactPosition(4)), FeatureLocation(ExactPosition(7),
+                ExactPosition(9))], 'join')
+                >>> new_loc = GenerateFeatLoc().make_start_fuzzy(location_object)
+                >>> new_loc
+                Out: CompoundLocation([FeatureLocation(BeforePosition(1), ExactPosition(4)), FeatureLocation(ExactPosition(7), ExactPosition(9))], 'join')
         '''
         
         from Bio import SeqFeature
-        new_start_pos = SeqFeature.BeforePosition(location_object.start)
-        new_location_object = SeqFeature.FeatureLocation(new_start_pos,
-            location_object.end)
-        return new_location_object
+        if hasattr(location_object, 'parts'):
+            if len(location_object.parts) == 1:
+                new_start_pos = SeqFeature.BeforePosition(location_object.start)
+                location_object = SeqFeature.FeatureLocation(new_start_pos,
+                    location_object.end)
+            if len(location_object.parts) > 1:
+                new_start_pos = SeqFeature.BeforePosition(location_object.parts[0].start)
+                location_object.parts[0] = SeqFeature.FeatureLocation(new_start_pos,
+                    location_object.parts[0].end)
+        return location_object
     
     def make_end_fuzzy(self, location_object):
         ''' This function makes the end position of location 
@@ -141,13 +166,31 @@ class GenerateFeatLoc:
                 >>> new_loc = GenerateFeatLoc().make_end_fuzzy(location_object)
                 >>> new_loc
                 Out: FeatureLocation(ExactPosition(5), AfterPosition(9))
+
+            Example 2:
+                >>> from Bio import SeqFeature
+                >>> csrange = [1,2,3,7,8]
+                >>> location_object = GenerateFeatLoc().make_location(csrange)
+                >>> location_object
+                Out: CompoundLocation([FeatureLocation(ExactPosition(1),
+                ExactPosition(4)), FeatureLocation(ExactPosition(7),
+                ExactPosition(9))], 'join')
+                >>> new_loc = GenerateFeatLoc().make_end_fuzzy(location_object)
+                >>> new_loc
+                Out: CompoundLocation([FeatureLocation(ExactPosition(1), ExactPosition(4)), FeatureLocation(ExactPosition(7), AfterPosition(9))], 'join')
         '''
         
         from Bio import SeqFeature
-        new_end_pos = SeqFeature.AfterPosition(location_object.end)
-        new_location_object = SeqFeature.FeatureLocation(
-            location_object.start, new_end_pos)
-        return new_location_object
+        if hasattr(location_object, 'parts'):
+            if len(location_object.parts) == 1:
+                new_end_pos = SeqFeature.AfterPosition(location_object.end)
+                location_object = SeqFeature.FeatureLocation(
+                    location_object.start, new_end_pos)
+            if len(location_object.parts) > 1:
+                new_end_pos = SeqFeature.AfterPosition(location_object.parts[-1].end)
+                location_object.parts[-1] = SeqFeature.FeatureLocation(
+                    location_object.parts[-1].start, new_end_pos)
+        return location_object
 
 
 class GenerateSeqFeature:
