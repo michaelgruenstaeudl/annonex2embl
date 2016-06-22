@@ -57,9 +57,8 @@ class GenerateFeatLocTestCases(unittest.TestCase):
         '''
         charset_range = range(1,139)
 
-        out = GnOps.GenerateFeatLoc(charset_range).make_location()
+        out = GnOps.GenerateFeatLoc().make_location(charset_range)
         self.assertIsInstance(out, Bio.SeqFeature.FeatureLocation) # FeatureLocation
-
 
     def test_GenerateFeatLoc_example_2(self):
         ''' Test to evaluate example 2 of GenerateFeatLoc.make_location
@@ -68,8 +67,37 @@ class GenerateFeatLocTestCases(unittest.TestCase):
         '''
         charset_range = range(1,37) + [134] + range(136,138)
 
-        out = GnOps.GenerateFeatLoc(charset_range).make_location()
+        out = GnOps.GenerateFeatLoc().make_location(charset_range)
         self.assertIsInstance(out, Bio.SeqFeature.CompoundLocation) # CompoundLocation
+
+    def test_GenerateFeatLoc_example_3(self):
+        ''' Test to evaluate the function GenerateFeatLoc.make_start_fuzzy()
+
+        This test evaluates if start FeatureLocations are made fuzzy.
+        '''
+        from Bio import SeqFeature
+        start_pos = SeqFeature.ExactPosition(5)
+        end_pos = SeqFeature.ExactPosition(9)
+        location_object = SeqFeature.FeatureLocation(start_pos, end_pos)
+
+        new_loc = GnOps.GenerateFeatLoc().make_start_fuzzy(location_object)
+        out = new_loc.start
+        self.assertIsInstance(out, Bio.SeqFeature.BeforePosition)
+
+    def test_GenerateFeatLoc_example_4(self):
+        ''' Test to evaluate the function GenerateFeatLoc.make_end_fuzzy()
+
+        This test evaluates if end FeatureLocations are made fuzzy.
+        '''
+        from Bio import SeqFeature
+        start_pos = SeqFeature.ExactPosition(5)
+        end_pos = SeqFeature.ExactPosition(9)
+        location_object = SeqFeature.FeatureLocation(start_pos, end_pos)
+
+        new_loc = GnOps.GenerateFeatLoc().make_end_fuzzy(location_object)
+        out = new_loc.end
+        self.assertIsInstance(out, Bio.SeqFeature.AfterPosition)
+
 
 class GenerateSeqFeatureTestCases(unittest.TestCase):
     ''' Tests for class `GenerateSeqFeature` '''
@@ -96,7 +124,7 @@ class GenerateSeqFeatureTestCases(unittest.TestCase):
         feature_name = 'psbI'
         feature_type = 'intron'
         charset_range = [2, 3, 4, 5]
-        feature_loc = GnOps.GenerateFeatLoc(charset_range).make_location()
+        feature_loc = GnOps.GenerateFeatLoc().make_location(charset_range)
 
         out = GnOps.GenerateSeqFeature().regular_feat(feature_name,
             feature_type, feature_loc)

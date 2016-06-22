@@ -148,7 +148,7 @@ annonex2embl("/home/michael_science/git/michaelgruenstaeudl_annonex2embl/tests/d
         for charset_name, charset_range in charsets_degapped.items():
 
 # 6.5.1. Convert charset_range into Location Object
-            location_object = GnOps.GenerateFeatLoc(charset_range).make_location()
+            location_object = GnOps.GenerateFeatLoc().make_location(charset_range)
 
 # 6.5.2. Assign a gene product to a gene name
             charset_sym, charset_type, charset_product = charset_dict[charset_name]
@@ -175,6 +175,10 @@ annonex2embl("/home/michael_science/git/michaelgruenstaeudl_annonex2embl/tests/d
                     print(' Feature "%s" of sequence "%s" is not saved into '\
                         'output.' % (feature.id, seq_record.id))
                     seq_record.features.pop(indx)
+
+# x.x. Introduce fuzzy ends
+        # Conduct if statements regarding start and stop codons
+        # Insert a fuzzy end either at the start or at the end.
 
 # 6.8. Write each completed record to file
         try:

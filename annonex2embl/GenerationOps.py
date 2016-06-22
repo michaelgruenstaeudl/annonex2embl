@@ -16,7 +16,7 @@ import MyExceptions as ME
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2016.06.13.1600'
+__version__ = '2016.06.22.1100'
 
 #############
 # DEBUGGING #
@@ -34,19 +34,12 @@ __version__ = '2016.06.13.1600'
 ###########
 
 class GenerateFeatLoc:
-    ''' This class contains functions to generate feature locations.
-
-    Args:
-        charset_range (list): a list of index positions, example: [1,2,3,8,9 ...]
-    Returns:
-        FeatureLocation (obj):  A SeqFeature location object, either a
-                                FeatureLocation or a CompoundLocation
-    Raises:
-        -
+    ''' This class contains functions to generate or manipulate
+    SeqFeature location objects.
     '''
 
-    def __init__(self, charset_range):
-        self.csrange = charset_range
+    def __init__(self):
+        pass
 
     @staticmethod
     def _exact(csrange):
@@ -77,22 +70,30 @@ class GenerateFeatLoc:
             outlist.append(map(itemgetter(1), g))
         return outlist
 
-    def make_location(self):
+    def make_location(self, charset_range):
         ''' This function goes through a decision tree and generates
         fitting feature locations.
+
+        Args:
+            charset_range (list): a list of index positions, example: [1,2,3,8,9 ...]
+        Returns:
+            FeatureLocation (obj):  A SeqFeature location object; either a
+                                    FeatureLocation or a CompoundLocation
+        Raises:
+            -
             
         Examples:
             Example 1: # Default feature location
                 >>> csrange = [1,2,3,7,8]
                 >>> csrange
                 Out: [1, 2, 3, 7, 8]
-                >>> GenerateFeatLoc(csrange).make_location()
+                >>> GenerateFeatLoc().make_location(csrange)
                 Out: CompoundLocation([FeatureLocation(ExactPosition(1),
                 ExactPosition(4)), FeatureLocation(ExactPosition(7),
                 ExactPosition(9))], 'join')
         '''
         contiguous_ranges = GenerateFeatLoc._extract_contiguous_subsets(
-            self.csrange)
+            charset_range)
         # Convert each contiguous range into an exact feature location
         for i,r in enumerate(contiguous_ranges):
             contiguous_ranges[i] = GenerateFeatLoc._exact(r)
@@ -101,6 +102,52 @@ class GenerateFeatLoc:
             return CompoundLocation(contiguous_ranges)
         else:
             return contiguous_ranges[0]
+    
+    def make_start_fuzzy(self, location_object):
+        ''' This function makes the start position of location 
+        objects fuzzy.
+        
+        Examples:
+            Example 1:
+                >>> from Bio import SeqFeature
+                >>> start_pos = SeqFeature.ExactPosition(5)
+                >>> end_pos = SeqFeature.ExactPosition(9)
+                >>> location_object = SeqFeature.FeatureLocation(start_pos, end_pos)
+                >>> location_object
+                Out: FeatureLocation(ExactPosition(5), ExactPosition(9))
+                >>> new_loc = GenerateFeatLoc().make_start_fuzzy(location_object)
+                >>> new_loc
+                Out: FeatureLocation(BeforePosition(5), ExactPosition(9))
+        '''
+        
+        from Bio import SeqFeature
+        new_start_pos = SeqFeature.BeforePosition(location_object.start)
+        new_location_object = SeqFeature.FeatureLocation(new_start_pos,
+            location_object.end)
+        return new_location_object
+    
+    def make_end_fuzzy(self, location_object):
+        ''' This function makes the end position of location 
+        objects fuzzy.
+        
+        Examples:
+            Example 1:
+                >>> from Bio import SeqFeature
+                >>> start_pos = SeqFeature.ExactPosition(5)
+                >>> end_pos = SeqFeature.ExactPosition(9)
+                >>> location_object = SeqFeature.FeatureLocation(start_pos, end_pos)
+                >>> location_object
+                Out: FeatureLocation(ExactPosition(5), ExactPosition(9))
+                >>> new_loc = GenerateFeatLoc().make_end_fuzzy(location_object)
+                >>> new_loc
+                Out: FeatureLocation(ExactPosition(5), AfterPosition(9))
+        '''
+        
+        from Bio import SeqFeature
+        new_end_pos = SeqFeature.AfterPosition(location_object.end)
+        new_location_object = SeqFeature.FeatureLocation(
+            location_object.start, new_end_pos)
+        return new_location_object
 
 
 class GenerateSeqFeature:
@@ -139,7 +186,7 @@ class GenerateSeqFeature:
         from Bio import SeqFeature
         
         full_index = range(0, full_len)
-        feature_loc = GenerateFeatLoc(full_index).make_location()
+        feature_loc = GenerateFeatLoc().make_location(full_index)
         source_feature = SeqFeature.SeqFeature(feature_loc, id='source',
             type='source', qualifiers=quals)
         source_feature.qualifiers["transl_table"]=transl_table

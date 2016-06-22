@@ -92,7 +92,7 @@ class AnnoCheck:
             len_with_internStop = len(transl_with_internStop) * 3
             adjusted_range = compound_integer_range[:len_with_internStop]
             # 3. Establish location            
-            feat_loc = GnOps.GenerateFeatLoc(adjusted_range).make_location()
+            feat_loc = GnOps.GenerateFeatLoc().make_location(adjusted_range)
         if len(transl_without_internStop) == len(transl_with_internStop):
             feat_loc = location_object
         return feat_loc
