@@ -15,9 +15,9 @@ import GenerationOps as GnOps
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2016.06.21.2300'
+__version__ = '2017.01.21.2300'
 
 #############
 # DEBUGGING #
@@ -177,62 +177,11 @@ class AnnoCheck:
             raise e
 
 
-class CheckCoord:
+class TranslCheck:
     ''' This class contains functions to coordinate different checks. '''
         
     def __init__(self):
         pass
-
-    def quality_of_qualifiers(self, lst_of_dcts, label):
-        ''' This function conducts a series of quality checks on the qualifiers 
-        list (a list of dictionaries).
-        
-        First (label_present), it checks if a qualifier matrix (and, hence, each 
-        entry) contains a column labelled with <seqname_col_label>.
-        Second (valid_INSDC_quals), it checks if column names constitute valid 
-        INSDC feature table qualifiers.
-            
-        Args:
-            label (str):  a string; example: 'isolate'
-            lst_of_dcts (list): a list of dictionaries; example: 
-                                [{'isolate': 'taxon_A', 'country': 'Ecuador'},
-                                 {'isolate': 'taxon_B', 'country': 'Peru'}] 
-        Returns:
-            True, unless exception
-        Raises:
-            passed exception
-
-        Examples:
-            Example 1: # Label is among keys of list of dicts
-                >>> label = 'isolate'
-                >>> lst_of_dcts = [{'isolate': 'taxon_A', 'country': 'Ecuador'},
-                                   {'isolate': 'taxon_B', 'country': 'Peru'}]
-                >>> CheckCoord().quality_of_qualifiers(lst_of_dcts, label)
-                Out: True
-
-            Example 2: # Label is NOT among keys of list of dicts
-                >>> label = 'sequence_name'
-                >>> lst_of_dcts = [{'isolate': 'taxon_A', 'country': 'Ecuador'},
-                                   {'isolate': 'taxon_B', 'country': 'Peru'}]
-                >>> CheckCoord().quality_of_qualifiers(lst_of_dcts, label)
-                Out: ME.MyException: csv-file does not contain a column labelled `sequence_name`
-    
-        TODO:
-            (i) Check if sequence_names are also in .nex-file
-            (ii) Have all metadata conform to basic ASCII standards (not 
-                extended ASCII)!
-        '''
-
-        qual_checks = MetaCheck(lst_of_dcts)
-        try:
-            qual_checks.label_present(label)
-        except ME.MyException as e:
-            raise e
-        try:
-            qual_checks.valid_INSDC_quals()
-        except ME.MyException as e:
-            raise e
-        return True
     
     def transl_and_quality_of_transl(self, seq_record, feature, transl_table):
         ''' This function conducts a translation of a coding region and checks 
@@ -252,21 +201,12 @@ class CheckCoord:
             Example 1: # 
 
             Example 2: # 
-
-        TODO:
-            (i) Adjust code of AnnoCheck.check() so that the start position of a 
-                subsequent feature is also adjusted.                
-            (ii) Adjust the location position in code of AnnoCheck.check() so 
-                that the stop codon is also included.
-            (iii) SHOULD EXAMPLE 2 NOT RESULT IN A FEATURE LOCATION THAT ENDS 
-                AT ExactPosition(5), I.E. AFTER THE STOP CODON ???
         '''
 
         extract = feature.extract(seq_record)
         try:
             transl, loc = AnnoCheck(extract.seq, feature, seq_record.id, 
                                      transl_table).check()
-            #pdb.set_trace()
             feature.qualifiers["translation"] = transl
             feature.location = loc
         except ME.MyException as e:
@@ -274,14 +214,16 @@ class CheckCoord:
         return feature
 
 
-class MetaCheck:
+class QualifierCheck:
     ''' This class contains functions to evaluate the quality of metadata.
     
     Args:
         lst_of_dcts (list): a list of dictionaries; example: 
                             [{'foo': 'foobarqux', 'bar': 'foobarqux', 
                               'qux': 'foobarqux'}, {'foo': 'foobarbaz', 
-                              'bar': 'foobarbaz', 'baz': 'foobarbaz'}]    
+                              'bar': 'foobarbaz', 'baz': 'foobarbaz'}]
+        label (???): ?
+    
     Returns:
         none
     
@@ -289,10 +231,12 @@ class MetaCheck:
         ME.MyException
     '''
     
-    def __init__(self, lst_of_dcts):
+    def __init__(self, lst_of_dcts, label):
         self.lst_of_dcts = lst_of_dcts
+        self.label = label
     
-    def label_present(self, label):
+    @staticmethod
+    def _label_present(lst_of_dcts, label):
         ''' This function checks if each (!) list of dictionary keys of a 
         list of dictionaries encompass the element <label> at least once.
         
@@ -325,13 +269,28 @@ class MetaCheck:
                 >>> MetaCheck(lst_of_dcts).label_present(label)
                 Out: ME.MyException: csv-file does not contain a column labelled `norf`
         '''
-
-        if not all(label in dct.keys() for dct in self.lst_of_dcts):
+    
+        if not all(label in dct.keys() for dct in lst_of_dcts):
             raise ME.MyException('csv-file does not contain a column '\
                 'labelled `%s`' % (label))
         return True
     
-    def valid_INSDC_quals(self):
+    @staticmethod
+    def _rm_empty_modifier(lst_of_dcts):
+        ''' This function removes any qualifier from a dictionary which 
+        displays an empty modifier.
+        
+        Technically, this function loops through the qualifier 
+        dictionaries and removes any key-value-pair from a dictionary 
+        which contains an empty value.
+        '''
+
+        filtered_lst_of_dcts = [{k: v for k, v in dct.items() if v != ''}\
+            for dct in lst_of_dcts]
+        return filtered_lst_of_dcts
+    
+    @staticmethod
+    def _valid_INSDC_quals(lst_of_dcts):
         ''' This function checks if every (!) dictionary key in a list of 
         dictionaries is a valid INSDC qualifier.
         
@@ -381,10 +340,55 @@ class MetaCheck:
         
         from itertools import chain
         keys_present = list(chain.from_iterable([dct.keys() for dct in 
-            self.lst_of_dcts]))
+            lst_of_dcts]))
         not_valid = [k for k in keys_present if k not in \
             valid_INSDC_quals]
         if not_valid:
             raise ME.MyException('The following are invalid INSDC qualifiers: '\
                 '`%s`' % (', '.join(not_valid)))
+        return True
+    
+    def quality_of_qualifiers(self):
+        ''' This function conducts a series of quality checks on the qualifiers 
+        list (a list of dictionaries).
+        
+        First (label_present), it checks if a qualifier matrix (and, hence, each 
+        entry) contains a column labelled with <seqname_col_label>.
+        Second (valid_INSDC_quals), it checks if column names constitute valid 
+        INSDC feature table qualifiers.
+            
+        Args:
+            label (str):  a string; example: 'isolate'
+            lst_of_dcts (list): a list of dictionaries; example: 
+                                [{'isolate': 'taxon_A', 'country': 'Ecuador'},
+                                 {'isolate': 'taxon_B', 'country': 'Peru'}] 
+        Returns:
+            True, unless exception
+        Raises:
+            passed exception
+
+        Examples:
+            Example 1: # Label is among keys of list of dicts
+                >>> label = 'isolate'
+                >>> lst_of_dcts = [{'isolate': 'taxon_A', 'country': 'Ecuador'},
+                                   {'isolate': 'taxon_B', 'country': 'Peru'}]
+                >>> QualifierCheck(lst_of_dcts, label).quality_of_qualifiers()
+                Out: True
+
+            Example 2: # Label is NOT among keys of list of dicts
+                >>> label = 'sequence_name'
+                >>> lst_of_dcts = [{'isolate': 'taxon_A', 'country': 'Ecuador'},
+                                   {'isolate': 'taxon_B', 'country': 'Peru'}]
+                >>> QualifierCheck(lst_of_dcts, label)..quality_of_qualifiers()
+                Out: ME.MyException: csv-file does not contain a column labelled `sequence_name`
+        '''
+
+        try:
+            QualifierCheck._label_present(self.lst_of_dcts, self.label)
+        except ME.MyException as e:
+            raise e
+        try:
+            QualifierCheck._valid_INSDC_quals(self.lst_of_dcts)
+        except ME.MyException as e:
+            raise e
         return True

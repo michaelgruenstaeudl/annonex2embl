@@ -24,9 +24,9 @@ import CheckingOps as CkOps
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2016.02.18.1100'
+__version__ = '2017.01.21.2300'
 
 #############
 # DEBUGGING #
@@ -115,41 +115,15 @@ class AnnoChecksTestCases(unittest.TestCase):
             CkOps.AnnoCheck(extract, feature, record_id).for_unittest()
 
 
-class CheckCoordTestCases(unittest.TestCase):
-    ''' Tests for class `CheckCoord` '''
+#class TranslCheckTestCases(unittest.TestCase):
+#    ''' Tests for class `TranslCheck` '''
+
+
+class QualifierCheckTestCases(unittest.TestCase):
+    ''' Tests for class `QualifierCheck` '''
     
-    def test_CheckCoord_example_1(self):
-        ''' Test to evaluate example 1 of CheckCoord().quality_of_qualifiers()
-
-        This test evaluates the situation where the input label is among the
-        keys of the list of dictionaries.
-        '''
-        
-        label = 'isolate'
-        lst_of_dcts = [{'isolate': 'taxon_A', 'country': 'Ecuador'},
-                       {'isolate': 'taxon_B', 'country': 'Peru'}]
-        self.assertTrue(CkOps.CheckCoord().quality_of_qualifiers(lst_of_dcts,
-                        label))
-
-    def test_CheckCoord_example_2(self):
-        ''' Test to evaluate example 2 of CheckCoord().quality_of_qualifiers()
-
-        This test evaluates the situation where the input label is NOT among
-        the keys of the list of dictionaries.
-        '''
-        
-        label = 'sequence_name'
-        lst_of_dcts = [{'isolate': 'taxon_A', 'country': 'Ecuador'},
-                       {'isolate': 'taxon_B', 'country': 'Peru'}]
-        with self.assertRaises(ME.MyException):
-            CkOps.CheckCoord().quality_of_qualifiers(lst_of_dcts, label)
-
-
-class MetaCheckTestCases(unittest.TestCase):
-    ''' Tests for class `MetaCheck` '''
-    
-    def test_MetaCheck_label_present_example_1(self):
-        ''' Test to evaluate example 1 of MetaCheck.label_present
+    def test_QualifierCheck_label_present_example_1(self):
+        ''' Test to evaluate example 1 of QualifierCheck._label_present
 
         This test evaluates the situation where the label is present in ALL 
         key lists.
@@ -159,10 +133,10 @@ class MetaCheckTestCases(unittest.TestCase):
             'qux': 'foobarqux'}, {'foo': 'foobarbaz', 'bar': 'foobarbaz', 
             'baz': 'foobarbaz'}]
         label = 'foo'
-        self.assertTrue(CkOps.MetaCheck(lst_of_dcts).label_present(label)) 
+        self.assertTrue(CkOps.QualifierCheck._label_present(lst_of_dcts, label)) 
     
-    def test_MetaCheck_label_present_example_2(self):
-        ''' Test to evaluate example 2 of MetaCheck.label_present
+    def test_QualifierCheck_label_present_example_2(self):
+        ''' Test to evaluate example 2 of QualifierCheck._label_present
 
         This test evaluates the situation where the label is not present in 
         EACH key list.
@@ -173,10 +147,10 @@ class MetaCheckTestCases(unittest.TestCase):
             'baz': 'foobarbaz'}]
         label = 'qux'
         with self.assertRaises(ME.MyException):
-            CkOps.MetaCheck(lst_of_dcts).label_present(label)
+            CkOps.QualifierCheck._label_present(lst_of_dcts, label)
     
-    def test_MetaCheck_label_present_example_3(self):
-        ''' Test to evaluate example 3 of MetaCheck.label_present
+    def test_QualifierCheck_label_present_example_3(self):
+        ''' Test to evaluate example 3 of QualifierCheck._label_present
 
         This test evaluates the situation where the label is not present in 
         ANY key list.
@@ -187,22 +161,37 @@ class MetaCheckTestCases(unittest.TestCase):
             'baz': 'foobarbaz'}]
         label = 'norf'
         with self.assertRaises(ME.MyException):
-            CkOps.MetaCheck(lst_of_dcts).label_present(label)
+            CkOps.QualifierCheck._label_present(lst_of_dcts, label)
+    
+    def test_QualifierCheck_label_present_example_1(self):
+        ''' Test to evaluate example 1 of QualifierCheck._rm_empty_modifier
 
-    def test_MetaCheck_valid_INSDC_quals_example_1(self):
-        ''' Test to evaluate example 1 of MetaCheck.valid_INSDC_quals
+        This test evaluates the situation where empty modifiers are in
+        qualifiers lists.
+        '''
+        
+        lst_of_dcts = [{'foo': 'foo', 'bar': 'bar', 
+            'qux': ''}, {'foo': '', 'bar': 'bar', 
+            'baz': 'baz'}]
+        out_ideal = [{'foo': 'foo', 'bar': 'bar'}, 
+            {'bar': 'bar', 'baz': 'baz'}]
+        out_actual = CkOps.QualifierCheck._rm_empty_modifier(lst_of_dcts)
+        self.assertEqual(out_actual, out_ideal)
+    
+    def test_QualifierCheck_valid_INSDC_quals_example_1(self):
+        ''' Test to evaluate example 1 of QualifierCheck._valid_INSDC_quals
 
-        This test evaluates the situation where no invalid qualifiers are
+        This test evaluates the situation where only valid qualifiers are
         present.
         '''
         
         lst_of_dcts = [{'allele': 'foobar', 'altitude': 'foobar', 
             'anticodon': 'foobar'}, {'trans_splicing': 'foobar', 
             'type_material': 'foobar', 'variety': 'foobar'}]
-        self.assertTrue(CkOps.MetaCheck(lst_of_dcts).valid_INSDC_quals())
+        self.assertTrue(CkOps.QualifierCheck._valid_INSDC_quals(lst_of_dcts))
 
-    def test_MetaCheck_valid_INSDC_quals_example_2(self):
-        ''' Test to evaluate example 2 of MetaCheck.valid_INSDC_quals
+    def test_QualifierCheck_valid_INSDC_quals_example_2(self):
+        ''' Test to evaluate example 2 of QualifierCheck._valid_INSDC_quals
 
         This test evaluates the situation where invalid qualifiers are very 
         much present.
@@ -212,7 +201,33 @@ class MetaCheckTestCases(unittest.TestCase):
             'anticodon': 'foobar'}, {'MyInvalidQual_2': 'foobar',
             'type_material': 'foobar', 'variety': 'foobar'}]
         with self.assertRaises(ME.MyException):
-            CkOps.MetaCheck(lst_of_dcts).valid_INSDC_quals()
+            CkOps.QualifierCheck._valid_INSDC_quals(lst_of_dcts)
+
+    def test_QualifierCheck_quality_of_qualifiers_example_1(self):
+        ''' Test to evaluate example 1 of _QualifierCheck().quality_of_qualifiers()
+
+        This test evaluates the situation where the input label is among the
+        keys of the list of dictionaries.
+        '''
+        
+        lst_of_dcts = [{'isolate': 'taxon_A', 'country': 'Ecuador'},
+                       {'isolate': 'taxon_B', 'country': 'Peru'}]
+        label = 'isolate'
+        self.assertTrue(CkOps.QualifierCheck(lst_of_dcts, label).quality_of_qualifiers())
+
+    def test_QualifierCheck_quality_of_qualifiers_example_2(self):
+        ''' Test to evaluate example 2 of _QualifierCheck().quality_of_qualifiers()
+
+        This test evaluates the situation where the input label is NOT among
+        the keys of the list of dictionaries.
+        '''
+        
+        lst_of_dcts = [{'isolate': 'taxon_A', 'country': 'Ecuador'},
+                       {'isolate': 'taxon_B', 'country': 'Peru'}]
+        label = 'sequence_name'
+        with self.assertRaises(ME.MyException):
+            CkOps.QualifierCheck(lst_of_dcts, label).quality_of_qualifiers()
+
 
 #############
 # FUNCTIONS #

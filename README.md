@@ -3,6 +3,6 @@ Converts annotated DNA sequence alignments in NEXUS format to EMBL submission fi
 
 #### CHANGELOG:
 
-###### 2017.01.21.2200
+###### 2017.01.21
 * Leading and trailing ambiguities per sequence are removed while maintaining correct annotations.
 * Modifiers without content are not included in the output.

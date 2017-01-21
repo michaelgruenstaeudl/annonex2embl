@@ -32,7 +32,7 @@ import IOOps as IOOps
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.01.21.2200'
+__version__ = '2017.01.21.2300'
 
 #############
 # DEBUGGING #
@@ -56,9 +56,26 @@ stop_codons = ["TAG", "TAA", "TGA"] # amber, ochre, opal
 # TODO #
 ########
 '''
-TODO:
-    (i) Include a function to check internet connectivity.
-    (ii) Functionality for making ends fuzzy.
+    GENERAL ISSUES:
+        (a) Include a function to check internet connectivity.
+        (b) Functionality for making ends fuzzy.
+        (c) Move lists like valid_INSDC_quals into global variables file,
+            so that they don't mess up code.
+        (d) Move start and stop codon specs into global variables file,
+            so that they don't mess up the code.
+
+    REGARDING CHECKINGOPS().QUALIFIERCHECK().QUALITY_OF_QUALIFIERS():
+        (a) Check if sequence_names are also in .nex-file
+        (b) Have all metadata conform to basic ASCII standards (not 
+            extended ASCII)!
+
+    REGARDING CHECKINGOPS().CHECKCOORD().TRANSL_AND_QUALITY_OF_TRANSL():
+        (a) Adjust code of AnnoCheck.check() so that the start position of a 
+            subsequent feature is also adjusted.                
+        (b) Adjust the location position in code of AnnoCheck.check() so 
+            that the stop codon is also included.
+        (c) SHOULD EXAMPLE 2 NOT RESULT IN A FEATURE LOCATION THAT ENDS 
+            AT ExactPosition(5), I.E. AFTER THE STOP CODON ???
 '''
 
 #############
@@ -96,11 +113,14 @@ def annonex2embl(path_to_nex,
 
 ########################################################################
 
-# 4. Do quality checks on input data
+# 4. Check qualifiers
+# 4. Perform quality checks on qualifiers
     try:
-        CkOps.CheckCoord().quality_of_qualifiers(qualifiers, seqname_col)
+        CkOps.QualifierCheck(qualifiers, seqname_col).quality_of_qualifiers()
     except ME.MyException as e:
         sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
+# 4.2. Remove modifiers without content (i.e. empty modifiers)
+    filtered_qualifiers = CkOps.QualifierCheck._rm_empty_modifier(qualifiers)
 
 ########################################################################
 
@@ -127,7 +147,7 @@ def annonex2embl(path_to_nex,
 
 # 6.1. Select current sequences and current qualifiers
         current_seq = alignm[seq_name]
-        current_quals = [d for d in qualifiers\
+        current_quals = [d for d in filtered_qualifiers\
             if d[seqname_col] == seq_name][0]
 
 ####################################
@@ -213,7 +233,7 @@ def annonex2embl(path_to_nex,
             # Check if feature is a coding region
             if feature.type == 'CDS' or feature.type == 'gene':
                 try:
-                    feature = CkOps.CheckCoord().transl_and_quality_of_transl( \
+                    feature = CkOps.TranslCheck().transl_and_quality_of_transl( \
                         seq_record, feature, transl_table)
                 except ME.MyException as e:
                     print('%s annonex2embl WARNING: %s Feature `%s` '\
