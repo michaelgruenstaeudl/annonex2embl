@@ -30,9 +30,9 @@ import IOOps as IOOps
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2016.06.21.2200'
+__version__ = '2017.01.21.2200'
 
 #############
 # DEBUGGING #
@@ -58,9 +58,7 @@ stop_codons = ["TAG", "TAA", "TGA"] # amber, ochre, opal
 '''
 TODO:
     (i) Include a function to check internet connectivity.
-
     (ii) Functionality for making ends fuzzy.
-
 '''
 
 #############
@@ -75,8 +73,12 @@ def annonex2embl(path_to_nex,
                  seqname_col='isolate',
                  transl_table='11'):
 
+########################################################################
+
 # 1. Open outfile
     outp_handle = open(path_to_outfile, 'a')
+
+########################################################################
 
 # 2. Parse data from .nex-file
     try:
@@ -84,17 +86,23 @@ def annonex2embl(path_to_nex,
     except ME.MyException as e:
         sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
 
+########################################################################
+
 # 3. Parse data from .csv-file
     try:
         qualifiers = IOOps.Inp().parse_csv_file(path_to_csv)
     except ME.MyException as e:
         sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
 
+########################################################################
+
 # 4. Do quality checks on input data
     try:
         CkOps.CheckCoord().quality_of_qualifiers(qualifiers, seqname_col)
     except ME.MyException as e:
         sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
+
+########################################################################
 
 # 5. Parse out feature key, obtain official gene name and gene product 
     charset_dict = {}
@@ -108,30 +116,60 @@ def annonex2embl(path_to_nex,
         charset_dict[charset_name] = (charset_sym, charset_type,
             charset_product)
 
+########################################################################
+
 # 6. Create a full SeqRecord for each sequence of the alignment.
 #    Work off the sequences alphabetically.
     sorted_seqnames = sorted(alignm.keys())
     for seq_name in sorted_seqnames:
+
+####################################
 
 # 6.1. Select current sequences and current qualifiers
         current_seq = alignm[seq_name]
         current_quals = [d for d in qualifiers\
             if d[seqname_col] == seq_name][0]
 
+####################################
+
 # 6.2. Generate the basic SeqRecord (i.e., without features or annotations)
         seq_record = GnOps.GenerateSeqRecord(current_seq,
             current_quals).base_record(seqname_col, charsets_withgaps)
 
-# 6.3. Degap the sequence while maintaing correct annotations, which has to 
-#      occur before (!) the SeqFeature 'source' is generated.
-#      Note: Charsets are identical across all sequences.
-        degap_handle = DgOps.DegapButMaintainAnno(seq_record.seq, charsets_withgaps)
-        seq_record.seq, charsets_degapped = degap_handle.degap()
+####################################
+
+# 6.3. Clean up the sequence of the SeqRecord (i.e., remove leading or 
+#      trailing ambiguities, remove gaps), but maintain correct 
+#      annotations.
+#      Note 1: This clean-up has to occur before (!) the SeqFeature 
+#      'source' is generated, as the source feature provides info on 
+#      the full sequence length.
+#      Note 2: Charsets are identical across all sequences.
+
+# 6.3.1. Replace question marks in DNA sequence with 'N'
+        seq_record.seq._data = seq_record.seq._data.replace('?', 'N')
+
+# 6.3.2. Remove leading and trailing ambiguities while maintaining 
+#        correct annotations
+        seq_noltambigs, charsets_noltambigs = DgOps.RmAmbigsButMaintainAnno(\
+            seq_record.seq, 'N', charsets_withgaps).rmleadtrail()
+
+# 6.3.3. (FUTURE) Give note that leading or trailing ambiguities were removed
+#        if seq_noltambigs != seq_record.seq:
+#            ltambigs_removed = True
+
+# 6.3.4. Degap the sequence while maintaining correct annotations
+        seq_record.seq, charsets_degapped = DgOps.DegapButMaintainAnno(\
+            seq_noltambigs, '-', charsets_noltambigs).degap()
+
+####################################
 
 # 6.4. Generate SeqFeature 'source' and append to features list
         source_feature = GnOps.GenerateSeqFeature().source_feat(
             len(seq_record), current_quals, transl_table)
         seq_record.features.append(source_feature)
+
+####################################
 
 # 6.5. Populate the feature keys with the charset information
 #      Note: Each charset represents a dictionary that must be added in 
@@ -151,11 +189,15 @@ def annonex2embl(path_to_nex,
                 charset_type, location_object, charset_product)
             seq_record.features.append(seq_feature)
 
+####################################
+
 # 6.6. Sort all seq_record.features except the first one (which 
 #      constitutes the source feature) by the start position
         sorted_features = sorted(seq_record.features[1:],
             key=lambda x: x.location.start.position)
         seq_record.features = [seq_record.features[0]] + sorted_features
+
+####################################
 
 # 6.7. Translate and check quality of translation
         removal_list = []
@@ -176,6 +218,8 @@ def annonex2embl(path_to_nex,
         for indx in sorted(removal_list, reverse=True):
             seq_record.features.pop(indx)
 
+####################################
+
 # 6.8. Introduce fuzzy ends
         for feature in seq_record.features:
             # Check if feature is a coding region
@@ -191,11 +235,15 @@ def annonex2embl(path_to_nex,
                     feature.location = GnOps.GenerateFeatLoc(
                         ).make_end_fuzzy(feature.location)
 
+####################################
+
 # 6.9. Write each completed record to file
         try:
             SeqIO.write(seq_record, outp_handle, out_format)
         except:
             sys.exit('%s annonex2embl ERROR: Problem with `%s`. Did not write to file.' % ('\n', seq_name))
+
+########################################################################
 
 # 7. Close outfile
     outp_handle.close()

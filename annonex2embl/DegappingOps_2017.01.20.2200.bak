@@ -12,15 +12,15 @@ Classes to degap sequences but maintain annotations
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.01.21.2200'
+__version__ = '2017.01.20.2100'
 
 #############
 # DEBUGGING #
 #############
 
-import pdb
+#import pdb
 #pdb.set_trace()
 
 ####################
@@ -174,17 +174,17 @@ class RmAmbigsButMaintainAnno:
         '''
         from copy import copy
         annotations = copy(charsets)
-        
-        lead_stripoff = len(seq)-len(seq.lstrip(rmchar)) 
-#        for index in range(lead_stripoff):
-        for gene_name, indices in annotations.items():
-            indices_shifted = [i-lead_stripoff for i in indices]
-            annotations[gene_name] = [i for i in indices_shifted if i >= 0]
-#                if index in indices:
-#                    indices.remove(index)
-#                annotations[gene_name] = [e-1 if e > index else e \
-#                    for e in indices]
-        seq = seq[lead_stripoff:]
+        lead_ambig_end = len(seq)-len(seq.lstrip(rmchar))
+        #index = seq.find(rmchar)
+        for index in range(lead_ambig_end):
+            for gene_name, indices in annotations.items():
+                if index in indices:
+                    indices.remove(index)
+                annotations[gene_name] = [e-1 if e > index else e \
+                    for e in indices]
+            #seq = seq[:index] + seq[index+1:lead_ambig_end] + seq[lead_ambig_end+1:]
+            #index = seq.find(rmchar)
+        seq = seq[lead_ambig_end:]
         return seq, annotations
     
     @staticmethod
@@ -195,18 +195,16 @@ class RmAmbigsButMaintainAnno:
         from copy import copy
         annotations = copy(charsets)
         #
-        #pdb.set_trace()
+        pdb.set_trace()
         #
-        
-        trail_stripoff = len(seq.rstrip(rmchar))
-        for index in reversed(range(trail_stripoff, len(seq)+1)): # counting must be reversed, as we remove from tail
+        trail_ambig_start = len(seq)-len(seq.rstrip(rmchar))+1 # 'plus 1' is important
+        for index in reversed(range(trail_ambig_start, len(seq)+1)): # counting must be reversed, as we remove from tail
             for gene_name, indices in annotations.items():
                 if index in indices:
                     indices.remove(index)
-                annotations[gene_name] = indices
-#                annotations[gene_name] = [e-1 if e > index else e \
-#                    for e in indices]
-        seq = seq[:trail_stripoff]
+                annotations[gene_name] = [e-1 if e > index else e \
+                    for e in indices]
+        seq = seq[:trail_ambig_start]
         return seq, annotations
     
     def rmleadtrail(self):
@@ -223,12 +221,8 @@ class RmAmbigsButMaintainAnno:
         myseq = copy(seq)
         annotations = copy(charsets)
         
-        if myseq[0] == rmchar:
-            myseq, annotations = RmAmbigsButMaintainAnno._rm_leadambig(\
-                myseq, rmchar, annotations)
-        if myseq[-1] == rmchar:
-            myseq, annotations = RmAmbigsButMaintainAnno._rm_trailambig(\
-                myseq, rmchar, annotations)
+        myseq, annotations = RmAmbigsButMaintainAnno._rm_leadambig(myseq, rmchar, annotations)
+        myseq, annotations = RmAmbigsButMaintainAnno._rm_trailambig(myseq, rmchar, annotations)
         return myseq, annotations
 
 #############
