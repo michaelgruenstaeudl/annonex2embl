@@ -151,16 +151,24 @@ def annonex2embl(path_to_nex,
 
 # 6.3.2. Remove leading and trailing ambiguities while maintaining 
 #        correct annotations
-        seq_noltambigs, charsets_noltambigs = DgOps.RmAmbigsButMaintainAnno(\
-            seq_record.seq, 'N', charsets_withgaps).rmleadtrail()
+        seq_noleadambigs, charsets_noleadambigs = DgOps.\
+            RmAmbigsButMaintainAnno(seq_record.seq, 'N', \
+            charsets_withgaps).rm_leadambig()
 
-# 6.3.3. (FUTURE) Give note that leading or trailing ambiguities were removed
+# 6.3.3. Remove leading and trailing ambiguities while maintaining 
+#        correct annotations
+        seq_notrailambigs, charsets_notrailambigs = DgOps.\
+            RmAmbigsButMaintainAnno(seq_noleadambigs, 'N', \
+            charsets_noleadambigs).rm_trailambig()
+
+# 6.3.4. (FUTURE) Give note that leading or trailing ambiguities were removed
 #        if seq_noltambigs != seq_record.seq:
 #            ltambigs_removed = True
 
-# 6.3.4. Degap the sequence while maintaining correct annotations
-        seq_record.seq, charsets_degapped = DgOps.DegapButMaintainAnno(\
-            seq_noltambigs, '-', charsets_noltambigs).degap()
+# 6.3.5. Degap the sequence while maintaining correct annotations
+        seq_record.seq, charsets_degapped = DgOps.\
+            DegapButMaintainAnno(seq_notrailambigs, '-', \
+            charsets_notrailambigs).degap()
 
 ####################################
 

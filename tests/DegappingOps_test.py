@@ -155,12 +155,10 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         charsets = {"gene1":[0,1,2,3],"gene2":[4,5,6,7,8]}
         out_ideal_step1 = ('ATGCCCC', {'gene1': [0,1], 'gene2': [2,3,4,5,6]})
         
-        #out_actual_1 = DgOps.RmAmbigsButMaintainAnno._rm_leadambig(seq, rmchar, charsets)
-        #self.assertTupleEqual(out_actual_1, out_ideal_step1)
-        #out_actual_2 = DgOps.RmAmbigsButMaintainAnno._rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
-        #self.assertTupleEqual(out_actual_2, out_ideal_step1)
-        out_actual = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rmleadtrail()
-        self.assertTupleEqual(out_actual, out_ideal_step1)
+        out_actual_1 = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rm_leadambig()
+        self.assertTupleEqual(out_actual_1, out_ideal_step1)
+        out_actual_2 = DgOps.RmAmbigsButMaintainAnno(out_actual_1[0], rmchar, out_actual_1[1]).rm_trailambig()
+        self.assertTupleEqual(out_actual_2, out_ideal_step1)
     
     def test_2_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where only leading ambiguities
@@ -172,12 +170,10 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         charsets = {"gene1":[0,1,2,3,4],"gene2":[3,4,5,6,7,8]}
         out_ideal_step1 = ('ATGCCCC', {'gene1': [0,1,2], 'gene2': [1,2,3,4,5,6]})
         
-        #out_actual_1 = DgOps.RmAmbigsButMaintainAnno._rm_leadambig(seq, rmchar, charsets)
-        #self.assertTupleEqual(out_actual_1, out_ideal_step1)
-        #out_actual_2 = DgOps.RmAmbigsButMaintainAnno._rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
-        #self.assertTupleEqual(out_actual_2, out_ideal_step1)
-        out_actual = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rmleadtrail()
-        self.assertTupleEqual(out_actual, out_ideal_step1)
+        out_actual_1 = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rm_leadambig()
+        self.assertTupleEqual(out_actual_1, out_ideal_step1)
+        out_actual_2 = DgOps.RmAmbigsButMaintainAnno(out_actual_1[0], rmchar, out_actual_1[1]).rm_trailambig()
+        self.assertTupleEqual(out_actual_2, out_ideal_step1)
     
     def test_3_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where only leading ambiguities
@@ -189,12 +185,10 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         charsets = {"gene1":[2,3,4],"gene2":[3,4,5,6]}
         out_ideal_step1 = ('ATGCCCC', {'gene1': [0,1,2], 'gene2': [1,2,3,4]})
         
-        #out_actual_1 = DgOps.RmAmbigsButMaintainAnno._rm_leadambig(seq, rmchar, charsets)
-        #self.assertTupleEqual(out_actual_1, out_ideal_step1)
-        #out_actual_2 = DgOps.RmAmbigsButMaintainAnno._rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
-        #self.assertTupleEqual(out_actual_2, out_ideal_step1)
-        out_actual = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rmleadtrail()
-        self.assertTupleEqual(out_actual, out_ideal_step1)
+        out_actual_1 = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rm_leadambig()
+        self.assertTupleEqual(out_actual_1, out_ideal_step1)
+        out_actual_2 = DgOps.RmAmbigsButMaintainAnno(out_actual_1[0], rmchar, out_actual_1[1]).rm_trailambig()
+        self.assertTupleEqual(out_actual_2, out_ideal_step1)
     
     def test_4_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where only trailing ambiguities
@@ -204,15 +198,13 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         seq = "AATGCCCNN"
         rmchar = "N"
         charsets = {"gene1":[0,1,2],"gene2":[3,4,5,6,7,8]}
-        #out_ideal_step1 = (seq, charsets)
+        out_ideal_step1 = (seq, charsets)
         out_ideal_step2 = ('AATGCCC', {'gene1': [0,1,2], 'gene2': [3,4,5,6]})
         
-        #out_actual_1 = DgOps.RmAmbigsButMaintainAnno._rm_leadambig(seq, rmchar, charsets)
-        #self.assertTupleEqual(out_actual_1, out_ideal_step1)
-        #out_actual_2 = DgOps.RmAmbigsButMaintainAnno._rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
-        #self.assertTupleEqual(out_actual_2, out_ideal_step2)
-        out_actual = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rmleadtrail()
-        self.assertTupleEqual(out_actual, out_ideal_step2)
+        out_actual_1 = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rm_leadambig()
+        self.assertTupleEqual(out_actual_1, out_ideal_step1)
+        out_actual_2 = DgOps.RmAmbigsButMaintainAnno(out_actual_1[0], rmchar, out_actual_1[1]).rm_trailambig()
+        self.assertTupleEqual(out_actual_2, out_ideal_step2)
     
     def test_5_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where only trailing ambiguities
@@ -222,15 +214,13 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         seq = "AATGCCCNN"
         rmchar = "N"
         charsets = {"gene1":[0,1,2,3,4],"gene2":[3,4,5,6,7,8]}
-        #out_ideal_step1 = (seq, charsets)
+        out_ideal_step1 = (seq, charsets)
         out_ideal_step2 = ('AATGCCC', {'gene1': [0,1,2,3,4], 'gene2': [3,4,5,6]})
         
-        #out_actual_1 = DgOps.RmAmbigsButMaintainAnno._rm_leadambig(seq, rmchar, charsets)
-        #self.assertTupleEqual(out_actual_1, out_ideal_step1)
-        #out_actual_2 = DgOps.RmAmbigsButMaintainAnno._rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
-        #self.assertTupleEqual(out_actual_2, out_ideal_step2)
-        out_actual = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rmleadtrail()
-        self.assertTupleEqual(out_actual, out_ideal_step2)
+        out_actual_1 = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rm_leadambig()
+        self.assertTupleEqual(out_actual_1, out_ideal_step1)
+        out_actual_2 = DgOps.RmAmbigsButMaintainAnno(out_actual_1[0], rmchar, out_actual_1[1]).rm_trailambig()
+        self.assertTupleEqual(out_actual_2, out_ideal_step2)
     
     def test_6_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where only trailing ambiguities
@@ -240,15 +230,13 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         seq = "AATGCCCNN"
         rmchar = "N"
         charsets = {"gene1":[3,4],"gene2":[3,4,5,6,7,8]}
-        #out_ideal_step1 = (seq, charsets)
+        out_ideal_step1 = (seq, charsets)
         out_ideal_step2 = ('AATGCCC', {'gene1': [3,4], 'gene2': [3,4,5,6]})
         
-        #out_actual_1 = DgOps.RmAmbigsButMaintainAnno._rm_leadambig(seq, rmchar, charsets)
-        #self.assertTupleEqual(out_actual_1, out_ideal_step1)
-        #out_actual_2 = DgOps.RmAmbigsButMaintainAnno._rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
-        #self.assertTupleEqual(out_actual_2, out_ideal_step2)
-        out_actual = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rmleadtrail()
-        self.assertTupleEqual(out_actual, out_ideal_step2)
+        out_actual_1 = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rm_leadambig()
+        self.assertTupleEqual(out_actual_1, out_ideal_step1)
+        out_actual_2 = DgOps.RmAmbigsButMaintainAnno(out_actual_1[0], rmchar, out_actual_1[1]).rm_trailambig()
+        self.assertTupleEqual(out_actual_2, out_ideal_step2)
     
     def test_7_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where leading (n=2) and 
@@ -259,15 +247,13 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         seq = "NNATGCNNN"
         rmchar = "N"
         charsets = {"gene1":[0,1,2,3],"gene2":[4,5,6,7,8]}
-        #out_ideal_step1 = ('ATGCNNN', {'gene1': [0,1], 'gene2': [2,3,4,5,6]})
+        out_ideal_step1 = ('ATGCNNN', {'gene1': [0,1], 'gene2': [2,3,4,5,6]})
         out_ideal_step2 = ('ATGC', {'gene1': [0,1], 'gene2': [2,3]})
         
-        #out_actual_1 = DgOps.RmAmbigsButMaintainAnno._rm_leadambig(seq, rmchar, charsets)
-        #self.assertTupleEqual(out_actual_1, out_ideal_step1)
-        #out_actual_2 = DgOps.RmAmbigsButMaintainAnno._rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
-        #self.assertTupleEqual(out_actual_2, out_ideal_step2)
-        out_actual = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rmleadtrail()
-        self.assertTupleEqual(out_actual, out_ideal_step2)
+        out_actual_1 = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rm_leadambig()
+        self.assertTupleEqual(out_actual_1, out_ideal_step1)
+        out_actual_2 = DgOps.RmAmbigsButMaintainAnno(out_actual_1[0], rmchar, out_actual_1[1]).rm_trailambig()
+        self.assertTupleEqual(out_actual_2, out_ideal_step2)
     
     def test_8_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where leading (n=1) and 
@@ -277,15 +263,13 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         seq = "NATGCNNN"
         rmchar = "N"
         charsets = {"gene1":[0,1,2],"gene2":[2,3,4,5,6,7]}
-        #out_ideal_step1 = ('ATGCNNN', {'gene1': [0,1], 'gene2': [1,2,3,4,5,6]})
+        out_ideal_step1 = ('ATGCNNN', {'gene1': [0,1], 'gene2': [1,2,3,4,5,6]})
         out_ideal_step2 = ('ATGC', {'gene1': [0,1], 'gene2': [1,2,3]})
         
-        #out_actual_1 = DgOps.RmAmbigsButMaintainAnno._rm_leadambig(seq, rmchar, charsets)
-        #self.assertTupleEqual(out_actual_1, out_ideal_step1)
-        #out_actual_2 = DgOps.RmAmbigsButMaintainAnno._rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
-        #self.assertTupleEqual(out_actual_2, out_ideal_step2)
-        out_actual = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rmleadtrail()
-        self.assertTupleEqual(out_actual, out_ideal_step2)
+        out_actual_1 = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rm_leadambig()
+        self.assertTupleEqual(out_actual_1, out_ideal_step1)
+        out_actual_2 = DgOps.RmAmbigsButMaintainAnno(out_actual_1[0], rmchar, out_actual_1[1]).rm_trailambig()
+        self.assertTupleEqual(out_actual_2, out_ideal_step2)
     
     def test_9_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where leading (n=1) and 
@@ -296,15 +280,14 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         seq = "NATGCNNN"
         rmchar = "N"
         charsets = {"gene1":[1,2],"gene2":[2,3,4,5]}
-        #out_ideal_step1 = ('ATGCNNN', {'gene1': [0,1], 'gene2': [1,2,3,4]})
+        out_ideal_step1 = ('ATGCNNN', {'gene1': [0,1], 'gene2': [1,2,3,4]})
         out_ideal_step2 = ('ATGC', {'gene1': [0,1], 'gene2': [1,2,3]})
         
-        #out_actual_1 = DgOps.RmAmbigsButMaintainAnno._rm_leadambig(seq, rmchar, charsets)
-        #self.assertTupleEqual(out_actual_1, out_ideal_step1)
-        #out_actual_2 = DgOps.RmAmbigsButMaintainAnno._rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
-        #self.assertTupleEqual(out_actual_2, out_ideal_step2)
-        out_actual = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rmleadtrail()
-        self.assertTupleEqual(out_actual, out_ideal_step2)
+        out_actual_1 = DgOps.RmAmbigsButMaintainAnno(seq, rmchar, charsets).rm_leadambig()
+        self.assertTupleEqual(out_actual_1, out_ideal_step1)
+        out_actual_2 = DgOps.RmAmbigsButMaintainAnno(out_actual_1[0], rmchar, out_actual_1[1]).rm_trailambig()
+        self.assertTupleEqual(out_actual_2, out_ideal_step2)
+
 
 #############
 # FUNCTIONS #

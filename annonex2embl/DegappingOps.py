@@ -167,69 +167,49 @@ class RmAmbigsButMaintainAnno:
         self.rmchar = rmchar
         self.charsets = charsets
     
-    @staticmethod
-    def _rm_leadambig(seq, rmchar, charsets):
+    def rm_leadambig(self):
         ''' This class removes leading ambiguous nucleotides from a DNA
         sequence while maintaining the annotations.
         '''
-        from copy import copy
-        annotations = copy(charsets)
-        
-        lead_stripoff = len(seq)-len(seq.lstrip(rmchar)) 
-#        for index in range(lead_stripoff):
-        for gene_name, indices in annotations.items():
-            indices_shifted = [i-lead_stripoff for i in indices]
-            annotations[gene_name] = [i for i in indices_shifted if i >= 0]
-#                if index in indices:
-#                    indices.remove(index)
-#                annotations[gene_name] = [e-1 if e > index else e \
-#                    for e in indices]
-        seq = seq[lead_stripoff:]
-        return seq, annotations
-    
-    @staticmethod
-    def _rm_trailambig(seq, rmchar, charsets):
-        ''' This class removes trailing ambiguous nucleotides from a DNA
-        sequence while maintaining the annotations.
-        '''
-        from copy import copy
-        annotations = copy(charsets)
-        #
-        #pdb.set_trace()
-        #
-        
-        trail_stripoff = len(seq.rstrip(rmchar))
-        for index in reversed(range(trail_stripoff, len(seq)+1)): # counting must be reversed, as we remove from tail
-            for gene_name, indices in annotations.items():
-                if index in indices:
-                    indices.remove(index)
-                annotations[gene_name] = indices
-#                annotations[gene_name] = [e-1 if e > index else e \
-#                    for e in indices]
-        seq = seq[:trail_stripoff]
-        return seq, annotations
-    
-    def rmleadtrail(self):
-        ''' This class removes leading and trailing ambiguous 
-        nucleotides from a DNA sequence while maintaining the 
-        annotations.
-        '''
-        
         seq = self.seq
         rmchar = self.rmchar
         charsets = self.charsets
         
         from copy import copy
-        myseq = copy(seq)
         annotations = copy(charsets)
         
-        if myseq[0] == rmchar:
-            myseq, annotations = RmAmbigsButMaintainAnno._rm_leadambig(\
-                myseq, rmchar, annotations)
-        if myseq[-1] == rmchar:
-            myseq, annotations = RmAmbigsButMaintainAnno._rm_trailambig(\
-                myseq, rmchar, annotations)
-        return myseq, annotations
+        if seq[0] == rmchar:
+            lead_stripoff = len(seq)-len(seq.lstrip(rmchar))
+            for gene_name, indices in annotations.items():
+                indices_shifted = [i-lead_stripoff for i in indices]
+                annotations[gene_name] = [i for i in indices_shifted if i >= 0]
+            seq = seq[lead_stripoff:]
+        
+        return seq, annotations
+    
+    def rm_trailambig(self):
+        ''' This class removes trailing ambiguous nucleotides from a DNA
+        sequence while maintaining the annotations.
+        '''
+        seq = self.seq
+        rmchar = self.rmchar
+        charsets = self.charsets
+        
+        from copy import copy
+        annotations = copy(charsets)
+        
+        if seq[-1] == rmchar:
+            trail_stripoff = len(seq.rstrip(rmchar))
+            # counting must be reversed, as we remove from tail
+            for index in reversed(range(trail_stripoff, len(seq)+1)):
+                for gene_name, indices in annotations.items():
+                    if index in indices:
+                        indices.remove(index)
+                    annotations[gene_name] = indices
+            seq = seq[:trail_stripoff]
+        
+        return seq, annotations
+
 
 #############
 # FUNCTIONS #
