@@ -22,7 +22,7 @@ import Annonex2emblMain as AN2EMBLMain
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.01.22.1400'
+__version__ = '2017.01.22.1700'
 
 #############
 # DEBUGGING #
@@ -74,13 +74,14 @@ if __name__ == '__main__':
                         default='/home/username/Desktop/test.embl',
                         required=True)
 
+    # Optional
+
     parser.add_argument('-u',
                         '--submmode',
                         help='a logical; enter into submission mode or not',
                         default='False',
-                        required=True)
-
-    # Optional
+                        required=False)
+                        
     parser.add_argument('-p',
                         '--topology',
                         help='`circular` or `linear`.', 
@@ -136,8 +137,8 @@ if __name__ == '__main__':
                                 args.csv,
                                 args.email,
                                 args.outfile,
-                                args.submmode,
                                 
+                                args.submmode,
                                 args.topology,
                                 args.taxdivision,
                                 args.outformat,

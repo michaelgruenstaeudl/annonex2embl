@@ -34,7 +34,7 @@ import IOOps as IOOps
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.01.22.1400'
+__version__ = '2017.01.22.1700'
 
 #############
 # DEBUGGING #
@@ -114,8 +114,8 @@ def annonex2embl(path_to_nex,
                  path_to_csv,
                  email_addr,
                  path_to_outfile,
-                 subm_mode='False',
                  
+                 subm_mode='False',
                  topology='linear',
                  tax_division='PLN',
                  out_format='embl',

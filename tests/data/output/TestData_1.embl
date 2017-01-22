@@ -1,4 +1,4 @@
-ID   Taxon_1; ; ; DNA; ; UNC; 38 BP.
+ID   Taxon_1; SV 1; linear; DNA; ; PLN; 38 BP.
 XX
 AC   Taxon_1;
 XX
@@ -27,7 +27,7 @@ XX
 SQ   Sequence 38 BP; 13 A; 6 C; 8 G; 11 T; 0 other;
      taaatggata tatagagtca gcattccgga ctttaacg                                38
 //
-ID   Taxon_2; ; ; DNA; ; UNC; 26 BP.
+ID   Taxon_2; SV 1; linear; DNA; ; PLN; 26 BP.
 XX
 AC   Taxon_2;
 XX
@@ -56,7 +56,7 @@ XX
 SQ   Sequence 26 BP; 9 A; 5 C; 4 G; 8 T; 0 other;
      taaatgatat agagtcccct ttaacg                                             26
 //
-ID   Taxon_3; ; ; DNA; ; UNC; 24 BP.
+ID   Taxon_3; SV 1; linear; DNA; ; PLN; 24 BP.
 XX
 AC   Taxon_3;
 XX

@@ -1,4 +1,4 @@
-ID   Celosia_argentea_AC1092_ITS; ; ; DNA; ; UNC; 681 BP.
+ID   Celosia_argentea_AC1092_ITS; SV 1; linear; DNA; ; PLN; 681 BP.
 XX
 AC   Celosia_argentea_AC1092_ITS;
 XX
@@ -41,7 +41,7 @@ SQ   Sequence 681 BP; 156 A; 173 C; 189 G; 163 T; 0 other;
      ctcgtaggac cctgaaaagt tgccttcttg gcgacatacc tttgcgaccc caggtcaggc       660
      gggattaccc gctgagttta a                                                 681
 //
-ID   Kyphocarpa_trichinoides_AC202_ITS; ; ; DNA; ; UNC; 658 BP.
+ID   Kyphocarpa_trichinoides_AC202_ITS; SV 1; linear; DNA; ; PLN; 658 BP.
 XX
 AC   Kyphocarpa_trichinoides_AC202_ITS;
 XX
@@ -83,7 +83,7 @@ SQ   Sequence 658 BP; 157 A; 166 C; 183 G; 152 T; 0 other;
      atacaaggcc attgcctagg aaacatcgcg tcgtgtatca catacccttg ttgtggcctc       600
      gtaggatcct aaaaaccttt gcgaccccag gtcaggcggg gttacccgct gagtttaa         658
 //
-ID   Lagrezia_sp__AC896_ITS; ; ; DNA; ; UNC; 706 BP.
+ID   Lagrezia_sp__AC896_ITS; SV 1; linear; DNA; ; PLN; 706 BP.
 XX
 AC   Lagrezia_sp__AC896_ITS;
 XX
