@@ -10,7 +10,9 @@ from Bio import SeqIO
 #from Bio.Alphabet import generic_dna
 #from Bio.Seq import Seq
 from Bio import SeqFeature
+from distutils.util import strtobool
 from collections import OrderedDict
+from StringIO import StringIO
 
 # Add specific directory to sys.path in order to import its modules
 # NOTE: THIS RELATIVE IMPORTING IS AMATEURISH.
@@ -32,7 +34,7 @@ import IOOps as IOOps
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.01.21.2300'
+__version__ = '2017.01.22.1400'
 
 #############
 # DEBUGGING #
@@ -47,6 +49,30 @@ import pdb
 
 start_codon = "ATG"
 stop_codons = ["TAG", "TAA", "TGA"] # amber, ochre, opal
+
+valid_topologies = ['linear', 'circular']
+
+valid_taxonomic_divisions = ['PHG', 'ENV', 'FUN', 'HUM', 'INV', 'MAM', 'VRT', 'MUS', 'PLN', 'PRO', 'ROD', 'SYN', 'TGN', 'UNC', 'VRL', 'XXX']
+# See Section "3.2 Taxonomic Division" in EMBL User Manual
+#    Division                 Code 
+#    -----------------        ---- 
+#    Bacteriophage            PHG 
+#    Environmental Sample     ENV 
+#    Fungal                   FUN 
+#    Human                    HUM 
+#    Invertebrate             INV 
+#    Other Mammal             MAM 
+#    Other Vertebrate         VRT 
+#    Mus musculus             MUS 
+#    Plant                    PLN 
+#    Prokaryote               PRO 
+#    Other Rodent             ROD 
+#    Synthetic                SYN 
+#    Transgenic               TGN 
+#    Unclassified             UNC (i.e. unknown) 
+#    Viral                    VRL 
+#    ENA SUBMISSIONS          XXX
+
 
 ###########
 # CLASSES #
@@ -63,6 +89,8 @@ stop_codons = ["TAG", "TAA", "TGA"] # amber, ochre, opal
             so that they don't mess up code.
         (d) Move start and stop codon specs into global variables file,
             so that they don't mess up the code.
+        (e) Find a better parsing for 'True'/'False' than strtobool(subm_mode);
+            ideally, people can also enter 'T'/'F' and '0'/'1'.
 
     REGARDING CHECKINGOPS().QUALIFIERCHECK().QUALITY_OF_QUALIFIERS():
         (a) Check if sequence_names are also in .nex-file
@@ -86,9 +114,14 @@ def annonex2embl(path_to_nex,
                  path_to_csv,
                  email_addr,
                  path_to_outfile,
+                 subm_mode='False',
+                 
+                 topology='linear',
+                 tax_division='PLN',
                  out_format='embl',
-                 seqname_col='isolate',
-                 transl_table='11'):
+                 col_label='isolate',
+                 transl_table='11',
+                 seq_version='1'):
 
 ########################################################################
 
@@ -116,7 +149,7 @@ def annonex2embl(path_to_nex,
 # 4. Check qualifiers
 # 4. Perform quality checks on qualifiers
     try:
-        CkOps.QualifierCheck(qualifiers, seqname_col).quality_of_qualifiers()
+        CkOps.QualifierCheck(qualifiers, col_label).quality_of_qualifiers()
     except ME.MyException as e:
         sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
 # 4.2. Remove modifiers without content (i.e. empty modifiers)
@@ -148,13 +181,30 @@ def annonex2embl(path_to_nex,
 # 6.1. Select current sequences and current qualifiers
         current_seq = alignm[seq_name]
         current_quals = [d for d in filtered_qualifiers\
-            if d[seqname_col] == seq_name][0]
+            if d[col_label] == seq_name][0]
 
 ####################################
 
-# 6.2. Generate the basic SeqRecord (i.e., without features or annotations)
+# 6.2. Generate the basic SeqRecord (i.e., without features)
+
+# 6.2.1. Generate the raw record
         seq_record = GnOps.GenerateSeqRecord(current_seq,
-            current_quals).base_record(seqname_col, charsets_withgaps)
+            current_quals).base_record(col_label, charsets_withgaps)
+
+# 6.2.2. Specify the topology of the sequence
+        if topology in valid_topologies:
+            seq_record.annotations['topology'] = topology
+        else:
+            seq_record.annotations['topology'] = 'linear'
+        
+# 6.2.3. Specify the sequence version
+        seq_record.id = seq_record.id + '.' + seq_version
+        
+# 6.2.4. Add ID line info on 'taxonomic division'
+        if tax_division in valid_taxonomic_divisions:
+            seq_record.annotations['data_file_division'] = tax_division
+        else:
+            seq_record.annotations['data_file_division'] = 'UNC'
 
 ####################################
 
@@ -265,11 +315,36 @@ def annonex2embl(path_to_nex,
 
 ####################################
 
-# 6.9. Write each completed record to file
+# 6.9. Write seqRecord to file and modify if a submission
+        temp_handle = StringIO()
+
+# 6.9.1. Write seqRecord to file
         try:
-            SeqIO.write(seq_record, outp_handle, out_format)
+            SeqIO.write(seq_record, temp_handle, out_format)
         except:
-            sys.exit('%s annonex2embl ERROR: Problem with `%s`. Did not write to file.' % ('\n', seq_name))
+            sys.exit('%s annonex2embl ERROR: Problem with `%s`. Did not write to internal handle.' % ('\n', seq_name))
+        
+# 6.9.1. Modify ID and AC line for first-time submissions
+        if strtobool(subm_mode):
+            temp_handle_lines = temp_handle.getvalue().splitlines()
+            if temp_handle_lines[0].split()[0] == 'ID':
+                ID_line = temp_handle_lines[0]
+                ID_line_parts = ID_line.split('; ')
+                print ID_line_parts
+                if len(ID_line_parts) == 7:
+                    ID_line_parts = ['XXX' if ID_line_parts.index(p) in \
+                        [0,1,3,4,5,6] else p for p in ID_line_parts]
+                temp_handle_lines[0] = 'ID   ' + '; '.join(ID_line_parts)
+            if temp_handle_lines[2].split()[0] == 'AC':
+                temp_handle_lines[2] = 'AC   XXX;'
+            temp_handle_new = '\n' + '\n'.join(temp_handle_lines)
+            temp_handle.truncate(0)
+            temp_handle.write(temp_handle_new)
+        else:
+            pass
+        outp_handle.write(temp_handle.getvalue()) # outp_handle was set to append in Section 1
+        temp_handle.close()
+
 
 ########################################################################
 
