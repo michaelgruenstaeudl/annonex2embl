@@ -1,5 +1,5 @@
 # annonex2embl
-Converts annotated DNA sequence alignments in NEXUS format to ENA flat files for submissions to ENA (http://www.ebi.ac.uk/ena) via Entry Upload (i.e., if no suitable checklist is available).
+Converts annotated DNA sequence alignments in NEXUS format to ENA flat files for submissions to [ENA] (http://www.ebi.ac.uk/ena) via Entry Upload (i.e., if no suitable ENA checklist is available).
 
 #### CHANGELOG:
 
