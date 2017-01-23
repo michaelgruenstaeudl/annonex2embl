@@ -2,8 +2,8 @@ ID   Celosia_argentea_AC1092_ITS; SV 1; linear; DNA; ; PLN; 681 BP.
 XX
 AC   Celosia_argentea_AC1092_ITS;
 XX
-DE   Celosia_argentea 28S rRNA and 5.8S rRNA and ITS2 misc RNA and 18S rRNA and
-DE   ITS1 misc RNA DNA.
+DE   Celosia_argentea ITS1 misc RNA and 28S rRNA and 18S rRNA and ITS2 misc RNA
+DE   and 5.8S rRNA DNA.
 XX
 OS   .
 OC   .
@@ -45,8 +45,8 @@ ID   Kyphocarpa_trichinoides_AC202_ITS; SV 1; linear; DNA; ; PLN; 658 BP.
 XX
 AC   Kyphocarpa_trichinoides_AC202_ITS;
 XX
-DE   Kyphocarpa_trichinoides 28S rRNA and 5.8S rRNA and ITS2 misc RNA and 18S
-DE   rRNA and ITS1 misc RNA DNA.
+DE   Kyphocarpa_trichinoides ITS1 misc RNA and 28S rRNA and 18S rRNA and ITS2
+DE   misc RNA and 5.8S rRNA DNA.
 XX
 OS   .
 OC   .
@@ -87,8 +87,8 @@ ID   Lagrezia_sp__AC896_ITS; SV 1; linear; DNA; ; PLN; 706 BP.
 XX
 AC   Lagrezia_sp__AC896_ITS;
 XX
-DE   Lagrezia_sp 28S rRNA and 5.8S rRNA and ITS2 misc RNA and 18S rRNA and ITS1
-DE   misc RNA DNA.
+DE   Lagrezia_sp ITS1 misc RNA and 28S rRNA and 18S rRNA and ITS2 misc RNA and
+DE   5.8S rRNA DNA.
 XX
 OS   .
 OC   .

@@ -14,7 +14,7 @@ Classes to degap sequences but maintain annotations
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.01.21.2200'
+__version__ = '2017.01.22.2300'
 
 #############
 # DEBUGGING #
@@ -162,53 +162,55 @@ class RmAmbigsButMaintainAnno:
         currently nothing
     '''
     
-    def __init__(self, seq, rmchar, charsets):
-        self.seq = seq
-        self.rmchar = rmchar
-        self.charsets = charsets
+    def __init__(self):
+        pass
     
-    def rm_leadambig(self):
+    @staticmethod
+    def rm_leadambig(seq, rmchar, charsets):
         ''' This class removes leading ambiguous nucleotides from a DNA
         sequence while maintaining the annotations.
         '''
-        seq = self.seq
-        rmchar = self.rmchar
-        charsets = self.charsets
-        
-        from copy import copy
-        annotations = copy(charsets)
         
         if seq[0] == rmchar:
             lead_stripoff = len(seq)-len(seq.lstrip(rmchar))
-            for gene_name, indices in annotations.items():
+            for gene_name, indices in charsets.items():
                 indices_shifted = [i-lead_stripoff for i in indices]
-                annotations[gene_name] = [i for i in indices_shifted if i >= 0]
+                charsets[gene_name] = [i for i in indices_shifted if i >= 0]
             seq = seq[lead_stripoff:]
         
-        return seq, annotations
+        return seq, charsets
     
-    def rm_trailambig(self):
+    @staticmethod
+    def rm_trailambig(seq, rmchar, charsets):
         ''' This class removes trailing ambiguous nucleotides from a DNA
         sequence while maintaining the annotations.
         '''
-        seq = self.seq
-        rmchar = self.rmchar
-        charsets = self.charsets
-        
         from copy import copy
-        annotations = copy(charsets)
         
         if seq[-1] == rmchar:
             trail_stripoff = len(seq.rstrip(rmchar))
-            # counting must be reversed, as we remove from tail
-            for index in reversed(range(trail_stripoff, len(seq)+1)):
-                for gene_name, indices in annotations.items():
-                    if index in indices:
-                        indices.remove(index)
-                    annotations[gene_name] = indices
+            range_stripoff = range(trail_stripoff, len(seq))
+            #range_stripoff = range(trail_stripoff, len(seq)+1)
+            #print 'range_stripoff:', range_stripoff
+            for gene_name, indices in charsets.items():
+                indices_new = copy(indices)
+                for index in range_stripoff:
+                    if index in indices_new:
+                        indices_new.remove(index)
+                #    else:
+                #        print "Warning: Index %s out of range." %(index)
+                charsets[gene_name] = indices_new
+
+            ## counting must be reversed, as we remove from tail
+            #for index in reversed(range(trail_stripoff, len(seq)+1)):
+                #for gene_name, indices in annotations.items():
+                    #if index in indices:
+                        #indices.remove(index)
+                    #annotations[gene_name] = indices
+
             seq = seq[:trail_stripoff]
-        
-        return seq, annotations
+
+        return seq, charsets
 
 
 #############

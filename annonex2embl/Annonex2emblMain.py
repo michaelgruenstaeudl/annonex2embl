@@ -12,6 +12,7 @@ from Bio import SeqIO
 from Bio import SeqFeature
 from distutils.util import strtobool
 from collections import OrderedDict
+from copy import copy
 from StringIO import StringIO
 
 # Add specific directory to sys.path in order to import its modules
@@ -34,7 +35,7 @@ import IOOps as IOOps
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.01.22.1700'
+__version__ = '2017.01.22.2300'
 
 #############
 # DEBUGGING #
@@ -91,6 +92,9 @@ valid_taxonomic_divisions = ['PHG', 'ENV', 'FUN', 'HUM', 'INV', 'MAM', 'VRT', 'M
             so that they don't mess up the code.
         (e) Find a better parsing for 'True'/'False' than strtobool(subm_mode);
             ideally, people can also enter 'T'/'F' and '0'/'1'.
+        (f) Make section "6.9.1. Modify ID and AC line for first-time submissions"
+            its own function in a class.
+        (g) Introduce fuzzy ends when leading or trailing Ns were removed (section 6.8.)
 
     REGARDING CHECKINGOPS().QUALIFIERCHECK().QUALITY_OF_QUALIFIERS():
         (a) Check if sequence_names are also in .nex-file
@@ -132,7 +136,7 @@ def annonex2embl(path_to_nex,
 
 # 2. Parse data from .nex-file
     try:
-        charsets_withgaps, alignm = IOOps.Inp().parse_nexus_file(path_to_nex)
+        charsets_global, alignm_global = IOOps.Inp().parse_nexus_file(path_to_nex)
     except ME.MyException as e:
         sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
 
@@ -159,7 +163,7 @@ def annonex2embl(path_to_nex,
 
 # 5. Parse out feature key, obtain official gene name and gene product 
     charset_dict = {}
-    for charset_name in charsets_withgaps.keys():
+    for charset_name in charsets_global.keys():
         try:
             charset_sym, charset_type, charset_product = PrOps.ParseCharsetName(
                 charset_name, email_addr).parse()
@@ -173,9 +177,13 @@ def annonex2embl(path_to_nex,
 
 # 6. Create a full SeqRecord for each sequence of the alignment.
 #    Work off the sequences alphabetically.
-    sorted_seqnames = sorted(alignm.keys())
+    sorted_seqnames = sorted(alignm_global.keys())
     for seq_name in sorted_seqnames:
-
+        #TFLs generate safe copies of charset and alignment for every
+        #loop iteration
+        charsets_withgaps = copy(charsets_global)
+        alignm = copy(alignm_global)
+        
 ####################################
 
 # 6.1. Select current sequences and current qualifiers
@@ -218,27 +226,31 @@ def annonex2embl(path_to_nex,
 
 # 6.3.1. Replace question marks in DNA sequence with 'N'
         seq_record.seq._data = seq_record.seq._data.replace('?', 'N')
+        # TFL generates a safe copy of sequence to work on
+        seq_withgaps = copy(seq_record.seq)
 
-# 6.3.2. Remove leading and trailing ambiguities while maintaining 
+# 6.3.2. Remove leading ambiguities while maintaining 
 #        correct annotations
         seq_noleadambigs, charsets_noleadambigs = DgOps.\
-            RmAmbigsButMaintainAnno(seq_record.seq, 'N', \
-            charsets_withgaps).rm_leadambig()
+            RmAmbigsButMaintainAnno().rm_leadambig(seq_withgaps, 'N', \
+            charsets_withgaps)
 
-# 6.3.3. Remove leading and trailing ambiguities while maintaining 
+# 6.3.3. Remove trailing ambiguities while maintaining 
 #        correct annotations
         seq_notrailambigs, charsets_notrailambigs = DgOps.\
-            RmAmbigsButMaintainAnno(seq_noleadambigs, 'N', \
-            charsets_noleadambigs).rm_trailambig()
+            RmAmbigsButMaintainAnno().rm_trailambig(seq_noleadambigs, \
+            'N', charsets_noleadambigs)
 
 # 6.3.4. (FUTURE) Give note that leading or trailing ambiguities were removed
 #        if seq_noltambigs != seq_record.seq:
 #            ltambigs_removed = True
 
 # 6.3.5. Degap the sequence while maintaining correct annotations
-        seq_record.seq, charsets_degapped = DgOps.\
+        seq_nogaps, charsets_degapped = DgOps.\
             DegapButMaintainAnno(seq_notrailambigs, '-', \
             charsets_notrailambigs).degap()
+        # TFL assigns the deambiged and degapped sequence back
+        seq_record.seq = seq_nogaps
 
 ####################################
 
@@ -270,7 +282,7 @@ def annonex2embl(path_to_nex,
 ####################################
 
 # 6.6. Sort all seq_record.features except the first one (which 
-#      constitutes the source feature) by the start position
+#      constitutes the source feature) by their relative start positions
         sorted_features = sorted(seq_record.features[1:],
             key=lambda x: x.location.start.position)
         seq_record.features = [seq_record.features[0]] + sorted_features
@@ -312,6 +324,7 @@ def annonex2embl(path_to_nex,
                 if all([not coding_seq.endswith(c) for c in stop_codons]):
                     feature.location = GnOps.GenerateFeatLoc(
                         ).make_end_fuzzy(feature.location)
+# (FUTURE) Also introduce fuzzy ends when leading or trailing Ns were removed
 
 ####################################
 
@@ -330,7 +343,6 @@ def annonex2embl(path_to_nex,
             if temp_handle_lines[0].split()[0] == 'ID':
                 ID_line = temp_handle_lines[0]
                 ID_line_parts = ID_line.split('; ')
-                print ID_line_parts
                 if len(ID_line_parts) == 7:
                     ID_line_parts = ['XXX' if ID_line_parts.index(p) in \
                         [0,1,3,4,5,6] else p for p in ID_line_parts]
