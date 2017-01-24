@@ -76,9 +76,21 @@ if __name__ == '__main__':
 
     # Optional
 
-    parser.add_argument('-u',
-                        '--submmode',
-                        help='a logical; enter into submission mode or not',
+    parser.add_argument('-k',
+                        '--checklistmode',
+                        help='a logical; output in checklist format',
+                        default='True',
+                        required=False)
+
+    parser.add_argument('-z',
+                        '--checklisttype',
+                        help='any of the currently implemented checklist types (i.e. `trnK_matK`)',
+                        default='trnK_matK',
+                        required=False)
+
+    parser.add_argument('-m',
+                        '--masking',
+                        help='a logical; should the ID and the AC lines be masked for Entry Upload submissions',
                         default='False',
                         required=False)
                         
@@ -138,7 +150,9 @@ if __name__ == '__main__':
                                 args.email,
                                 args.outfile,
                                 
-                                args.submmode,
+                                args.checklistmode,
+                                args.checklisttype,
+                                args.masking,
                                 args.topology,
                                 args.taxdivision,
                                 args.outformat,
