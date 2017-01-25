@@ -12,4 +12,4 @@ Converts annotated DNA sequence alignments in NEXUS format to ENA flat files for
 
 ###### Version 0.3 (2017.01.25)
 * Rudimentary checklist output has been implemented.
-* Taxon names are compared to `NCBI Taxonomy` and corrected if not listed there.
+* Taxon names are compared to [NCBI Taxonomy](https://www.ncbi.nlm.nih.gov/taxonomy) and corrected automatically if not listed there.
