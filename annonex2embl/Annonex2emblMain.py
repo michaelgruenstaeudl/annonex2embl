@@ -33,7 +33,7 @@ import IOOps as IOOps
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.01.22.2300'
+__version__ = '2017.01.25.1400'
 
 #############
 # DEBUGGING #
@@ -107,6 +107,15 @@ valid_taxonomic_divisions = ['PHG', 'ENV', 'FUN', 'HUM', 'INV', 'MAM', 'VRT', 'M
             that the stop codon is also included.
         (c) SHOULD EXAMPLE 2 NOT RESULT IN A FEATURE LOCATION THAT ENDS 
             AT ExactPosition(5), I.E. AFTER THE STOP CODON ???
+    
+    REGARDING PARSINGOPS().GETENTREZINFO():
+        (a) Concerning class GetEntrezInfo, the staticmethod 
+        `_taxname_lookup` only returns the hitcount ('Count'), 
+        which may indicate that the taxon name was found as a valid taxon 
+        name or as a valid synonym. If it is the latter, it would be better 
+        to save the id_name, pull out the main taxon name via 
+        `Entrez.epost('gene', id=','.join(entrez_id_list))` and return 
+        the main taxon name instead of the hitcount.
 '''
 
 #############
@@ -118,8 +127,8 @@ def annonex2embl(path_to_nex,
                  email_addr,
                  path_to_outfile,
                  
-                 checklist_mode='True',
-                 checklist_type='trnK_matK',
+                 checklist_mode='False',
+                 checklist_type=None,
                  eusubm_mode='False',
                  topology='linear',
                  tax_division='PLN',
@@ -262,10 +271,20 @@ def annonex2embl(path_to_nex,
 
 ####################################
 
-# 6.4. Generate SeqFeature 'source' and append to features list
+# 6.4. Generate SeqFeature 'source' and test taxon name against NCBI taxonomy
+
+# 6.4.1. Generate SeqFeature 'source' and append to features list
         source_feature = GnOps.GenerateSeqFeature().source_feat(
             len(seq_record), current_quals, transl_table)
         seq_record.features.append(source_feature)
+
+#        pdb.set_trace()
+
+# 6.4.1. Test taxon name against NCBI taxonomy; if not listed, adjust
+#        taxon name and append ecotype info
+        #source_feature = GnOps.GenerateSeqFeature().source_feat(
+        #    len(seq_record), current_quals, transl_table)
+        #seq_record.features['source']
 
 ####################################
 
@@ -340,6 +359,8 @@ def annonex2embl(path_to_nex,
         if checklist_bool:
             if checklist_type == 'trnK_matK':
                 IOOps.ENAchecklist().matK_trnK(seq_record, counter, outp_handle)
+            else:
+                sys.exit('%s annonex2embl ERROR: Checklist type `%s` not recognized.' % ('\n', checklist_type))
         else:
             IOOps.Outp().write_EntryUpload(seq_record, out_format, 
                 outp_handle, eusubm_bool)

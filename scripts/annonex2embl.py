@@ -79,13 +79,13 @@ if __name__ == '__main__':
     parser.add_argument('-k',
                         '--checklistmode',
                         help='a logical; output in checklist format',
-                        default='True',
+                        default='False',
                         required=False)
 
     parser.add_argument('-z',
                         '--checklisttype',
                         help='any of the currently implemented checklist types (i.e. `trnK_matK`)',
-                        default='trnK_matK',
+                        default=None,
                         required=False)
 
     parser.add_argument('-m',
@@ -140,6 +140,11 @@ if __name__ == '__main__':
                         version='%(prog)s ' + __version__)
 
     args = parser.parse_args()
+    
+    if args.checklistmode is None and args.checklisttype is not None:
+        parser.error(" ERROR: --checklisttype (-z) requires --checklistmode (-k).")
+    if args.checklistmode == 'False' and args.checklisttype is not None:
+        parser.error(" ERROR: --checklisttype (-z) requires --checklistmode (-k) to be `True`.")
 
 ########
 # MAIN #

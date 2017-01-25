@@ -56,13 +56,13 @@ INSDC_feature_keys = ["assembly_gap", "C_region", "CDS", "centromere",
 
 
 class ParseCharsetNameTestCases(unittest.TestCase):
-    ''' Tests to evaluate  class `ParseCharsetName` '''
+    ''' Tests to evaluate class `ParseCharsetName` '''
     
     def test_1_ParseCharsetName(self):
         ''' This test evaluates the basic parsing ability of the class. '''
         
         charset_name = 'psbI_CDS'
-        email_addr = 'mi.gruenstaeudl@gmail.com'
+        email_addr = 'm.gruenstaeudl@fu-berlin.de'
         handle = PrOps.ParseCharsetName(charset_name, email_addr).parse()      
         self.assertIsInstance(handle, tuple)
         self.assertIsInstance(handle[0], str)
@@ -74,7 +74,7 @@ class ParseCharsetNameTestCases(unittest.TestCase):
         more than one charset_type. '''
 
         charset_name = 'psbI_rRNA_CDS' # Two feature keys present.
-        email_addr = 'mi.gruenstaeudl@gmail.com'
+        email_addr = 'm.gruenstaeudl@fu-berlin.de'
         with self.assertRaises(ME.MyException):
             PrOps.ParseCharsetName(charset_name, email_addr).parse()
     
@@ -83,7 +83,7 @@ class ParseCharsetNameTestCases(unittest.TestCase):
         more than one charset_sym. '''
         
         charset_name = 'psbI_matK_CDS' # Two gene symbols present.
-        email_addr = 'mi.gruenstaeudl@gmail.com'
+        email_addr = 'm.gruenstaeudl@fu-berlin.de'
         with self.assertRaises(ME.MyException):
             PrOps.ParseCharsetName(charset_name, email_addr).parse()
         
@@ -92,7 +92,7 @@ class ParseCharsetNameTestCases(unittest.TestCase):
         unknown charset_sym. '''
         
         charset_name = 'xxxX_CDS'
-        email_addr = 'mi.gruenstaeudl@gmail.com'
+        email_addr = 'm.gruenstaeudl@fu-berlin.de'
         with self.assertRaises(ME.MyException):
             PrOps.ParseCharsetName(charset_name, email_addr).parse()
 
@@ -101,7 +101,7 @@ class ParseCharsetNameTestCases(unittest.TestCase):
         only the charset_sym, not the charset_type. '''
         
         charset_name = 'matK'
-        email_addr = 'mi.gruenstaeudl@gmail.com'        
+        email_addr = 'm.gruenstaeudl@fu-berlin.de'        
         with self.assertRaises(ME.MyException):
             PrOps.ParseCharsetName(charset_name, email_addr).parse()
    
@@ -110,7 +110,7 @@ class ParseCharsetNameTestCases(unittest.TestCase):
         only the charset_type, not the charset_sym. '''
         
         charset_name = 'CDS'
-        email_addr = 'mi.gruenstaeudl@gmail.com'        
+        email_addr = 'm.gruenstaeudl@fu-berlin.de'        
         with self.assertRaises(ME.MyException):
             PrOps.ParseCharsetName(charset_name, email_addr).parse()
    
@@ -120,12 +120,33 @@ class ParseCharsetNameTestCases(unittest.TestCase):
         a switch should not matter. '''
         
         charset_name = 'CDS_psbI'
-        email_addr = 'mi.gruenstaeudl@gmail.com'
+        email_addr = 'm.gruenstaeudl@fu-berlin.de'
         handle = PrOps.ParseCharsetName(charset_name, email_addr).parse()      
         self.assertIsInstance(handle, tuple)
         self.assertIsInstance(handle[0], str)
         self.assertIsInstance(handle[1], str)
         self.assertTrue(handle[1] in INSDC_feature_keys)
+
+class GetEntrezInfoTestCases(unittest.TestCase):
+    ''' Tests to evaluate class `GetEntrezInfo` '''
+    
+    def test_1_GetEntrezInfo(self):
+        ''' This test evaluates the function `does_taxon_exist` with
+        a taxon name that does not exist on NCBI Taxonomy. '''
+        
+        taxon_name = 'Pyrus tamamaschjanae'
+        email_addr = 'm.gruenstaeudl@fu-berlin.de'
+        handle = PrOps.GetEntrezInfo(email_addr).does_taxon_exist(taxon_name)
+        self.assertFalse(handle)
+    
+    def test_2_GetEntrezInfo(self):
+        ''' This test evaluates the function `does_taxon_exist` with
+        a taxon name that does exist on NCBI Taxonomy. '''
+        
+        taxon_name = 'Pyrus caucasica'
+        email_addr = 'm.gruenstaeudl@fu-berlin.de'
+        handle = PrOps.GetEntrezInfo(email_addr).does_taxon_exist(taxon_name)
+        self.assertTrue(handle)
 
 #############
 # FUNCTIONS #

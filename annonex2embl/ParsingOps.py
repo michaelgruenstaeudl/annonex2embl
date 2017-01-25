@@ -33,6 +33,19 @@ __version__ = '2016.02.18.1100'
 # CLASSES #
 ###########
 
+#########
+# TO DO #
+#########
+'''
+    (a) Concerning class class GetEntrezInfo, the staticmethod 
+        `_taxname_lookup` only returns the hitcount ('Count'), 
+        which may indicate that the taxon name was found as a valid taxon 
+        name or as a valid synonym. If it is the latter, it would be better 
+        to save the id_name, pull out the main taxon name via 
+        `Entrez.epost('gene', id=','.join(entrez_id_list))` and return 
+        the main taxon name instead of the hitcount.
+'''
+
 class GetEntrezInfo:
     ''' This class contains functions to obtain gene information from gene
     symbols. '''
@@ -151,6 +164,45 @@ class GetEntrezInfo:
     
         return gene_product
 
+    @staticmethod
+    def _taxname_lookup(taxon_name, retmax=1):
+        ''' An internal static function to look up a taxon name at NCBI 
+        Taxonomy via ESearch.
+    
+        Args:
+            taxon_name (str): a taxon name; example: 'Pyrus tamamaschjanae'
+            retmax (int):     the number of maximally retained hits
+        Returns:
+            entrez_hitcount (int): an integer
+        Raises:
+            none
+
+        Examples:
+            Example 1: # Default behaviour
+                >>> taxon_name = 'Pyrus tamamaschjanae'
+                >>> _taxname_lookup(taxon_name)
+                Out: 0
+        '''
+        from Bio import Entrez
+
+        if not taxon_name:
+            raise ME.MyException('No taxon name detected.')
+        
+        if '_' in taxon_name:
+            raise ME.MyException('Taxon name `%s` contains an underscore, '
+            'which is not allowed.' % (taxon_name))
+        
+        query_term = taxon_name
+        try:
+            esearch_records = Entrez.esearch(db='taxonomy', term=query_term,
+                retmax=retmax, retmod='xml')
+        except:
+            raise ME.MyException('An error occurred while retrieving data from '\
+                '%s.' % ('ESearch'))
+        parsed_records = Entrez.read(esearch_records)
+        entrez_hitcount = parsed_records['Count']
+        return entrez_hitcount
+
 
     def obtain_gene_product(self, gene_sym):
         ''' This function performs something.
@@ -181,6 +233,39 @@ class GetEntrezInfo:
             raise e
         return gene_product
 
+
+    def does_taxon_exist(self, taxon_name):
+        ''' This function calls _taxname_lookup and thus evaluates if a taxon exists.
+        
+        Args:
+            taxon_name (str): a taxon name; example: 'Pyrus tamamaschjanae'
+            retmax (int):     the number of maximally retained hits
+        Returns:
+            entrez_id_list (list): a list of Entrez IDs; example: ['26835430',
+                            '26833718', '26833393', ...]
+        Raises:
+            none
+            
+        Examples:
+            Example 1:
+                >>> taxon_name = 'Pyrus tamamaschjanae'
+                >>> GetEntrezInfo().does_taxon_exist(taxon_name)
+                Out: False
+            
+        '''
+
+        from Bio import Entrez
+        Entrez.email = self.email_addr
+
+        try:
+            entrez_hitcount = GetEntrezInfo._taxname_lookup(taxon_name)
+        except ME.MyException as e:
+            raise e
+
+        if entrez_hitcount == '0':
+            return False
+        if entrez_hitcount == '1':
+            return True
 
 
 class ParseCharsetName:
