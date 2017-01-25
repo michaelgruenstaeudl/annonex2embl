@@ -104,14 +104,13 @@ class Outp:
     def __init__(self):
         pass
 
-    def write_EntryUpload(self, seq_record, out_format, outp_handle, eusubm_bool):
+    def write_EntryUpload(self, seq_record, outp_handle, eusubm_bool):
         ''' This function writes a seqRecord in ENA format for a submission
         via Entry Upload. Upon request (eusubm_bool), it also masks the ID and AC 
         lines as requested by ENA for submissions.
         
         Args:
             seq_record (obj)
-            out_format (str)
             outp_handle (obj)
             eusubm_bool(str)
         Returns:
@@ -124,7 +123,7 @@ class Outp:
 
         temp_handle = StringIO()
         try:
-            SeqIO.write(seq_record, temp_handle, out_format)
+            SeqIO.write(seq_record, temp_handle, 'embl')
         except:
             raise ME.MyException('%s annonex2embl ERROR: Problem with \
             `%s`. Did not write to internal handle.' % ('\n', seq_name))
@@ -245,6 +244,12 @@ class ENAchecklist:
         except:
             locality = ''
 
+        #ECOTYPE
+        try:
+            ecotype = qualifiers['ecotype'] # tag 'locality' does not exist in INDSC, but 'country' does
+        except:
+            ecotype = ''
+
         #SEQUENCE
         sequence = str(seq_record.seq)
             
@@ -258,6 +263,7 @@ class ENAchecklist:
                     isolate,
                     spec_vouch,
                     locality,
+                    ecotype,
                     sequence
                    ]
         

@@ -33,7 +33,7 @@ import IOOps as IOOps
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.01.25.1400'
+__version__ = '2017.01.25.1900'
 
 #############
 # DEBUGGING #
@@ -127,13 +127,13 @@ def annonex2embl(path_to_nex,
                  email_addr,
                  path_to_outfile,
                  
+                 tax_check='False',
                  checklist_mode='False',
                  checklist_type=None,
-                 eusubm_mode='False',
+                 linemask='False',
                  topology='linear',
                  tax_division='PLN',
-                 out_format='embl',
-                 col_label='isolate',
+                 column_label='isolate',
                  transl_table='11',
                  seq_version='1'):
 
@@ -141,8 +141,9 @@ def annonex2embl(path_to_nex,
 
 # 0. Make specific variables boolean
     from distutils.util import strtobool
+    taxcheck_bool = strtobool(tax_check)
     checklist_bool = strtobool(checklist_mode)
-    eusubm_bool = strtobool(eusubm_mode)
+    linemask_bool = strtobool(linemask)
 
 ########################################################################
 
@@ -170,7 +171,7 @@ def annonex2embl(path_to_nex,
 # 4. Check qualifiers
 # 4. Perform quality checks on qualifiers
     try:
-        CkOps.QualifierCheck(qualifiers, col_label).quality_of_qualifiers()
+        CkOps.QualifierCheck(qualifiers, column_label).quality_of_qualifiers()
     except ME.MyException as e:
         sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
 # 4.2. Remove modifiers without content (i.e. empty modifiers)
@@ -206,7 +207,7 @@ def annonex2embl(path_to_nex,
 # 6.1. Select current sequences and current qualifiers
         current_seq = alignm[seq_name]
         current_quals = [d for d in filtered_qualifiers\
-            if d[col_label] == seq_name][0]
+            if d[column_label] == seq_name][0]
 
 ####################################
 
@@ -214,7 +215,7 @@ def annonex2embl(path_to_nex,
 
 # 6.2.1. Generate the raw record
         seq_record = GnOps.GenerateSeqRecord(current_seq,
-            current_quals).base_record(col_label, charsets_withgaps)
+            current_quals).base_record(column_label, charsets_withgaps)
 
 # 6.2.2. Specify the topology of the sequence
         if topology in valid_topologies:
@@ -280,8 +281,9 @@ def annonex2embl(path_to_nex,
 
 # 6.4.1. Test taxon name against NCBI taxonomy; if not listed, adjust
 #        taxon name and append ecotype info
-        seq_record = PrOps.ConfirmAdjustTaxonName().go(seq_record, \
-            email_addr)
+        if taxcheck_bool:
+            seq_record = PrOps.ConfirmAdjustTaxonName().go(seq_record, 
+                email_addr)
 
 ####################################
 
@@ -355,14 +357,14 @@ def annonex2embl(path_to_nex,
 # 6.9. Decision of which output format to employ
         if checklist_bool:
             if checklist_type == 'trnK_matK':
-                IOOps.ENAchecklist().matK_trnK(seq_record, counter, \
+                IOOps.ENAchecklist().matK_trnK(seq_record, counter,
                     outp_handle)
             else:
                 sys.exit('%s annonex2embl ERROR: Checklist type `%s` \
                     not recognized.' % ('\n', checklist_type))
         else:
-            IOOps.Outp().write_EntryUpload(seq_record, out_format, 
-                outp_handle, eusubm_bool)
+            IOOps.Outp().write_EntryUpload(seq_record, outp_handle,
+                linemask_bool)
 
 ########################################################################
 

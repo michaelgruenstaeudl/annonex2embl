@@ -22,7 +22,7 @@ import Annonex2emblMain as AN2EMBLMain
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.01.22.1700'
+__version__ = '2017.01.25.1900'
 
 #############
 # DEBUGGING #
@@ -75,60 +75,50 @@ if __name__ == '__main__':
                         required=True)
 
     # Optional
-
-    parser.add_argument('-k',
-                        '--checklistmode',
-                        help='a logical; output in checklist format',
+    parser.add_argument('--taxonomycheck',
+                        help='A logical; Shall taxon names be checked against NCBI Taxonomy?',
                         default='False',
                         required=False)
 
-    parser.add_argument('-z',
-                        '--checklisttype',
-                        help='any of the currently implemented checklist types (i.e. `trnK_matK`)',
+    parser.add_argument('--checklistmode',
+                        help='A logical; Shall the output be checklists?',
+                        default='False',
+                        required=False)
+
+    parser.add_argument('--checklisttype',
+                        help='Any of the currently implemented checklist types (i.e. `trnK_matK`)',
                         default=None,
                         required=False)
 
-    parser.add_argument('-m',
-                        '--masking',
-                        help='a logical; should the ID and the AC lines be masked for Entry Upload submissions',
+    parser.add_argument('--linemask',
+                        help='A logical; Shall the ID and the AC lines be masked for Entry Upload submissions?',
                         default='False',
                         required=False)
                         
-    parser.add_argument('-p',
-                        '--topology',
+    parser.add_argument('--topology',
                         help='`circular` or `linear`.', 
                         default='linear',
                         required=False)
                         
-    parser.add_argument('-d',
-                        '--taxdivision',
+    parser.add_argument('--taxdivision',
                         help='Any of the three letter codes specified in section 3.2 of the EMBL user manual.', 
                         default='PLN',
                         required=False)
-    
-    parser.add_argument('-f',
-                        '--outformat',
-                        help='Available arguments: embl, gb', 
-                        default='embl',
-                        required=False)
 
-    parser.add_argument('-l',
-                        '--collabel',
+    parser.add_argument('--columnlabel',
                         metavar='column specifying sequence names',
                         help='Name of column that specifies the sequence names.',
                         default='isolate',
                         required=False)
 
-    parser.add_argument('-t',
-                        '--transltable',
+    parser.add_argument('--transltable',
                         metavar='translation table',
                         help='Number of the translation table to translate coding regions with.'\
                         'For details, see: http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi',
                         default='11',
                         required=False)
 
-    parser.add_argument('-s',
-                        '--seqversion',
+    parser.add_argument('--seqversion',
                         metavar='sequence version',
                         help='An integer',
                         default='1',
@@ -142,9 +132,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     if args.checklistmode is None and args.checklisttype is not None:
-        parser.error(" ERROR: --checklisttype (-z) requires --checklistmode (-k).")
+        parser.error(" ERROR: --checklisttype requires --checklistmode.")
     if args.checklistmode == 'False' and args.checklisttype is not None:
-        parser.error(" ERROR: --checklisttype (-z) requires --checklistmode (-k) to be `True`.")
+        parser.error(" ERROR: --checklisttype requires --checklistmode to be `True`.")
 
 ########
 # MAIN #
@@ -155,12 +145,12 @@ if __name__ == '__main__':
                                 args.email,
                                 args.outfile,
                                 
+                                args.taxonomycheck,
                                 args.checklistmode,
                                 args.checklisttype,
-                                args.masking,
+                                args.linemask,
                                 args.topology,
                                 args.taxdivision,
-                                args.outformat,
-                                args.collabel,
+                                args.columnlabel,
                                 args.transltable,
                                 args.seqversion )

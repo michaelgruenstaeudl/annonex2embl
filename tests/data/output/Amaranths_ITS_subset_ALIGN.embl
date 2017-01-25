@@ -2,7 +2,7 @@ ID   Celosia_argentea_AC1092_ITS; SV 1; linear; DNA; ; PLN; 681 BP.
 XX
 AC   Celosia_argentea_AC1092_ITS;
 XX
-DE   Celosia_argentea ITS1 misc RNA and 28S rRNA and 18S rRNA and ITS2 misc RNA
+DE   Celosia argentea ITS1 misc RNA and 28S rRNA and 18S rRNA and ITS2 misc RNA
 DE   and 5.8S rRNA DNA.
 XX
 OS   .
@@ -13,7 +13,7 @@ FT   source          1..681
 FT                   /country="Ecuador: Zaruma"
 FT                   /isolate="Celosia_argentea_AC1092_ITS"
 FT                   /note="Authority: (I.C.Chung) Harling"
-FT                   /organism="Celosia_argentea"
+FT                   /organism="Celosia argentea"
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
 FT                   /transl_table=11
 FT   rRNA            1..32
@@ -45,7 +45,7 @@ ID   Kyphocarpa_trichinoides_AC202_ITS; SV 1; linear; DNA; ; PLN; 658 BP.
 XX
 AC   Kyphocarpa_trichinoides_AC202_ITS;
 XX
-DE   Kyphocarpa_trichinoides ITS1 misc RNA and 28S rRNA and 18S rRNA and ITS2
+DE   Kyphocarpa trichinoides ITS1 misc RNA and 28S rRNA and 18S rRNA and ITS2
 DE   misc RNA and 5.8S rRNA DNA.
 XX
 OS   .
@@ -56,7 +56,7 @@ FT   source          1..658
 FT                   /country="Ecuador: Central Andes"
 FT                   /isolate="Kyphocarpa_trichinoides_AC202_ITS"
 FT                   /note="Authority: (Benth.) I.C.Chung"
-FT                   /organism="Kyphocarpa_trichinoides"
+FT                   /organism="Kyphocarpa trichinoides"
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
 FT                   /transl_table=11
 FT   rRNA            1..32
@@ -87,7 +87,7 @@ ID   Lagrezia_sp__AC896_ITS; SV 1; linear; DNA; ; PLN; 706 BP.
 XX
 AC   Lagrezia_sp__AC896_ITS;
 XX
-DE   Lagrezia_sp ITS1 misc RNA and 28S rRNA and 18S rRNA and ITS2 misc RNA and
+DE   Lagrezia sp. ITS1 misc RNA and 28S rRNA and 18S rRNA and ITS2 misc RNA and
 DE   5.8S rRNA DNA.
 XX
 OS   .
@@ -98,7 +98,7 @@ FT   source          1..706
 FT                   /country="Ecuador: Central Andes"
 FT                   /isolate="Lagrezia_sp__AC896_ITS"
 FT                   /note="Authority: (Benth.) I.C.Chung"
-FT                   /organism="Lagrezia_sp"
+FT                   /organism="Lagrezia sp."
 FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
 FT                   /transl_table=11
 FT   rRNA            1..32
