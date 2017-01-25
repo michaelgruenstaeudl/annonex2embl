@@ -7,6 +7,7 @@ Classes to parse charset names
 # IMPORT OPERATIONS #
 #####################
 
+import sys
 import MyExceptions as ME
 
 ###############
@@ -268,6 +269,60 @@ class GetEntrezInfo:
             return True
 
 
+class ConfirmAdjustTaxonName:
+    ''' This class contains functions to confirm or adjust a sequence's
+    taxon name.
+    '''
+
+    def __init__(self):
+        pass
+    
+    def go(self, seq_record, email_addr):
+        ''' This function evaluates a taxon name against NCBI taxonomy; 
+            if not listed, it adjusts the taxon name and appends it
+            as ecotype info.
+
+            Args:
+                seq_record (obj):   a seqRecord object
+                email_addr (dict):  your email address; example: 
+                                    "m.gruenstaeudl@fu-berlin.de"
+            Returns:
+                seq_record (obj):   a seqRecord object
+            Raises:
+                currently nothing
+        '''
+        
+        species_name = seq_record.name
+        try:
+            genus_name = species_name.split()[0]
+        except ME.MyException as e:
+            sys.exit('%s annonex2embl ERROR: Could not locate a '\
+                'whitespace between genus name and specific epithet '\
+                'in taxon name of sequence `%s`.' % ('\n', seq_record.id))
+        if not GetEntrezInfo(email_addr).does_taxon_exist(species_name):
+            print('%s annonex2embl WARNING: Adjusting taxon name of '\
+                'sequence `%s`.' % ('\n', seq_record.id))
+            if not GetEntrezInfo(email_addr).does_taxon_exist(genus_name):
+                sys.exit('%s annonex2embl ERROR: Neither genus name, '\
+                    'nor species name of sequence `%s` were found in '\
+                    'NCBI Taxonomy.' % ('\n', seq_record.id))
+            else:
+                species_name_original = species_name
+                species_name_new = genus_name + ' sp.'
+                seq_record.name = species_name_new
+                seq_record.features[0].qualifiers['organism'] = species_name_new
+                seq_record.description = seq_record.description.\
+                    replace(species_name_original, species_name_new)
+                if 'ecotype' in seq_record.features[0].qualifiers:
+                    temp = seq_record.features[0].qualifiers['ecotype']
+                    seq_record.features[0].qualifiers['ecotype'] = \
+                        temp + '; ' + species_name_original
+                else:
+                    seq_record.features[0].qualifiers['ecotype'] = \
+                        species_name_original
+        return seq_record
+
+
 class ParseCharsetName:
     ''' This class contains functions to parse charset names. 
         
@@ -275,7 +330,7 @@ class ParseCharsetName:
         charset_name (str): a string that represents a charset name; example: 
                             "psbI_CDS"
         email_addr (dict):  your email address; example: 
-                            "mi.gruenstaeudl@gmail.com"
+                            "m.gruenstaeudl@fu-berlin.de"
     Raises:
         currently nothing
     '''

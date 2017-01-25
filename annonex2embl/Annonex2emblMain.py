@@ -278,13 +278,10 @@ def annonex2embl(path_to_nex,
             len(seq_record), current_quals, transl_table)
         seq_record.features.append(source_feature)
 
-#        pdb.set_trace()
-
 # 6.4.1. Test taxon name against NCBI taxonomy; if not listed, adjust
 #        taxon name and append ecotype info
-        #source_feature = GnOps.GenerateSeqFeature().source_feat(
-        #    len(seq_record), current_quals, transl_table)
-        #seq_record.features['source']
+        seq_record = PrOps.ConfirmAdjustTaxonName().go(seq_record, \
+            email_addr)
 
 ####################################
 
@@ -358,9 +355,11 @@ def annonex2embl(path_to_nex,
 # 6.9. Decision of which output format to employ
         if checklist_bool:
             if checklist_type == 'trnK_matK':
-                IOOps.ENAchecklist().matK_trnK(seq_record, counter, outp_handle)
+                IOOps.ENAchecklist().matK_trnK(seq_record, counter, \
+                    outp_handle)
             else:
-                sys.exit('%s annonex2embl ERROR: Checklist type `%s` not recognized.' % ('\n', checklist_type))
+                sys.exit('%s annonex2embl ERROR: Checklist type `%s` \
+                    not recognized.' % ('\n', checklist_type))
         else:
             IOOps.Outp().write_EntryUpload(seq_record, out_format, 
                 outp_handle, eusubm_bool)
@@ -369,4 +368,3 @@ def annonex2embl(path_to_nex,
 
 # 7. Close outfile
     outp_handle.close()
-
