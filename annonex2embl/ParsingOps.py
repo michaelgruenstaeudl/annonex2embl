@@ -300,8 +300,9 @@ class ConfirmAdjustTaxonName:
                 'whitespace between genus name and specific epithet '\
                 'in taxon name of sequence `%s`.' % ('\n', seq_record.id))
         if not GetEntrezInfo(email_addr).does_taxon_exist(species_name):
-            print('%s annonex2embl WARNING: Adjusting taxon name of '\
-                'sequence `%s`.' % ('\n', seq_record.id))
+            print('%s annonex2embl WARNING: Taxon name of sequence `%s` '\
+                'not found in NCBI Taxonomy. Thus, adjusting taxon name.' 
+                % ('\n', seq_record.id))
             if not GetEntrezInfo(email_addr).does_taxon_exist(genus_name):
                 sys.exit('%s annonex2embl ERROR: Neither genus name, '\
                     'nor species name of sequence `%s` were found in '\

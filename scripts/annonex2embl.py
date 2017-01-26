@@ -106,20 +106,20 @@ if __name__ == '__main__':
                         required=False)
 
     parser.add_argument('--columnlabel',
-                        metavar='column specifying sequence names',
+                        #metavar='column specifying sequence names',
                         help='Name of column that specifies the sequence names.',
                         default='isolate',
                         required=False)
 
     parser.add_argument('--transltable',
-                        metavar='translation table',
+                        #metavar='translation table',
                         help='Number of the translation table to translate coding regions with.'\
                         'For details, see: http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi',
                         default='11',
                         required=False)
 
     parser.add_argument('--seqversion',
-                        metavar='sequence version',
+                        #metavar='sequence version',
                         help='An integer',
                         default='1',
                         required=False)
