@@ -23,6 +23,7 @@ import MyExceptions as ME
 import CheckingOps as CkOps
 import DegappingOps as DgOps
 import GenerationOps as GnOps
+import GlobalVariables as GlobVars
 import ParsingOps as PrOps
 import IOOps as IOOps
 
@@ -33,7 +34,7 @@ import IOOps as IOOps
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.01.25.1900'
+__version__ = '2017.01.31.2000'
 
 #############
 # DEBUGGING #
@@ -42,81 +43,9 @@ __version__ = '2017.01.25.1900'
 import pdb
 #pdb.set_trace()
 
-####################
-# GLOBAL VARIABLES #
-####################
-
-start_codon = "ATG"
-stop_codons = ["TAG", "TAA", "TGA"] # amber, ochre, opal
-
-valid_topologies = ['linear', 'circular']
-
-valid_taxonomic_divisions = ['PHG', 'ENV', 'FUN', 'HUM', 'INV', 'MAM', 'VRT', 'MUS', 'PLN', 'PRO', 'ROD', 'SYN', 'TGN', 'UNC', 'VRL', 'XXX']
-# See Section "3.2 Taxonomic Division" in EMBL User Manual
-#    Division                 Code 
-#    -----------------        ---- 
-#    Bacteriophage            PHG 
-#    Environmental Sample     ENV 
-#    Fungal                   FUN 
-#    Human                    HUM 
-#    Invertebrate             INV 
-#    Other Mammal             MAM 
-#    Other Vertebrate         VRT 
-#    Mus musculus             MUS 
-#    Plant                    PLN 
-#    Prokaryote               PRO 
-#    Other Rodent             ROD 
-#    Synthetic                SYN 
-#    Transgenic               TGN 
-#    Unclassified             UNC (i.e. unknown) 
-#    Viral                    VRL 
-#    ENA SUBMISSIONS          XXX
-
-
 ###########
 # CLASSES #
 ###########
-
-########
-# TODO #
-########
-'''
-    GENERAL ISSUES:
-        (a) Include a function to check internet connectivity.
-        (b) Functionality for making ends fuzzy.
-        (c) Move lists like valid_INSDC_quals into global variables file,
-            so that they don't mess up code.
-        (d) Move start and stop codon specs into global variables file,
-            so that they don't mess up the code.
-        (e) Find a better parsing for 'True'/'False' than strtobool(eu_subm_mode);
-            ideally, people can also enter 'T'/'F' and '0'/'1'.
-        (f) Make section "6.9.1. Modify ID and AC line for first-time submissions"
-            its own function in a class.
-        (g) Introduce fuzzy ends when leading or trailing Ns were removed (section 6.8.)
-        (h) Move the bool decision before section 1 into argparse
-
-    REGARDING CHECKINGOPS().QUALIFIERCHECK().QUALITY_OF_QUALIFIERS():
-        (a) Check if sequence_names are also in .nex-file
-        (b) Have all metadata conform to basic ASCII standards (not 
-            extended ASCII)!
-
-    REGARDING CHECKINGOPS().CHECKCOORD().TRANSL_AND_QUALITY_OF_TRANSL():
-        (a) Adjust code of AnnoCheck.check() so that the start position of a 
-            subsequent feature is also adjusted.                
-        (b) Adjust the location position in code of AnnoCheck.check() so 
-            that the stop codon is also included.
-        (c) SHOULD EXAMPLE 2 NOT RESULT IN A FEATURE LOCATION THAT ENDS 
-            AT ExactPosition(5), I.E. AFTER THE STOP CODON ???
-    
-    REGARDING PARSINGOPS().GETENTREZINFO():
-        (a) Concerning class GetEntrezInfo, the staticmethod 
-        `_taxname_lookup` only returns the hitcount ('Count'), 
-        which may indicate that the taxon name was found as a valid taxon 
-        name or as a valid synonym. If it is the latter, it would be better 
-        to save the id_name, pull out the main taxon name via 
-        `Entrez.epost('gene', id=','.join(entrez_id_list))` and return 
-        the main taxon name instead of the hitcount.
-'''
 
 #############
 # FUNCTIONS #
@@ -133,7 +62,7 @@ def annonex2embl(path_to_nex,
                  linemask='False',
                  topology='linear',
                  tax_division='PLN',
-                 column_label='isolate',
+                 uniq_seqid='isolate',
                  transl_table='11',
                  seq_version='1'):
 
@@ -171,7 +100,7 @@ def annonex2embl(path_to_nex,
 # 4. Check qualifiers
 # 4. Perform quality checks on qualifiers
     try:
-        CkOps.QualifierCheck(qualifiers, column_label).quality_of_qualifiers()
+        CkOps.QualifierCheck(qualifiers, uniq_seqid).quality_of_qualifiers()
     except ME.MyException as e:
         sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
 # 4.2. Remove modifiers without content (i.e. empty modifiers)
@@ -207,7 +136,7 @@ def annonex2embl(path_to_nex,
 # 6.1. Select current sequences and current qualifiers
         current_seq = alignm[seq_name]
         current_quals = [d for d in filtered_qualifiers\
-            if d[column_label] == seq_name][0]
+            if d[uniq_seqid] == seq_name][0]
 
 ####################################
 
@@ -215,10 +144,10 @@ def annonex2embl(path_to_nex,
 
 # 6.2.1. Generate the raw record
         seq_record = GnOps.GenerateSeqRecord(current_seq,
-            current_quals).base_record(column_label, charsets_withgaps)
+            current_quals).base_record(uniq_seqid, charsets_withgaps)
 
 # 6.2.2. Specify the topology of the sequence
-        if topology in valid_topologies:
+        if topology in GlobVars.nex2ena_valid_topologies:
             seq_record.annotations['topology'] = topology
         else:
             seq_record.annotations['topology'] = 'linear'
@@ -227,7 +156,7 @@ def annonex2embl(path_to_nex,
         seq_record.id = seq_record.id + '.' + seq_version
         
 # 6.2.4. Add ID line info on 'taxonomic division'
-        if tax_division in valid_taxonomic_divisions:
+        if tax_division in GlobVars.nex2ena_valid_tax_divisions:
             seq_record.annotations['data_file_division'] = tax_division
         else:
             seq_record.annotations['data_file_division'] = 'UNC'
@@ -344,10 +273,10 @@ def annonex2embl(path_to_nex,
                 #       as stop codon was truncated from feature under 
                 #       Step 6.5.3.
                 coding_seq = ''.join([seq_record.seq[i] for i in charset_range])
-                if not coding_seq.startswith(start_codon):
+                if not coding_seq.startswith(GlobVars.nex2ena_start_codon):
                     feature.location = GnOps.GenerateFeatLoc(
                         ).make_start_fuzzy(feature.location)
-                if all([not coding_seq.endswith(c) for c in stop_codons]):
+                if all([not coding_seq.endswith(c) for c in GlobVars.nex2ena_stop_codons]):
                     feature.location = GnOps.GenerateFeatLoc(
                         ).make_end_fuzzy(feature.location)
 # (FUTURE) Also introduce fuzzy ends when leading or trailing Ns were removed

@@ -13,18 +13,18 @@ def my_test_suite():
 
 setup(
     name='annonex2embl',
-    version='0.3',
+    version='0.4',
     description='Converts annotated DNA sequence alignments in NEXUS format to EMBL submission files',
     long_description=read('README.rst'),
     classifiers=[
-        'Development Status :: 1 - Planning',
+        'Development Status :: 2 - Pre-Alpha',
         'License :: OSI Approved :: GNU General Public License (GPLv3)',
         'Programming Language :: Python :: 2.7',
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Bio-Informatics'
         ],
     keywords='EMBL DNA sequence submission',
-    url='https://github.com/michaelgruenstaeudl/SPTSPD',
+    url='https://github.com/michaelgruenstaeudl/annonex2embl',
     author='Michael Gruenstaeudl',
     author_email='m.gruenstaeudl@fu-berlin.de',
     license='GPLv3',

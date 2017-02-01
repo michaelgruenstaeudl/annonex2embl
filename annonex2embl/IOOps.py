@@ -14,7 +14,7 @@ import MyExceptions as ME
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
 __version__ = '2017.01.24.1800'
 
@@ -25,17 +25,13 @@ __version__ = '2017.01.24.1800'
 import pdb
 #pdb.set_trace()
 
-####################
-# GLOBAL VARIABLES #
-####################
-
 ###########
 # CLASSES #
 ###########
 
 class Inp:
-    ''' This class contains functions to conduct miscellaneous input operations.
-    
+    ''' This class contains functions to conduct miscellaneous input 
+        operations.
     Args:
         [specific to function]
     Returns:
@@ -47,26 +43,20 @@ class Inp:
     def __init__(self):
         pass
 
-
     def extract_fn(self, in_path):
         ''' This function splits a the path from path+filename. '''
         import os
-        
         path, fn =  os.path.split(in_path)
         return fn
 
-    
     def repl_fileend(self, fn, new_end):
         ''' This function replaces the file ending (e.g. ".csv") with a 
         different ending. '''
-        
         return fn[:fn.rfind('.')] + '.' + new_end
 
-    
     def parse_csv_file(self, path_to_csv):
         ''' This function parses a csv file. '''
         from csv import DictReader
-        
         try:
             reader = DictReader(open(path_to_csv, 'rb'), delimiter=',', 
                 quotechar='"', skipinitialspace=True)
@@ -75,11 +65,9 @@ class Inp:
             raise ME.MyException('Parsing of .csv-file unsuccessful.')
         return a_matrix    
 
-
     def parse_nexus_file(self, path_to_nex):
         ''' This function parses a NEXUS file. '''
         from Bio.Nexus import Nexus
-        
         try:
             aln = Nexus.Nexus()
             aln.read(path_to_nex)
@@ -92,7 +80,6 @@ class Inp:
 
 class Outp:
     ''' This class contains two functions for various output operations.
-    
     Args:
         [specific to function]
     Returns:
@@ -106,9 +93,8 @@ class Outp:
 
     def write_EntryUpload(self, seq_record, outp_handle, eusubm_bool):
         ''' This function writes a seqRecord in ENA format for a submission
-        via Entry Upload. Upon request (eusubm_bool), it also masks the ID and AC 
-        lines as requested by ENA for submissions.
-        
+            via Entry Upload. Upon request (eusubm_bool), it also masks the ID and AC 
+            lines as requested by ENA for submissions.
         Args:
             seq_record (obj)
             outp_handle (obj)
@@ -151,11 +137,9 @@ class Outp:
         #return something?
 
 
-
 class ENAchecklist:
     ''' This class writes checklist in ENA format for a submission
         via ENA's checklist system.
-    
     Args:
         [specific to function]
     Returns:
@@ -169,9 +153,8 @@ class ENAchecklist:
 
 
     def matK_trnK(self, seq_record, counter, outp_handle):
-        ''' This function writes a checklist in ENA format for a submission
-        via ENA's checklist system.
-        
+        ''' This function writes a checklist in ENA format for a 
+            submission via ENA's checklist system.
         Args:
             seq_record (obj)
             counter (int)
@@ -182,7 +165,6 @@ class ENAchecklist:
         Raises:
             -
         '''
-        
         import Bio
         
         #ENTRYNUMBER
@@ -266,41 +248,5 @@ class ENAchecklist:
                     ecotype,
                     sequence
                    ]
-        
         out_string = '\t'.join(out_list) + '\n'
-        
         outp_handle.write(out_string)
-        
-        '''
-        from StringIO import StringIO
-        from Bio import SeqIO
-
-        temp_handle = StringIO()
-        try:
-            SeqIO.write(seq_record, temp_handle, out_format)
-        except:
-            raise ME.MyException('%s annonex2embl ERROR: Problem with \
-            `%s`. Did not write to internal handle.' % ('\n', seq_name))
-        
-        #if eusubm_bool:
-            #temp_handle_lines = temp_handle.getvalue().splitlines()
-            #if temp_handle_lines[0].split()[0] == 'ID':
-                #ID_line = temp_handle_lines[0]
-                #ID_line_parts = ID_line.split('; ')
-                #if len(ID_line_parts) == 7:
-                    #ID_line_parts = ['XXX' if ID_line_parts.index(p) in \
-                        #[0,1,3,4,5,6] else p for p in ID_line_parts]
-                #temp_handle_lines[0] = 'ID   ' + '; '.join(ID_line_parts)
-            #if temp_handle_lines[2].split()[0] == 'AC':
-                #temp_handle_lines[2] = 'AC   XXX;'
-            #temp_handle_new = '\n' + '\n'.join(temp_handle_lines)
-            #temp_handle.truncate(0)
-            #temp_handle.write(temp_handle_new)
-        #else:
-            #pass
-
-        outp_handle.write(temp_handle.getvalue())
-        temp_handle.close()
-        
-        #return something?
-        '''

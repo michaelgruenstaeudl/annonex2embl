@@ -15,6 +15,7 @@ import unittest
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
 
+import GlobalVariables as GlobVars
 import MyExceptions as ME
 import ParsingOps as PrOps
 
@@ -23,9 +24,9 @@ import ParsingOps as PrOps
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2016.02.24.1900'
+__version__ = '2017.02.01.1400'
 
 #############
 # DEBUGGING #
@@ -33,22 +34,6 @@ __version__ = '2016.02.24.1900'
 
 #import pdb
 #pdb.set_trace()
-
-####################
-# GLOBAL VARIABLES #
-####################
-
-INSDC_feature_keys = ["assembly_gap", "C_region", "CDS", "centromere",
-        "D-loop", "D_segment", "exon", "gap", "gene", "iDNA", "intron",
-        "J_segment", "LTR", "mat_peptide", "misc_binding", "misc_difference",
-        "misc_feature", "misc_recomb", "misc_RNA", "misc_structure",
-        "mobile_element", "modified_base", "mRNA", "ncRNA", "N_region",
-        "old_sequence", "operon", "oriT", "polyA_site", "precursor_RNA",
-        "prim_transcript", "primer_bind", "protein_bind", "regulatory", 
-        "repeat_region", "rep_origin", "rRNA", "S_region", "sig_peptide",
-        "source", "stem_loop", "STS", "telomere", "tmRNA", "transit_peptide",
-        "tRNA", "unsure", "V_region", "V_segment", "variation", "3'UTR",
-        "5'UTR"]
 
 ###########
 # CLASSES #
@@ -58,91 +43,99 @@ INSDC_feature_keys = ["assembly_gap", "C_region", "CDS", "centromere",
 class ParseCharsetNameTestCases(unittest.TestCase):
     ''' Tests to evaluate class `ParseCharsetName` '''
     
-    def test_1_ParseCharsetName(self):
-        ''' This test evaluates the basic parsing ability of the class. '''
-        
+    def test_ParseCharsetName__parse__1(self):
+        ''' This test evaluates the function `parse` of the class 
+            `ParseCharsetName`.
+            This test evaluates the basic parsing ability of the 
+            class. '''
         charset_name = 'psbI_CDS'
         email_addr = 'm.gruenstaeudl@fu-berlin.de'
         handle = PrOps.ParseCharsetName(charset_name, email_addr).parse()      
         self.assertIsInstance(handle, tuple)
         self.assertIsInstance(handle[0], str)
         self.assertIsInstance(handle[1], str)
-        self.assertTrue(handle[1] in INSDC_feature_keys)
+        self.assertTrue(handle[1] in GlobVars.nex2ena_valid_INSDC_featurekeys)
     
-    def test_2_ParseCharsetName(self):
-        ''' This test evaluates the situation where a charset_name contains
-        more than one charset_type. '''
-
+    def test_ParseCharsetName__parse__2(self):
+        ''' This test evaluates the function `parse` of the class 
+            `ParseCharsetName`.
+            This test evaluates the situation where a charset_name 
+            contains more than one charset_type. '''
         charset_name = 'psbI_rRNA_CDS' # Two feature keys present.
         email_addr = 'm.gruenstaeudl@fu-berlin.de'
         with self.assertRaises(ME.MyException):
             PrOps.ParseCharsetName(charset_name, email_addr).parse()
     
-    def test_3_ParseCharsetName(self):
-        ''' This test evaluates the situation where a charset_name contains 
-        more than one charset_sym. '''
-        
+    def test_ParseCharsetName__parse__3(self):
+        ''' This test evaluates the function `parse` of the class 
+            `ParseCharsetName`.
+            This test evaluates the situation where a charset_name contains 
+            more than one charset_sym. '''
         charset_name = 'psbI_matK_CDS' # Two gene symbols present.
         email_addr = 'm.gruenstaeudl@fu-berlin.de'
         with self.assertRaises(ME.MyException):
             PrOps.ParseCharsetName(charset_name, email_addr).parse()
         
-    def test_4_ParseCharsetName(self):
-        ''' This test evaluates the situation where a charset_name contains an 
-        unknown charset_sym. '''
-        
+    def test_ParseCharsetName__parse__4(self):
+        ''' This test evaluates the function `parse` of the class 
+            `ParseCharsetName`.
+            This test evaluates the situation where a charset_name contains an 
+            unknown charset_sym. '''
         charset_name = 'xxxX_CDS'
         email_addr = 'm.gruenstaeudl@fu-berlin.de'
         with self.assertRaises(ME.MyException):
             PrOps.ParseCharsetName(charset_name, email_addr).parse()
 
-    def test_5_ParseCharsetName(self):
-        ''' This test evaluates the situation where a charset_name contains 
-        only the charset_sym, not the charset_type. '''
-        
+    def test_ParseCharsetName__parse__5(self):
+        ''' This test evaluates the function `parse` of the class
+            `ParseCharsetName`.
+            This test evaluates the situation where a charset_name 
+            contains only the charset_sym, not the charset_type. '''
         charset_name = 'matK'
-        email_addr = 'm.gruenstaeudl@fu-berlin.de'        
+        email_addr = 'm.gruenstaeudl@fu-berlin.de'
         with self.assertRaises(ME.MyException):
             PrOps.ParseCharsetName(charset_name, email_addr).parse()
    
-    def test_6_ParseCharsetName(self):
-        ''' This test evaluates the situation where a charset_name contains
-        only the charset_type, not the charset_sym. '''
-        
+    def test_ParseCharsetName__parse__6(self):
+        ''' This test evaluates the function `parse` of the class
+            `ParseCharsetName`.
+            This test evaluates the situation where a charset_name 
+            contains only the charset_type, not the charset_sym. '''
         charset_name = 'CDS'
         email_addr = 'm.gruenstaeudl@fu-berlin.de'        
         with self.assertRaises(ME.MyException):
             PrOps.ParseCharsetName(charset_name, email_addr).parse()
    
-    def test_7_ParseCharsetName(self):
-        ''' This test evaluates the situation where the position of the 
-        charset_sym and the charset_type have been inadvertedly switched. Such
-        a switch should not matter. '''
-        
+    def test_ParseCharsetName__parse__7(self):
+        ''' This test evaluates the function `parse` of the class
+            `ParseCharsetName`.
+            This test evaluates the situation where the position of the 
+            charset_sym and the charset_type have been inadvertedly 
+            switched. Such a switch should not matter. '''
         charset_name = 'CDS_psbI'
         email_addr = 'm.gruenstaeudl@fu-berlin.de'
-        handle = PrOps.ParseCharsetName(charset_name, email_addr).parse()      
+        handle = PrOps.ParseCharsetName(charset_name, email_addr).parse()
         self.assertIsInstance(handle, tuple)
         self.assertIsInstance(handle[0], str)
         self.assertIsInstance(handle[1], str)
-        self.assertTrue(handle[1] in INSDC_feature_keys)
+        self.assertTrue(handle[1] in GlobVars.nex2ena_valid_INSDC_featurekeys)
 
 class GetEntrezInfoTestCases(unittest.TestCase):
     ''' Tests to evaluate class `GetEntrezInfo` '''
     
-    def test_1_GetEntrezInfo(self):
-        ''' This test evaluates the function `does_taxon_exist` with
-        a taxon name that does not exist on NCBI Taxonomy. '''
-        
+    def test_GetEntrezInfo__does_taxon_exist__1(self):
+        ''' This test evaluates function `does_taxon_exist` of class `GetEntrezInfo`.
+            This test evaluates the case where a taxon name is used that does 
+            not exist on NCBI Taxonomy. '''
         taxon_name = 'Pyrus tamamaschjanae'
         email_addr = 'm.gruenstaeudl@fu-berlin.de'
         handle = PrOps.GetEntrezInfo(email_addr).does_taxon_exist(taxon_name)
         self.assertFalse(handle)
     
-    def test_2_GetEntrezInfo(self):
-        ''' This test evaluates the function `does_taxon_exist` with
-        a taxon name that does exist on NCBI Taxonomy. '''
-        
+    def test_GetEntrezInfo__does_taxon_exist__2(self):
+        ''' This test evaluates function `does_taxon_exist` of class `GetEntrezInfo`.
+            This test evaluates the case where a taxon name is used that does 
+            exist on NCBI Taxonomy. '''
         taxon_name = 'Pyrus caucasica'
         email_addr = 'm.gruenstaeudl@fu-berlin.de'
         handle = PrOps.GetEntrezInfo(email_addr).does_taxon_exist(taxon_name)
