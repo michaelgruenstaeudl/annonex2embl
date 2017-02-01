@@ -23,7 +23,7 @@ __version__ = '2017.01.31.1900'
 # DEBUGGING #
 #############
 
-#import pdb
+import pdb
 #pdb.set_trace()
 
 ###########
@@ -109,7 +109,7 @@ class GenerateFeatLoc:
         ''' This function makes the end position of location 
             objects fuzzy.
         '''
-        
+    
 #        Examples:
 #            Example 1:
 #                >>> from Bio import SeqFeature
@@ -153,18 +153,21 @@ class GenerateSeqFeature:
     def __init__(self):
         pass
     
-    def source_feat(self, full_len, quals, transl_table):
+    def source_feat(self, full_len, quals, charset_names, transl_table):
         ''' This function generates the SeqFeature `source` for a 
             SeqRecord. The SeqFeature `source` is critical for 
             submissions to EMBL or GenBank, as it contains all the 
             relevant info on collection locality, herbarium voucher, 
             etc. It also provides info on which translation table is 
-            used for subsequent CDS features.
+            used if a CDS sequence feature is encountered among the 
+            gene names.
         Args:
             full_len (int): the full length of the seq in question;
                             example: 509
             quals (dict):   a dictionary of qualifiers; example: 
                             {'isolate': 'taxon_B', 'country': 'Ecuador'}
+            charset_names (list): a list of gene names; example: 
+                            ['foo_gene', 'foo_CDS']
             transl_table (int): an integer; example: 11 (for bacterial code)
         Returns:
             SeqFeature (obj):   A SeqFeature object
@@ -176,8 +179,10 @@ class GenerateSeqFeature:
         feature_loc = GenerateFeatLoc().make_location(full_index)
         source_feature = SeqFeature.SeqFeature(feature_loc, id='source',
             type='source', qualifiers=quals)
-        # only if a CDS, should the trans_table be integrated
-        source_feature.qualifiers["transl_table"] = transl_table
+        # If a CDS among the gene names, add qualifier trans_table 
+        # to source feature
+        if any(['CDS' in gene_name for gene_name in charset_names]):
+            source_feature.qualifiers["transl_table"] = transl_table
         return source_feature
 
     def regular_feat(self, feature_name, feature_type, feature_loc,
@@ -227,25 +232,26 @@ class GenerateSeqRecord:
         self.seq = current_seq
         self.qual = current_qual
     
-    def base_record(self, uniq_seqid, charsets_full):
+    def base_record(self, uniq_seqid, seq_version, charsets_full):
         ''' This function generates a base SeqRecord (i.e., the foundation to
             subsequent SeqRecords).
         Args:
             uniq_seqid (str): the label of the .csv-file column that
                              contains info on the sequence names; 
                              example: "sequence_name"
+            seq_version (str): an integer in string format
             charsets_full (dict):    foobar; example: foobar
-        
-        TODO:
-            (i) include info on linearity of molecule (i.e., linear or 
-                circular)
-            (ii) include db_x in base_record
+        Returns:
+            SeqRecord (obj):   A SeqRecord object
         '''
         from Bio.SeqRecord import SeqRecord
         gene_names = [k for k in charsets_full.keys()]
         gene_names = [gn.replace("_", " ") for gn in gene_names]
         gene_names_str = ' and '.join(gene_names)
         ID_line = self.qual[uniq_seqid]
+        ID_line = ID_line + '.' + seq_version
+        # Note to line above: seq_version is parsed internally from 
+        # ID-line when EMBL format is written
         try:
             org_name = self.qual['organism']
         except:
@@ -255,6 +261,27 @@ class GenerateSeqRecord:
             description=DE_line)
         return new_seqRecord
 
+    @staticmethod
+    def _add_annotations(seq_record, topology, tax_division):
+        ''' This function adds mandatory annotations to a SeqRecord.
+        Args:
+            seq_record (obj): a valid and functional SeqRecord
+            topology (str): one of the valid ENA topology specifications
+            tax_division (str): one of the valid ENA taxonomic divisions
+        Returns:
+            SeqRecord (obj):   An updated SeqRecord
+        '''
+        # 1. Specify the topology of the sequence
+        if topology in GlobVars.nex2ena_valid_topologies:
+            seq_record.annotations['topology'] = topology
+        else:
+            seq_record.annotations['topology'] = 'linear'
+        # 2. Add ID line info on 'taxonomic division'
+        if tax_division in GlobVars.nex2ena_valid_tax_divisions:
+            seq_record.annotations['data_file_division'] = tax_division
+        else:
+            seq_record.annotations['data_file_division'] = 'UNC'
+        return seq_record
 
 #############
 # FUNCTIONS #

@@ -2,7 +2,7 @@ ID   Taxon_1; SV 1; linear; DNA; ; PLN; 38 BP.
 XX
 AC   Taxon_1;
 XX
-DE   Taxon one foo gene and foo CDS DNA.
+DE   Taxon one foo gene and foo CDS isolate
 XX
 OS   .
 OC   .
@@ -31,7 +31,7 @@ ID   Taxon_2; SV 1; linear; DNA; ; PLN; 26 BP.
 XX
 AC   Taxon_2;
 XX
-DE   Taxon two foo gene and foo CDS DNA.
+DE   Taxon two foo gene and foo CDS isolate
 XX
 OS   .
 OC   .
@@ -60,16 +60,16 @@ ID   Taxon_3; SV 1; linear; DNA; ; PLN; 24 BP.
 XX
 AC   Taxon_3;
 XX
-DE   Taxon three foo gene and foo CDS DNA.
+DE   Taxon three foo gene and foo CDS isolate
 XX
 OS   .
 OC   .
 XX
 FH   Key             Location/Qualifiers
 FT   source          1..24
-FT                   /country="Country_2: Area_3"
+FT                   /country="Iceland: Reykjavik"
 FT                   /isolate="Taxon_3"
-FT                   /note="Tax.Authority: Author_3"
+FT                   /note="Tax.Authority: A.Love"
 FT                   /organism="Taxon three"
 FT                   /specimen_voucher="Herbarium_2: Collection#"
 FT                   /transl_table=11

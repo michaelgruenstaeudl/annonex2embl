@@ -149,7 +149,7 @@ class QualifierCheckTestCases(unittest.TestCase):
         with self.assertRaises(ME.MyException):
             CkOps.QualifierCheck._label_present(lst_of_dcts, label)
     
-    def test_QualifierCheck__rm_empty_modifier__1(self):
+    def test_QualifierCheck__rm_empty_qual__1(self):
         ''' Test to evaluate the static method `_rm_empty_modifier` of class 
             `QualifierCheck`.
             This test evaluates the situation where empty modifiers are in
@@ -160,7 +160,7 @@ class QualifierCheckTestCases(unittest.TestCase):
         out_ideal = [
             {'foo': 'foo', 'bar': 'bar'},
             {'bar': 'bar', 'baz': 'baz'}]
-        out_actual = CkOps.QualifierCheck._rm_empty_modifier(lst_of_dcts)
+        out_actual = CkOps.QualifierCheck._rm_empty_qual(lst_of_dcts)
         self.assertEqual(out_actual, out_ideal)
     
     def test_QualifierCheck__valid_INSDC_quals__1(self):

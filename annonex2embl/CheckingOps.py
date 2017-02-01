@@ -208,6 +208,16 @@ class QualifierCheck:
         self.label = label
     
     @staticmethod
+    def _enforce_ASCII(lst_of_dcts):
+        ''' This function converts any non-ASCII characters among 
+            qualifier values to ASCII characters. '''
+        from unidecode import unidecode
+        filtered_lst_of_dcts = [
+            {k: unidecode(v.decode('utf-8')) for k, v in dct.items()} 
+            for dct in lst_of_dcts]
+        return filtered_lst_of_dcts
+    
+    @staticmethod
     def _label_present(lst_of_dcts, label):
         ''' This function checks if each (!) list of dictionary keys 
             of a list of dictionaries encompass the element <label> at 
@@ -218,16 +228,16 @@ class QualifierCheck:
         return True
     
     @staticmethod
-    def _rm_empty_modifier(lst_of_dcts):
+    def _rm_empty_qual(lst_of_dcts):
         ''' This function removes any qualifier from a dictionary which 
-            displays an empty modifier. Technically, this function 
+            displays an empty value. Technically, this function 
             loops through the qualifier dictionaries and removes any 
             key-value-pair from a dictionary which contains an empty 
             value.
         '''
-        filtered_lst_of_dcts = [{k: v for k, v in dct.items() if v != ''}\
+        nonempty_lst_of_dcts = [{k: v for k, v in dct.items() if v != ''}\
             for dct in lst_of_dcts]
-        return filtered_lst_of_dcts
+        return nonempty_lst_of_dcts
     
     @staticmethod
     def _valid_INSDC_quals(lst_of_dcts):

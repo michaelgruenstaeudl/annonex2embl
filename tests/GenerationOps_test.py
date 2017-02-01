@@ -124,16 +124,31 @@ class GenerateSeqFeatureTestCases(unittest.TestCase):
 
     def test_GenerateSeqFeature__source_feat__1(self):
         ''' Test to evaluate function `source_feat` of class `GenerateSeqFeature`.
-            This test evaluates the correct generation of the SeqFeature `source`. '''
+            This test evaluates the correct generation of the SeqFeature 
+            `source`. A translation table is to be included. '''
         full_len = 509
         quals = {'isolate': 'taxon_B', 'country': 'Ecuador'}
+        charset_names = ['foo_gene', 'foo_CDS']
         transl_table = 11
         out = GnOps.GenerateSeqFeature().source_feat(full_len,
-            quals, transl_table)
+            quals, charset_names, transl_table)
         self.assertIsInstance(out, Bio.SeqFeature.SeqFeature)
 
     def test_GenerateSeqFeature__source_feat__2(self):
         ''' Test to evaluate function `source_feat` of class `GenerateSeqFeature`.
+            This test evaluates the correct generation of the SeqFeature 
+            `source`. A translation table is NOT to be included. '''
+        full_len = 509
+        quals = {'isolate': 'taxon_B', 'country': 'Ecuador'}
+        charset_names = ['foo_intron', 'foo_IGS']
+        transl_table = 11
+        out = GnOps.GenerateSeqFeature().source_feat(full_len,
+            quals, charset_names, transl_table)
+        self.assertIsInstance(out, Bio.SeqFeature.SeqFeature)
+
+
+    def test_GenerateSeqFeature__regular_feat__1(self):
+        ''' Test to evaluate function `regular_feat` of class `GenerateSeqFeature`.
             This test evaluates the correct generation of a regular, non-coding 
             SeqFeature. '''
         feature_name = 'psbI'

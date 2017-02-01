@@ -14,7 +14,7 @@ def my_test_suite():
 setup(
     name='annonex2embl',
     version='0.4',
-    description='Converts annotated DNA sequence alignments in NEXUS format to EMBL submission files',
+    description='Converts annotated DNA sequence alignments in NEXUS format to ENA submission files',
     long_description=read('README.rst'),
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
@@ -30,7 +30,7 @@ setup(
     license='GPLv3',
     packages=['annonex2embl'], # So that the subfolder 'annonex2embl' is read immediately.
     #packages = find_packages(),
-    install_requires=['biopython'],
+    install_requires=['biopython', 'unidecode'],
     scripts=glob.glob('scripts/*'),
     test_suite='setup.my_test_suite',
     include_package_data=True,

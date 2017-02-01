@@ -1,4 +1,4 @@
 isolate, organism, note, country, specimen_voucher
 Taxon_1, "Taxon one", "Tax.Authority: Author_1", "Country_1: Area_1", "Herbarium_1: Collection#"
 Taxon_2, "Taxon two", "Tax.Authority: (Author_1) Author_2", "Country_2: Area_2", "Herbarium_2: Collection#"
-Taxon_3, "Taxon three", "Tax.Authority: Author_3", "Country_2: Area_3", "Herbarium_2: Collection#"
+Taxon_3, "Taxon three", "Tax.Authority: Á.Löve", "Iceland: Reykjavík", "Herbarium_2: Collection#"

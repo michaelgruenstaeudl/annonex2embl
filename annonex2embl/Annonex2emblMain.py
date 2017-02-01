@@ -34,7 +34,7 @@ import IOOps as IOOps
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.01.31.2000'
+__version__ = '2017.02.01.1800'
 
 #############
 # DEBUGGING #
@@ -91,7 +91,7 @@ def annonex2embl(path_to_nex,
 
 # 3. Parse data from .csv-file
     try:
-        qualifiers = IOOps.Inp().parse_csv_file(path_to_csv)
+        raw_qualifiers = IOOps.Inp().parse_csv_file(path_to_csv)
     except ME.MyException as e:
         sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
 
@@ -100,11 +100,16 @@ def annonex2embl(path_to_nex,
 # 4. Check qualifiers
 # 4. Perform quality checks on qualifiers
     try:
-        CkOps.QualifierCheck(qualifiers, uniq_seqid).quality_of_qualifiers()
+        CkOps.QualifierCheck(raw_qualifiers, uniq_seqid).\
+            quality_of_qualifiers()
     except ME.MyException as e:
         sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
-# 4.2. Remove modifiers without content (i.e. empty modifiers)
-    filtered_qualifiers = CkOps.QualifierCheck._rm_empty_modifier(qualifiers)
+# 4.2. Remove qualifiers without content (i.e. empty qualifiers)
+    nonempty_qualifiers = CkOps.QualifierCheck.\
+        _rm_empty_qual(raw_qualifiers)
+# 4.3. Enforce that all qualifier values consist of ASCII characters
+    filtered_qualifiers = CkOps.QualifierCheck.\
+        _enforce_ASCII(nonempty_qualifiers)
 
 ########################################################################
 
@@ -112,8 +117,8 @@ def annonex2embl(path_to_nex,
     charset_dict = {}
     for charset_name in charsets_global.keys():
         try:
-            charset_sym, charset_type, charset_product = PrOps.ParseCharsetName(
-                charset_name, email_addr).parse()
+            charset_sym, charset_type, charset_product = PrOps.\
+                ParseCharsetName(charset_name, email_addr).parse()
         except ME.MyException as e:
             sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
         
@@ -142,24 +147,14 @@ def annonex2embl(path_to_nex,
 
 # 6.2. Generate the basic SeqRecord (i.e., without features)
 
-# 6.2.1. Generate the raw record
+# 6.2.1. Generate the raw SeqRecord
         seq_record = GnOps.GenerateSeqRecord(current_seq,
-            current_quals).base_record(uniq_seqid, charsets_withgaps)
+            current_quals).base_record(uniq_seqid, seq_version, 
+            charsets_withgaps)
 
-# 6.2.2. Specify the topology of the sequence
-        if topology in GlobVars.nex2ena_valid_topologies:
-            seq_record.annotations['topology'] = topology
-        else:
-            seq_record.annotations['topology'] = 'linear'
-        
-# 6.2.3. Specify the sequence version
-        seq_record.id = seq_record.id + '.' + seq_version
-        
-# 6.2.4. Add ID line info on 'taxonomic division'
-        if tax_division in GlobVars.nex2ena_valid_tax_divisions:
-            seq_record.annotations['data_file_division'] = tax_division
-        else:
-            seq_record.annotations['data_file_division'] = 'UNC'
+# 6.2.2. Add info on sequence topology and taxonomic division to SeqRecord
+        seq_record = GnOps.GenerateSeqRecord._add_annotations(
+            seq_record, topology, tax_division)
 
 ####################################
 
@@ -204,11 +199,13 @@ def annonex2embl(path_to_nex,
 # 6.4. Generate SeqFeature 'source' and test taxon name against NCBI taxonomy
 
 # 6.4.1. Generate SeqFeature 'source' and append to features list
-        source_feature = GnOps.GenerateSeqFeature().source_feat(
-            len(seq_record), current_quals, transl_table)
+        charset_names = charsets_degapped.keys()
+        source_feature = GnOps.GenerateSeqFeature().\
+            source_feat(len(seq_record), current_quals, charset_names, 
+            transl_table)
         seq_record.features.append(source_feature)
 
-# 6.4.1. Test taxon name against NCBI taxonomy; if not listed, adjust
+# 6.4.2. Test taxon name against NCBI taxonomy; if not listed, adjust
 #        taxon name and append ecotype info
         if taxcheck_bool:
             seq_record = PrOps.ConfirmAdjustTaxonName().go(seq_record, 
