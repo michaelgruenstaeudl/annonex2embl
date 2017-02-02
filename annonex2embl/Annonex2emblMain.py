@@ -129,7 +129,7 @@ def annonex2embl(path_to_nex,
 
 ########################################################################
 
-# 6. CREATE A FULL SEQ_RECORD FOR EACH SEQUENCE OF THE ALIGNMENT.
+# 6. GENERATING SEQ_RECORDS BY LOOPING THROUGH EACH SEQUENCE OF THE ALIGNMENT
 #    Work off the sequences alphabetically.
     sorted_seqnames = sorted(alignm_global.keys())
     for counter, seq_name in enumerate(sorted_seqnames):
@@ -181,7 +181,8 @@ def annonex2embl(path_to_nex,
             RmAmbigsButMaintainAnno().rm_trailambig(seq_noleadambigs, \
             'N', charsets_noleadambigs)
 
-# 6.3.4. (FUTURE) Give note that leading or trailing ambiguities were removed
+# 6.3.4. (FUTURE) Give note that leading or trailing ambiguities were 
+#        removed; for future association with of fuzzy ends
 #        if seq_noltambigs != seq_record.seq:
 #            ltambigs_removed = True
 
@@ -204,7 +205,11 @@ def annonex2embl(path_to_nex,
             transl_table)
         seq_record.features.append(source_feature)
 
-# 6.4.2. Test taxon name against NCBI taxonomy; if not listed, adjust
+####################################
+
+# 6.5. VALIDATE TAXON NAME
+
+# 6.5.1. Test taxon name against NCBI taxonomy; if not listed, adjust
 #        taxon name and append ecotype info
         if taxcheck_bool:
             seq_record = PrOps.ConfirmAdjustTaxonName().go(seq_record, 
@@ -212,18 +217,18 @@ def annonex2embl(path_to_nex,
 
 ####################################
 
-# 6.5. POPULATE THE FEATURE KEYS WITH THE CHARSET INFORMATION
+# 6.6. POPULATE THE FEATURE KEYS WITH THE CHARSET INFORMATION
 #      Note: Each charset represents a dictionary that must be added in 
 #      full to the list "SeqRecord.features"
         for charset_name, charset_range in charsets_degapped.items():
 
-# 6.5.1. Convert charset_range into Location Object
+# 6.6.1. Convert charset_range into Location Object
             location_object = GnOps.GenerateFeatLoc().make_location(charset_range)
 
-# 6.5.2. Assign a gene product to a gene name
+# 6.6.2. Assign a gene product to a gene name
             charset_sym, charset_type, charset_product = charset_dict[charset_name]
 
-# 6.5.3. Generate a regular SeqFeature and append to seq_record.features
+# 6.6.3. Generate a regular SeqFeature and append to seq_record.features
 #        Note: The position indices for the stop codon are truncated in 
 #              this step.
             seq_feature = GnOps.GenerateSeqFeature().regular_feat(charset_sym,
@@ -232,7 +237,7 @@ def annonex2embl(path_to_nex,
 
 ####################################
 
-# 6.6. SORT ALL SEQ_RECORD.FEATURES EXCEPT THE FIRST ONE (WHICH 
+# 6.7. SORT ALL SEQ_RECORD.FEATURES EXCEPT THE FIRST ONE (WHICH 
 #      CONSTITUTES THE SOURCE FEATURE) BY THEIR RELATIVE START 
 #      POSITIONS
         sorted_features = sorted(seq_record.features[1:],
@@ -241,14 +246,15 @@ def annonex2embl(path_to_nex,
 
 ####################################
 
-# 6.7. TRANSLATE AND CHECK QUALITY OF TRANSLATION
+# 6.8. TRANSLATE AND CHECK QUALITY OF TRANSLATION
         removal_list = []
         for indx, feature in enumerate(seq_record.features):
             # Check if feature is a coding region
             if feature.type == 'CDS' or feature.type == 'gene':
                 try:
-                    feature = CkOps.TranslCheck().transl_and_quality_of_transl( \
-                        seq_record, feature, transl_table)
+                    feature = CkOps.TranslCheck().\
+                        transl_and_quality_of_transl(seq_record, 
+                        feature, transl_table)
                 except ME.MyException as e:
                     print('%s annonex2embl WARNING: %s Feature `%s` '\
                         '(type: `%s`) of sequence `%s` is not saved to '\
@@ -262,7 +268,7 @@ def annonex2embl(path_to_nex,
 
 ####################################
 
-# 6.8. INTRODUCE FUZZY ENDS
+# 6.9. INTRODUCE FUZZY ENDS
         for feature in seq_record.features:
             # Check if feature is a coding region
             if feature.type == 'CDS' or feature.type == 'gene':
@@ -280,7 +286,7 @@ def annonex2embl(path_to_nex,
 
 ####################################
 
-# 6.9. DECISION OF WHICH OUTPUT FORMAT TO EMPLOY
+# 6.10. DECISION OF WHICH OUTPUT FORMAT TO EMPLOY
         if checklist_bool:
             if checklist_type == 'trnK_matK':
                 IOOps.ENAchecklist().matK_trnK(seq_record, counter,

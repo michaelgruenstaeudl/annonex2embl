@@ -39,7 +39,7 @@ import pdb
 # TODO #
 ########
 
-''' Include selection on topology of submission (linear [default] or circular) '''
+''' Include selection on topol of submission (linear [default] or circular) '''
 
 ############
 # ARGPARSE #
@@ -63,7 +63,7 @@ if __name__ == '__main__':
                         required=True)
 
     parser.add_argument('-d',
-                        '--description',
+                        '--descript',
                         help='text string characterizing the DNA alignment; Example: "chloroplast trnR-atpA intergenic spacer"',
                         default='[PLACEHOLDER]',
                         required=True)
@@ -81,17 +81,17 @@ if __name__ == '__main__':
                         required=True)
 
     # Optional
-    parser.add_argument('--taxonomycheck',
+    parser.add_argument('--taxcheck',
                         help='A logical; Shall taxon names be checked against NCBI Taxonomy?',
                         default='False',
                         required=False)
 
-    parser.add_argument('--checklistmode',
+    parser.add_argument('--clmode',
                         help='A logical; Shall the output be checklists?',
                         default='False',
                         required=False)
 
-    parser.add_argument('--checklisttype',
+    parser.add_argument('--cltype',
                         help='Any of the currently implemented checklist types (i.e. `trnK_matK`)',
                         default=None,
                         required=False)
@@ -101,30 +101,30 @@ if __name__ == '__main__':
                         default='False',
                         required=False)
                         
-    parser.add_argument('--topology',
+    parser.add_argument('--topol',
                         help='`circular` or `linear`.', 
                         default='linear',
                         required=False)
                         
-    parser.add_argument('--taxdivision',
+    parser.add_argument('--taxdiv',
                         help='Any of the three letter codes specified in section 3.2 of the EMBL user manual.', 
                         default='PLN',
                         required=False)
 
-    parser.add_argument('--columnlabel',
+    parser.add_argument('--collabel',
                         #metavar='column specifying sequence names',
                         help='Name of column that specifies the sequence names.',
                         default='isolate',
                         required=False)
 
-    parser.add_argument('--transltable',
+    parser.add_argument('--ttable',
                         #metavar='translation table',
                         help='Number of the translation table to translate coding regions with.'\
                         'For details, see: http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi',
                         default='11',
                         required=False)
 
-    parser.add_argument('--seqversion',
+    parser.add_argument('--seqvers',
                         #metavar='sequence version',
                         help='An integer',
                         default='1',
@@ -137,10 +137,10 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     
-    if args.checklistmode is None and args.checklisttype is not None:
-        parser.error(" ERROR: --checklisttype requires --checklistmode.")
-    if args.checklistmode == 'False' and args.checklisttype is not None:
-        parser.error(" ERROR: --checklisttype requires --checklistmode to be `True`.")
+    if args.clmode is None and args.cltype is not None:
+        parser.error(" ERROR: --cltype requires --clmode.")
+    if args.clmode == 'False' and args.cltype is not None:
+        parser.error(" ERROR: --cltype requires --clmode to be `True`.")
 
 ########
 # MAIN #
@@ -148,16 +148,16 @@ if __name__ == '__main__':
 
     AN2EMBLMain.annonex2embl(   args.nexus,
                                 args.csv,
-                                args.description,
+                                args.descript,
                                 args.email,
                                 args.outfile,
                                 
-                                args.taxonomycheck,
-                                args.checklistmode,
-                                args.checklisttype,
+                                args.taxcheck,
+                                args.clmode,
+                                args.cltype,
                                 args.linemask,
-                                args.topology,
-                                args.taxdivision,
-                                args.columnlabel,
-                                args.transltable,
-                                args.seqversion )
+                                args.topol,
+                                args.taxdiv,
+                                args.collabel,
+                                args.ttable,
+                                args.seqvers )
