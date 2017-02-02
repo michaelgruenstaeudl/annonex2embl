@@ -19,13 +19,13 @@ import sys
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.01.31.2000'
+__version__ = '2017.02.02.1100'
 
 #############
 # DEBUGGING #
 #############
 
-#import pdb
+import pdb
 #pdb.set_trace()
 
 ###########
@@ -251,35 +251,31 @@ class ConfirmAdjustTaxonName:
             Raises:
                 currently nothing
         '''
-        species_name = seq_record.name
         try:
-            genus_name = species_name.split()[0]
+            genus_name, specific_epithet = seq_record.name.split(' ', 1)
         except ME.MyException as e:
             sys.exit('%s annonex2embl ERROR: Could not locate a '\
                 'whitespace between genus name and specific epithet '\
                 'in taxon name of sequence `%s`.' % ('\n', seq_record.id))
-        if not GetEntrezInfo(email_addr).does_taxon_exist(species_name):
+        if not GetEntrezInfo(email_addr).does_taxon_exist(seq_record.name):
             print('%s annonex2embl WARNING: Taxon name of sequence `%s` '\
-                'not found in NCBI Taxonomy. Thus, adjusting taxon name.' 
-                % ('\n', seq_record.id))
+                'not found in NCBI Taxonomy: `%s`. Please consider sending '\
+                'a taxon request to ENA.'
+                % ('\n', seq_record.id, seq_record.name))
             if not GetEntrezInfo(email_addr).does_taxon_exist(genus_name):
                 sys.exit('%s annonex2embl ERROR: Neither genus name, '\
                     'nor species name of sequence `%s` were found in '\
                     'NCBI Taxonomy.' % ('\n', seq_record.id))
             else:
-                species_name_original = species_name
-                species_name_new = genus_name + ' sp.'
+                species_name_original = seq_record.name
+                species_name_new = genus_name + ' sp. ' + specific_epithet
                 seq_record.name = species_name_new
                 seq_record.features[0].qualifiers['organism'] = species_name_new
                 seq_record.description = seq_record.description.\
                     replace(species_name_original, species_name_new)
-                if 'ecotype' in seq_record.features[0].qualifiers:
-                    temp = seq_record.features[0].qualifiers['ecotype']
-                    seq_record.features[0].qualifiers['ecotype'] = \
-                        temp + '; ' + species_name_original
-                else:
-                    seq_record.features[0].qualifiers['ecotype'] = \
-                        species_name_original
+                print('%s annonex2embl WARNING: Taxon name of sequence '\
+                      '`%s` converted to the informal name: `%s`' 
+                      % ('\n', seq_record.id, species_name_new))
         return seq_record
 
 

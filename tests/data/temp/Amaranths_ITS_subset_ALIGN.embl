@@ -1,0 +1,125 @@
+ID   Celosia_argentea_AC1092_ITS; SV 1; linear; DNA; ; PLN; 681 BP.
+XX
+AC   Celosia_argentea_AC1092_ITS;
+XX
+DE   Celosia argentea nuclear ribosomal internal transcribed spacer, isolate
+DE   Celosia_argentea_AC1092_ITS
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..681
+FT                   /country="Ecuador: Zaruma"
+FT                   /isolate="Celosia_argentea_AC1092_ITS"
+FT                   /note="Authority: (I.C.Chung) Harling"
+FT                   /organism="Celosia argentea"
+FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
+FT   rRNA            1..32
+FT                   /note="18S"
+FT   misc_RNA        33..278
+FT                   /note="ITS1"
+FT   rRNA            279..431
+FT                   /note="5.8S"
+FT   misc_RNA        432..643
+FT                   /note="ITS2"
+FT   rRNA            644..681
+FT                   /note="28S"
+XX
+SQ   Sequence 681 BP; 156 A; 173 C; 189 G; 163 T; 0 other;
+     tttccgtagg tgaacctgcg gaaggatcat tgtcgaaacc tgcccagcag aaccaccagc        60
+     gaacatgttt atactcatgg gttgggtgtg ctttcacgaa gcctttgggc ctagttgagc       120
+     tcatcccaac cagtcgaggg cgccctcttt tgggagcctt ttgacaaaat aactcaattc       180
+     ggcgcggtat gcgccaagga acataaacac tagtgtgcct gtctcgtgcc cggttttccg       240
+     gtgcatggat gtggcatcaa gtattaataa aacaacgact ctcggcaacg gatatcttgg       300
+     ctctcgcatc gatgaagaac gtagcgaaat gcgatacttg gtgtgaattg cagaatcccg       360
+     tgaaccatcg agtttttgaa cgcaagttgc gcccgaagct tcggccaggg cacgtctgcc       420
+     tgggcgtcac acagcgtctc ccccacccca ccacattgtg gggaggggcg aggaggatgg       480
+     tctcccatgt ctcaccggac atggttggcc gaaaatggga gcccgtggtt gcgaatgcct       540
+     cggctattgg tggactaata tgttgatcaa attgagtcga gagcatgtag cctatgtgga       600
+     ctcgtaggac cctgaaaagt tgccttcttg gcgacatacc tttgcgaccc caggtcaggc       660
+     gggattaccc gctgagttta a                                                 681
+//
+ID   Kyphocarpa_trichinoides_AC202_ITS; SV 1; linear; DNA; ; PLN; 658 BP.
+XX
+AC   Kyphocarpa_trichinoides_AC202_ITS;
+XX
+DE   Kyphocarpa trichinoides nuclear ribosomal internal transcribed spacer,
+DE   isolate Kyphocarpa_trichinoides_AC202_ITS
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..658
+FT                   /country="Ecuador: Central Andes"
+FT                   /isolate="Kyphocarpa_trichinoides_AC202_ITS"
+FT                   /note="Authority: (Benth.) I.C.Chung"
+FT                   /organism="Kyphocarpa trichinoides"
+FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
+FT   rRNA            1..32
+FT                   /note="18S"
+FT   misc_RNA        33..262
+FT                   /note="ITS1"
+FT   rRNA            263..417
+FT                   /note="5.8S"
+FT   misc_RNA        418..620
+FT                   /note="ITS2"
+FT   rRNA            621..658
+FT                   /note="28S"
+XX
+SQ   Sequence 658 BP; 157 A; 166 C; 183 G; 152 T; 0 other;
+     tttccgtagg tgaacctgcg gaaggatcat tgtcgaaacc tgcatagcag aacgaccagc        60
+     gaacatgttt atatcatgaa tgggggggtt ctggctagcc tagtccctac cctatgccga       120
+     agggcactcc tttaggggtg ttgttcggca caataacgaa ccccggcgtg ttatacgcca       180
+     aggaacataa acacgagtgt gcctgatctt gcccggatac gtggcgcatg gatacaggca       240
+     cccagtctaa gtcatgaaat gactctcggc aacggatatc tcggctctcg catcgatgaa       300
+     gaacgtagcg aaatgcgata cttggtgtga attgcagaat cccgtgaacc atcgagtttt       360
+     tgaacgcaag ttgcgcccga agccttttgg ccagggcacg tctgcctggg cgtcacgcat       420
+     agcgtctctt cccaactacc aagtgtaggg gggagaggat gatggcctcc catgcctcac       480
+     ctggcgtgga tggcctaaat aaggagcctt gggtaatgag attccacggc gattggtggt       540
+     atacaaggcc attgcctagg aaacatcgcg tcgtgtatca catacccttg ttgtggcctc       600
+     gtaggatcct aaaaaccttt gcgaccccag gtcaggcggg gttacccgct gagtttaa         658
+//
+ID   Lagrezia_sp__AC896_ITS; SV 1; linear; DNA; ; PLN; 706 BP.
+XX
+AC   Lagrezia_sp__AC896_ITS;
+XX
+DE   Lagrezia sp. nuclear ribosomal internal transcribed spacer, isolate
+DE   Lagrezia_sp__AC896_ITS
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..706
+FT                   /country="Ecuador: Central Andes"
+FT                   /isolate="Lagrezia_sp__AC896_ITS"
+FT                   /note="Authority: (Benth.) I.C.Chung"
+FT                   /organism="Lagrezia sp."
+FT                   /specimen_voucher="MEXU: J.L. Villasenor R. s.n."
+FT   rRNA            1..32
+FT                   /note="18S"
+FT   misc_RNA        33..281
+FT                   /note="ITS1"
+FT   rRNA            282..435
+FT                   /note="5.8S"
+FT   misc_RNA        436..668
+FT                   /note="ITS2"
+FT   rRNA            669..706
+FT                   /note="28S"
+XX
+SQ   Sequence 706 BP; 148 A; 197 C; 211 G; 150 T; 0 other;
+     tttccgtagg tgaacctgcg gaaggatcat tgtcgaaacc tgcccagcag aacgaccagc        60
+     gaacatgtta atcaacctgg gggtgggggg tgctcgtgcg gagccttttg gccgagtcga       120
+     gcccctcccc cccaagtcag gggtgcactc gcaagggtgc ctcctggcac aataacgaac       180
+     cccggcgcgg tatgcgccaa ggaacatcaa tgctagtgtg cctatcctgt gctcggtttt       240
+     ccgtagcacg gatgtggcac ccagtcttat taataaaacg actctcggca acggatatct       300
+     tggctctcgc atcgatgaag aacgtagcga aatgcgatac ttggtgtgaa ttgcagaatc       360
+     ccgtgaacca tcgagttttt gaacgcaagt tgcgcccgat cctttgggta agggcacgtc       420
+     tgcctgggcg tcacgcatag cgtctccccc accccgccaa gctgcgggaa ggggcgagga       480
+     ggatggcctc ccgtgcctca ccgggcgtgg ttggcctaaa ttgggagccc gtggttacga       540
+     actgcctcgg cgattggtgg aatacgtggc cttgtgccta gcatgaaatc gagccgtgag       600
+     cacgtagcct gcgtggactc gcaggaccct gagtaagttg ttgcctttcg gcgacaacta       660
+     aaacctttgc gaccccaggt caggcgggac tacccgctga gtttaa                      706
+//

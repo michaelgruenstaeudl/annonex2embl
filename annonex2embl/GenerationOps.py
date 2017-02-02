@@ -17,7 +17,7 @@ import MyExceptions as ME
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.01.31.1900'
+__version__ = '2017.02.01.2000'
 
 #############
 # DEBUGGING #
@@ -218,70 +218,61 @@ class GenerateSeqFeature:
 
 
 class GenerateSeqRecord:
-    ''' This class contains functions to generate SeqRecords.
-    Args:
-        current_seq (str): the DNA sequence of; example: 1
-        current_qual (xxx): foobar; example: foobar
-    Returns:
-        SeqRecord (obj):   A SeqRecord object
-    Raises:
-        [specific to function]
-    '''
+    ''' This class contains functions to generate SeqRecords. '''
         
-    def __init__(self, current_seq, current_qual):
-        self.seq = current_seq
-        self.qual = current_qual
+    def __init__(self):
+        pass
     
-    def base_record(self, uniq_seqid, seq_version, charsets_full):
+    def base_record(self, current_seq, current_qual, uniq_seqid_col,
+                    seq_version, descr_DEline, topology, tax_division):
         ''' This function generates a base SeqRecord (i.e., the foundation to
             subsequent SeqRecords).
         Args:
-            uniq_seqid (str): the label of the .csv-file column that
-                             contains info on the sequence names; 
-                             example: "sequence_name"
-            seq_version (str): an integer in string format
-            charsets_full (dict):    foobar; example: foobar
+            current_seq (str): the DNA sequence of; example: 1
+            current_qual (xxx): foobar; example: foobar
+            uniq_seqid_col (str): the column label of the .csv-file that
+                                  contains info on the sequence names; 
+                                  example: "isolate"
+            seq_version (str):    an integer in string format
+            descr_DEline (str):   a text string to be included in the 
+                                  DE line
+            topology (str):       one of the valid ENA topology 
+                                  specifications
+            tax_division (str):   one of the valid ENA taxonomic 
+                                  divisions
         Returns:
-            SeqRecord (obj):   A SeqRecord object
+            SeqRecord (obj):      A SeqRecord object
         '''
         from Bio.SeqRecord import SeqRecord
-        gene_names = [k for k in charsets_full.keys()]
-        gene_names = [gn.replace("_", " ") for gn in gene_names]
-        gene_names_str = ' and '.join(gene_names)
-        ID_line = self.qual[uniq_seqid]
-        ID_line = ID_line + '.' + seq_version
+        # 1. Selecting correct sequence line
+        uniq_seqid = current_qual[uniq_seqid_col]
+        # 2. Generating parse-able ID line
+        ID_line = uniq_seqid + '.' + seq_version
         # Note to line above: seq_version is parsed internally from 
         # ID-line when EMBL format is written
         try:
-            org_name = self.qual['organism']
+            org_name = current_qual['organism']
         except:
             org_name = 'undetermined organism'
-        DE_line = ' '.join([org_name, gene_names_str, uniq_seqid])
-        new_seqRecord = SeqRecord(self.seq, id=ID_line, name=org_name, 
+        # 3. Generating DE line
+        descr_DEline = descr_DEline.replace('"','')
+        DE_line = ' '.join([org_name, descr_DEline+',', 'isolate', 
+            uniq_seqid])
+        # 4. Set up new seq record
+        seq_record = SeqRecord(current_seq, id=ID_line, name=org_name, 
             description=DE_line)
-        return new_seqRecord
-
-    @staticmethod
-    def _add_annotations(seq_record, topology, tax_division):
-        ''' This function adds mandatory annotations to a SeqRecord.
-        Args:
-            seq_record (obj): a valid and functional SeqRecord
-            topology (str): one of the valid ENA topology specifications
-            tax_division (str): one of the valid ENA taxonomic divisions
-        Returns:
-            SeqRecord (obj):   An updated SeqRecord
-        '''
-        # 1. Specify the topology of the sequence
+        # 5. Specify the topology of the sequence
         if topology in GlobVars.nex2ena_valid_topologies:
             seq_record.annotations['topology'] = topology
         else:
             seq_record.annotations['topology'] = 'linear'
-        # 2. Add ID line info on 'taxonomic division'
+        # 6. Add ID line info on 'taxonomic division'
         if tax_division in GlobVars.nex2ena_valid_tax_divisions:
             seq_record.annotations['data_file_division'] = tax_division
         else:
             seq_record.annotations['data_file_division'] = 'UNC'
         return seq_record
+
 
 #############
 # FUNCTIONS #

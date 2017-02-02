@@ -53,6 +53,7 @@ import pdb
 
 def annonex2embl(path_to_nex,
                  path_to_csv,
+                 descr_DEline,
                  email_addr,
                  path_to_outfile,
                  
@@ -62,13 +63,13 @@ def annonex2embl(path_to_nex,
                  linemask='False',
                  topology='linear',
                  tax_division='PLN',
-                 uniq_seqid='isolate',
+                 uniq_seqid_col='isolate',
                  transl_table='11',
                  seq_version='1'):
 
 ########################################################################
 
-# 0. Make specific variables boolean
+# 0. MAKE SPECIFIC VARIABLES BOOLEAN
     from distutils.util import strtobool
     taxcheck_bool = strtobool(tax_check)
     checklist_bool = strtobool(checklist_mode)
@@ -76,20 +77,21 @@ def annonex2embl(path_to_nex,
 
 ########################################################################
 
-# 1. Open outfile
+# 1. OPEN OUTFILE
     outp_handle = open(path_to_outfile, 'a')
 
 ########################################################################
 
-# 2. Parse data from .nex-file
+# 2. PARSE DATA FROM .NEX-FILE
     try:
-        charsets_global, alignm_global = IOOps.Inp().parse_nexus_file(path_to_nex)
+        charsets_global, alignm_global = IOOps.Inp().\
+            parse_nexus_file(path_to_nex)
     except ME.MyException as e:
         sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
 
 ########################################################################
 
-# 3. Parse data from .csv-file
+# 3. PARSE DATA FROM .CSV-FILE
     try:
         raw_qualifiers = IOOps.Inp().parse_csv_file(path_to_csv)
     except ME.MyException as e:
@@ -97,10 +99,10 @@ def annonex2embl(path_to_nex,
 
 ########################################################################
 
-# 4. Check qualifiers
+# 4. CHECK QUALIFIERS
 # 4. Perform quality checks on qualifiers
     try:
-        CkOps.QualifierCheck(raw_qualifiers, uniq_seqid).\
+        CkOps.QualifierCheck(raw_qualifiers, uniq_seqid_col).\
             quality_of_qualifiers()
     except ME.MyException as e:
         sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
@@ -113,7 +115,7 @@ def annonex2embl(path_to_nex,
 
 ########################################################################
 
-# 5. Parse out feature key, obtain official gene name and gene product 
+# 5. PARSE OUT FEATURE KEY, OBTAIN OFFICIAL GENE NAME AND GENE PRODUCT 
     charset_dict = {}
     for charset_name in charsets_global.keys():
         try:
@@ -127,7 +129,7 @@ def annonex2embl(path_to_nex,
 
 ########################################################################
 
-# 6. Create a full SeqRecord for each sequence of the alignment.
+# 6. CREATE A FULL SEQ_RECORD FOR EACH SEQUENCE OF THE ALIGNMENT.
 #    Work off the sequences alphabetically.
     sorted_seqnames = sorted(alignm_global.keys())
     for counter, seq_name in enumerate(sorted_seqnames):
@@ -138,27 +140,23 @@ def annonex2embl(path_to_nex,
         
 ####################################
 
-# 6.1. Select current sequences and current qualifiers
+# 6.1. SELECT CURRENT SEQUENCES AND CURRENT QUALIFIERS
         current_seq = alignm[seq_name]
         current_quals = [d for d in filtered_qualifiers\
-            if d[uniq_seqid] == seq_name][0]
+            if d[uniq_seqid_col] == seq_name][0]
 
 ####################################
 
-# 6.2. Generate the basic SeqRecord (i.e., without features)
+# 6.2. GENERATE THE BASIC SEQ_RECORD (I.E., WITHOUT FEATURES)
 
-# 6.2.1. Generate the raw SeqRecord
-        seq_record = GnOps.GenerateSeqRecord(current_seq,
-            current_quals).base_record(uniq_seqid, seq_version, 
-            charsets_withgaps)
-
-# 6.2.2. Add info on sequence topology and taxonomic division to SeqRecord
-        seq_record = GnOps.GenerateSeqRecord._add_annotations(
-            seq_record, topology, tax_division)
+# 6.2.1. Generate the basic SeqRecord
+        seq_record = GnOps.GenerateSeqRecord().base_record(
+            current_seq, current_quals, uniq_seqid_col, seq_version, 
+            descr_DEline, topology, tax_division)
 
 ####################################
 
-# 6.3. Clean up the sequence of the SeqRecord (i.e., remove leading or 
+# 6.3. CLEAN UP THE SEQUENCE OF THE SEQ_RECORD (i.e., remove leading or 
 #      trailing ambiguities, remove gaps), but maintain correct 
 #      annotations.
 #      Note 1: This clean-up has to occur before (!) the SeqFeature 
@@ -196,7 +194,8 @@ def annonex2embl(path_to_nex,
 
 ####################################
 
-# 6.4. Generate SeqFeature 'source' and test taxon name against NCBI taxonomy
+# 6.4. GENERATE SEQFEATURE 'SOURCE' AND TEST TAXON NAME AGAINST 
+#      NCBI TAXONOMY
 
 # 6.4.1. Generate SeqFeature 'source' and append to features list
         charset_names = charsets_degapped.keys()
@@ -213,7 +212,7 @@ def annonex2embl(path_to_nex,
 
 ####################################
 
-# 6.5. Populate the feature keys with the charset information
+# 6.5. POPULATE THE FEATURE KEYS WITH THE CHARSET INFORMATION
 #      Note: Each charset represents a dictionary that must be added in 
 #      full to the list "SeqRecord.features"
         for charset_name, charset_range in charsets_degapped.items():
@@ -233,15 +232,16 @@ def annonex2embl(path_to_nex,
 
 ####################################
 
-# 6.6. Sort all seq_record.features except the first one (which 
-#      constitutes the source feature) by their relative start positions
+# 6.6. SORT ALL SEQ_RECORD.FEATURES EXCEPT THE FIRST ONE (WHICH 
+#      CONSTITUTES THE SOURCE FEATURE) BY THEIR RELATIVE START 
+#      POSITIONS
         sorted_features = sorted(seq_record.features[1:],
             key=lambda x: x.location.start.position)
         seq_record.features = [seq_record.features[0]] + sorted_features
 
 ####################################
 
-# 6.7. Translate and check quality of translation
+# 6.7. TRANSLATE AND CHECK QUALITY OF TRANSLATION
         removal_list = []
         for indx, feature in enumerate(seq_record.features):
             # Check if feature is a coding region
@@ -262,7 +262,7 @@ def annonex2embl(path_to_nex,
 
 ####################################
 
-# 6.8. Introduce fuzzy ends
+# 6.8. INTRODUCE FUZZY ENDS
         for feature in seq_record.features:
             # Check if feature is a coding region
             if feature.type == 'CDS' or feature.type == 'gene':
@@ -280,7 +280,7 @@ def annonex2embl(path_to_nex,
 
 ####################################
 
-# 6.9. Decision of which output format to employ
+# 6.9. DECISION OF WHICH OUTPUT FORMAT TO EMPLOY
         if checklist_bool:
             if checklist_type == 'trnK_matK':
                 IOOps.ENAchecklist().matK_trnK(seq_record, counter,
@@ -294,5 +294,5 @@ def annonex2embl(path_to_nex,
 
 ########################################################################
 
-# 7. Close outfile
+# 7. CLOSE OUTFILE
     outp_handle.close()

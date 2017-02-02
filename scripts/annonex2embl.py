@@ -22,7 +22,7 @@ import Annonex2emblMain as AN2EMBLMain
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.01.25.1900'
+__version__ = '2017.02.02.1000'
 
 #############
 # DEBUGGING #
@@ -60,6 +60,12 @@ if __name__ == '__main__':
                         '--csv',
                         help='absolute path to infile; infile in CSV format; Example: /path_to_input/test.csv',
                         default='/home/username/Desktop/test.csv',
+                        required=True)
+
+    parser.add_argument('-d',
+                        '--description',
+                        help='text string characterizing the DNA alignment; Example: "chloroplast trnR-atpA intergenic spacer"',
+                        default='[PLACEHOLDER]',
                         required=True)
 
     parser.add_argument('-e',
@@ -142,6 +148,7 @@ if __name__ == '__main__':
 
     AN2EMBLMain.annonex2embl(   args.nexus,
                                 args.csv,
+                                args.description,
                                 args.email,
                                 args.outfile,
                                 
