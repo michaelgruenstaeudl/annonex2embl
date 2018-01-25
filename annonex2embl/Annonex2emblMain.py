@@ -21,6 +21,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
 
 import MyExceptions as ME
 import CheckingOps as CkOps
+import ChecklistOps as ClOps
 import DegappingOps as DgOps
 import GenerationOps as GnOps
 import GlobalVariables as GlobVars
@@ -34,7 +35,7 @@ import IOOps as IOOps
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.02.01.1800'
+__version__ = '2017.09.26.1400'
 
 #############
 # DEBUGGING #
@@ -288,12 +289,26 @@ def annonex2embl(path_to_nex,
 
 # 6.10. DECISION OF WHICH OUTPUT FORMAT TO EMPLOY
         if checklist_bool:
-            if checklist_type == 'trnK_matK':
-                IOOps.ENAchecklist().matK_trnK(seq_record, counter,
+            if checklist_type == 'ITS':
+                # charset_sym should be ...
+                ClOps.ChecklistWriter().ITS(seq_record, counter, 
                     outp_handle)
+            elif checklist_type == 'rRNA':
+                # charset_sym for rRNA should be '18S', '28S' or the like
+                ClOps.ChecklistWriter().rRNA(seq_record, counter, 
+                    charset_sym, outp_handle)
+            elif checklist_type == 'trnK_matK':
+                ClOps.ChecklistWriter().trnK_matK(seq_record, counter,
+                    outp_handle)
+            elif checklist_type == 'IGS':
+                ClOps.ChecklistWriter().IGS(seq_record, counter, 
+                    charset_sym, outp_handle)
+            elif checklist_type == 'genomic_CDS':
+                ClOps.ChecklistWriter().genomic_CDS(seq_record, counter, 
+                    charset_sym, outp_handle)
             else:
-                sys.exit('%s annonex2embl ERROR: Checklist type `%s` \
-                    not recognized.' % ('\n', checklist_type))
+                sys.exit('%s annonex2embl ERROR: Checklist type `%s` '\
+                    'not recognized.' % ('\n', checklist_type))
         else:
             IOOps.Outp().write_EntryUpload(seq_record, outp_handle,
                 linemask_bool)

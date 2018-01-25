@@ -19,7 +19,7 @@ import sys
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.02.02.1100'
+__version__ = '2017.02.01.1400'
 
 #############
 # DEBUGGING #

@@ -37,10 +37,7 @@ class AnnoCheck:
     Args:
         extract (obj):      a sequence object; example: Seq('ATGGAGTAA', 
                             IUPACAmbiguousDNA())
-        loc_object (obj):   a location object; example: FeatureLocation(
-                            ExactPosition(0), ExactPosition(8))
-        feature_type (str): a string detailing the type of the feature;
-                            example: "CDS"
+        feature_object (obj):   a feature object
         record_id (str):    a string deatiling the name of the sequence in 
                             question; example: "taxon_A"
         transl_table (int): an integer; example: 11 (for bacterial code)

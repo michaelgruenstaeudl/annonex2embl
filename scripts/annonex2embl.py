@@ -22,7 +22,7 @@ import Annonex2emblMain as AN2EMBLMain
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.02.02.1000'
+__version__ = '2017.09.18.2200'
 
 #############
 # DEBUGGING #
@@ -92,7 +92,7 @@ if __name__ == '__main__':
                         required=False)
 
     parser.add_argument('--cltype',
-                        help='Any of the currently implemented checklist types (i.e. `trnK_matK`)',
+                        help='Any of the currently implemented checklist types (i.e., `ITS`, `rRNA`, `trnK_matK`, `IGS`, `genomic_CDS`)',
                         default=None,
                         required=False)
 
