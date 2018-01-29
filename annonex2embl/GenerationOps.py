@@ -9,6 +9,12 @@ Custom operations for EMBL submission preparation tool
 
 import GlobalVariables as GlobVars
 import MyExceptions as ME
+from operator import itemgetter
+from itertools import groupby
+from Bio import SeqFeature
+from Bio.SeqRecord import SeqRecord
+from Bio.SeqFeature import ExactPosition, FeatureLocation, CompoundLocation
+import pdb
 
 ###############
 # AUTHOR INFO #
@@ -23,8 +29,8 @@ __version__ = '2017.02.01.2000'
 # DEBUGGING #
 #############
 
-import pdb
-#pdb.set_trace()
+
+# pdb.set_trace()
 
 ###########
 # CLASSES #
@@ -40,11 +46,10 @@ class GenerateFeatLoc:
 
     @staticmethod
     def _exact(csrange):
-        ''' An internal static function to generate an exact feature 
+        ''' An internal static function to generate an exact feature
             location. '''
-        from Bio.SeqFeature import ExactPosition, FeatureLocation
         start_pos = csrange[0]
-        stop_pos = csrange[-1]+1
+        stop_pos = csrange[-1] + 1
         start_exact = ExactPosition(start_pos)
         stop_exact = ExactPosition(stop_pos)
         return FeatureLocation(start_exact, stop_exact)
@@ -60,10 +65,9 @@ class GenerateFeatLoc:
 #            >>> _extract_contiguous_subsets(compound_integer_range)
 #            Out: [[1, 2, 3], [7, 8, 9]]
 
-        from operator import itemgetter
-        from itertools import groupby
         outlist = []
-        for k, g in groupby(enumerate(compound_integer_range), lambda (i,x):i-x):
+        for k, g in groupby(enumerate(compound_integer_range),
+                            lambda i_x: i_x[0] - i_x[1]):
             outlist.append(map(itemgetter(1), g))
         return outlist
 
@@ -81,35 +85,35 @@ class GenerateFeatLoc:
         contiguous_ranges = GenerateFeatLoc._extract_contiguous_subsets(
             charset_range)
         # Convert each contiguous range into an exact feature location
-        for i,r in enumerate(contiguous_ranges):
+        for i, r in enumerate(contiguous_ranges):
             contiguous_ranges[i] = GenerateFeatLoc._exact(r)
         if len(contiguous_ranges) > 1:
-            from Bio.SeqFeature import CompoundLocation
             return CompoundLocation(contiguous_ranges)
         else:
             return contiguous_ranges[0]
-    
+
     def make_start_fuzzy(self, location_object):
-        ''' This function makes the start position of location 
+        ''' This function makes the start position of location
             objects fuzzy.
         '''
-        from Bio import SeqFeature
         if hasattr(location_object, 'parts'):
             if len(location_object.parts) == 1:
-                new_start_pos = SeqFeature.BeforePosition(location_object.start)
-                location_object = SeqFeature.FeatureLocation(new_start_pos,
-                    location_object.end)
+                new_start_pos = SeqFeature.BeforePosition(
+                    location_object.start)
+                location_object = SeqFeature.FeatureLocation(
+                    new_start_pos, location_object.end)
             if len(location_object.parts) > 1:
-                new_start_pos = SeqFeature.BeforePosition(location_object.parts[0].start)
-                location_object.parts[0] = SeqFeature.FeatureLocation(new_start_pos,
-                    location_object.parts[0].end)
+                new_start_pos = SeqFeature.BeforePosition(
+                    location_object.parts[0].start)
+                location_object.parts[0] = SeqFeature.FeatureLocation(
+                    new_start_pos, location_object.parts[0].end)
         return location_object
-    
+
     def make_end_fuzzy(self, location_object):
-        ''' This function makes the end position of location 
+        ''' This function makes the end position of location
             objects fuzzy.
         '''
-    
+
 #        Examples:
 #            Example 1:
 #                >>> from Bio import SeqFeature
@@ -132,16 +136,18 @@ class GenerateFeatLoc:
 #                ExactPosition(9))], 'join')
 #                >>> new_loc = GenerateFeatLoc().make_end_fuzzy(location_object)
 #                >>> new_loc
-#                Out: CompoundLocation([FeatureLocation(ExactPosition(1), ExactPosition(4)), FeatureLocation(ExactPosition(7), AfterPosition(9))], 'join')
-        
-        from Bio import SeqFeature
+# Out: CompoundLocation([FeatureLocation(ExactPosition(1),
+# ExactPosition(4)), FeatureLocation(ExactPosition(7), AfterPosition(9))],
+# 'join')
+
         if hasattr(location_object, 'parts'):
             if len(location_object.parts) == 1:
                 new_end_pos = SeqFeature.AfterPosition(location_object.end)
                 location_object = SeqFeature.FeatureLocation(
                     location_object.start, new_end_pos)
             if len(location_object.parts) > 1:
-                new_end_pos = SeqFeature.AfterPosition(location_object.parts[-1].end)
+                new_end_pos = SeqFeature.AfterPosition(
+                    location_object.parts[-1].end)
                 location_object.parts[-1] = SeqFeature.FeatureLocation(
                     location_object.parts[-1].start, new_end_pos)
         return location_object
@@ -149,24 +155,24 @@ class GenerateFeatLoc:
 
 class GenerateSeqFeature:
     ''' This class contains functions to generate SeqFeatures. '''
-        
+
     def __init__(self):
         pass
-    
+
     def source_feat(self, full_len, quals, charset_names, transl_table):
-        ''' This function generates the SeqFeature `source` for a 
-            SeqRecord. The SeqFeature `source` is critical for 
-            submissions to EMBL or GenBank, as it contains all the 
-            relevant info on collection locality, herbarium voucher, 
-            etc. It also provides info on which translation table is 
-            used if a CDS sequence feature is encountered among the 
+        ''' This function generates the SeqFeature `source` for a
+            SeqRecord. The SeqFeature `source` is critical for
+            submissions to EMBL or GenBank, as it contains all the
+            relevant info on collection locality, herbarium voucher,
+            etc. It also provides info on which translation table is
+            used if a CDS sequence feature is encountered among the
             gene names.
         Args:
             full_len (int): the full length of the seq in question;
                             example: 509
-            quals (dict):   a dictionary of qualifiers; example: 
+            quals (dict):   a dictionary of qualifiers; example:
                             {'isolate': 'taxon_B', 'country': 'Ecuador'}
-            charset_names (list): a list of gene names; example: 
+            charset_names (list): a list of gene names; example:
                             ['foo_gene', 'foo_CDS']
             transl_table (int): an integer; example: 11 (for bacterial code)
         Returns:
@@ -174,12 +180,11 @@ class GenerateSeqFeature:
         Raises:
             [currently nothing]
         '''
-        from Bio import SeqFeature
         full_index = range(0, full_len)
         feature_loc = GenerateFeatLoc().make_location(full_index)
         source_feature = SeqFeature.SeqFeature(feature_loc, id='source',
-            type='source', qualifiers=quals)
-        # If a CDS among the gene names, add qualifier trans_table 
+                                               type='source', qualifiers=quals)
+        # If a CDS among the gene names, add qualifier trans_table
         # to source feature
         if any(['CDS' in gene_name for gene_name in charset_names]):
             source_feature.qualifiers["transl_table"] = transl_table
@@ -190,9 +195,9 @@ class GenerateSeqFeature:
         ''' This function generates a regular SeqFeature for a SeqRecord.
         Args:
             feature_name (str):  usually a gene symbol; example: 'matK'
-            feature_type (str):  an identifier as to the type of feature; 
+            feature_type (str):  an identifier as to the type of feature;
                                  example: 'intron'
-            feature_loc (object): a SeqFeature object specifying a simple 
+            feature_loc (object): a SeqFeature object specifying a simple
                                   or compund location on a DNA string
             feature_product (str): the product of the feature in question;
                                    example: 'maturase K'
@@ -201,28 +206,30 @@ class GenerateSeqFeature:
         Raises:
             -
         '''
-        from Bio import SeqFeature
         # 1. Define the annotation type
         if feature_type not in GlobVars.nex2ena_valid_INSDC_featurekeys:
-            raise ME.MyException('%s nex2embl ERROR: Internal error: '\
-                'Name of feature key not passed correctly.')
+            raise ME.MyException('%s nex2embl ERROR: Internal error: '
+                                 'Name of feature key not passed correctly.')
         # 2. Generate qualifiers
-        qualifiers={'note':feature_name}
+        qualifiers = {'note': feature_name}
         # 3. Include product, if a coding feature
         if feature_product:
             if feature_type == 'CDS' or feature_type == 'gene':
                 qualifiers['product'] = feature_product
-        seq_feature = SeqFeature.SeqFeature(feature_loc,
-            id=feature_name, type=feature_type, qualifiers=qualifiers)
+        seq_feature = SeqFeature.SeqFeature(
+            feature_loc,
+            id=feature_name,
+            type=feature_type,
+            qualifiers=qualifiers)
         return seq_feature
 
 
 class GenerateSeqRecord:
     ''' This class contains functions to generate SeqRecords. '''
-        
+
     def __init__(self):
         pass
-    
+
     def base_record(self, current_seq, current_qual, uniq_seqid_col,
                     seq_version, descr_DEline, topology, tax_division):
         ''' This function generates a base SeqRecord (i.e., the foundation to
@@ -231,36 +238,35 @@ class GenerateSeqRecord:
             current_seq (str): the DNA sequence of; example: 1
             current_qual (xxx): foobar; example: foobar
             uniq_seqid_col (str): the column label of the .csv-file that
-                                  contains info on the sequence names; 
+                                  contains info on the sequence names;
                                   example: "isolate"
             seq_version (str):    an integer in string format
-            descr_DEline (str):   a text string to be included in the 
+            descr_DEline (str):   a text string to be included in the
                                   DE line
-            topology (str):       one of the valid ENA topology 
+            topology (str):       one of the valid ENA topology
                                   specifications
-            tax_division (str):   one of the valid ENA taxonomic 
+            tax_division (str):   one of the valid ENA taxonomic
                                   divisions
         Returns:
             SeqRecord (obj):      A SeqRecord object
         '''
-        from Bio.SeqRecord import SeqRecord
         # 1. Selecting correct sequence line
         uniq_seqid = current_qual[uniq_seqid_col]
         # 2. Generating parse-able ID line
         ID_line = uniq_seqid + '.' + seq_version
-        # Note to line above: seq_version is parsed internally from 
+        # Note to line above: seq_version is parsed internally from
         # ID-line when EMBL format is written
         try:
             org_name = current_qual['organism']
-        except:
+        except BaseException:
             org_name = 'undetermined organism'
         # 3. Generating DE line
-        descr_DEline = descr_DEline.replace('"','')
-        DE_line = ' '.join([org_name, descr_DEline+',', 'isolate', 
-            uniq_seqid])
+        descr_DEline = descr_DEline.replace('"', '')
+        DE_line = ' '.join([org_name, descr_DEline + ',', 'isolate',
+                            uniq_seqid])
         # 4. Set up new seq record
-        seq_record = SeqRecord(current_seq, id=ID_line, name=org_name, 
-            description=DE_line)
+        seq_record = SeqRecord(current_seq, id=ID_line, name=org_name,
+                               description=DE_line)
         # 5. Specify the topology of the sequence
         if topology in GlobVars.nex2ena_valid_topologies:
             seq_record.annotations['topology'] = topology
