@@ -16,5 +16,6 @@ __version__ = '2016.02.18.1100'
 # CLASSES #
 ###########
 
+
 class MyException(Exception):
     pass

@@ -7,7 +7,14 @@ Custom operations input and output processes
 # IMPORT OPERATIONS #
 #####################
 
+import os
+import pdb
 import MyExceptions as ME
+
+from csv import DictReader
+from Bio.Nexus import Nexus
+from StringIO import StringIO
+from Bio import SeqIO
 
 ###############
 # AUTHOR INFO #
@@ -22,12 +29,12 @@ __version__ = '2017.04.26.2100'
 # DEBUGGING #
 #############
 
-import pdb
-#pdb.set_trace()
+# pdb.set_trace()
 
 ###########
 # CLASSES #
 ###########
+
 
 class Inp:
     ''' This class contains functions to conduct miscellaneous input 
@@ -45,8 +52,7 @@ class Inp:
 
     def extract_fn(self, in_path):
         ''' This function splits a the path from path+filename. '''
-        import os
-        path, fn =  os.path.split(in_path)
+        path, fn = os.path.split(in_path)
         return fn
 
     def repl_fileend(self, fn, new_end):
@@ -56,18 +62,16 @@ class Inp:
 
     def parse_csv_file(self, path_to_csv):
         ''' This function parses a csv file. '''
-        from csv import DictReader
         try:
-            reader = DictReader(open(path_to_csv, 'rb'), delimiter=',', 
-                quotechar='"', skipinitialspace=True)
+            reader = DictReader(open(path_to_csv, 'rb'), delimiter=',',
+                                quotechar='"', skipinitialspace=True)
             a_matrix = list(reader)
         except:
             raise ME.MyException('Parsing of .csv-file unsuccessful.')
-        return a_matrix    
+        return a_matrix
 
     def parse_nexus_file(self, path_to_nex):
         ''' This function parses a NEXUS file. '''
-        from Bio.Nexus import Nexus
         try:
             aln = Nexus.Nexus()
             aln.read(path_to_nex)
@@ -104,24 +108,21 @@ class Outp:
         Raises:
             -
         '''
-        from StringIO import StringIO
-        from Bio import SeqIO
-
         temp_handle = StringIO()
         try:
             SeqIO.write(seq_record, temp_handle, 'embl')
         except:
             raise ME.MyException('%s annonex2embl ERROR: Problem with \
             `%s`. Did not write to internal handle.' % ('\n', seq_name))
-        
+
         if eusubm_bool:
             temp_handle_lines = temp_handle.getvalue().splitlines()
             if temp_handle_lines[0].split()[0] == 'ID':
                 ID_line = temp_handle_lines[0]
                 ID_line_parts = ID_line.split('; ')
                 if len(ID_line_parts) == 7:
-                    ID_line_parts = ['XXX' if ID_line_parts.index(p) in \
-                        [0,1,3,4,5,6] else p for p in ID_line_parts]
+                    ID_line_parts = ['XXX' if ID_line_parts.index(p) in
+                                     [0, 1, 3, 4, 5, 6] else p for p in ID_line_parts]
                 temp_handle_lines[0] = 'ID   ' + '; '.join(ID_line_parts)
             if temp_handle_lines[2].split()[0] == 'AC':
                 temp_handle_lines[2] = 'AC   XXX;'
@@ -133,5 +134,5 @@ class Outp:
 
         outp_handle.write(temp_handle.getvalue())
         temp_handle.close()
-        
-        #return something?
+
+        # return something?

@@ -11,6 +11,11 @@ import MyExceptions as ME
 import GenerationOps as GnOps
 import GlobalVariables as GlobVars
 
+from Bio.Seq import Seq
+from Bio.SeqFeature import FeatureLocation
+from unidecode import unidecode
+
+
 ###############
 # AUTHOR INFO #
 ###############
@@ -58,7 +63,6 @@ class AnnoCheck:
     @staticmethod
     def _transl(extract, transl_table, to_stop=False, cds=False):
         ''' An internal static function to translate a coding region. '''
-        from Bio.Seq import Seq
         transl = extract.translate(table=transl_table, to_stop=to_stop,
                                    cds=cds)
         # Adjustment for non-start codons given the necessary use of
@@ -74,7 +78,6 @@ class AnnoCheck:
     def _check_protein_start(extract, transl_table):
         ''' An internal static function to translate a coding region and check
             if it starts with a methionine. '''
-        from Bio.Seq import Seq
         transl = extract.translate(table=transl_table)
         return transl.startswith('M')
 
@@ -116,8 +119,6 @@ class AnnoCheck:
             _transl(to_stop=True) and must consequently be added again
             (see line 137).
         '''
-        from Bio.Seq import Seq
-        from Bio.SeqFeature import FeatureLocation
         try:
             # Note: TFL must contain "cds=True"; don't delete it
             transl_out = AnnoCheck._transl(self.extract,
@@ -147,8 +148,6 @@ class AnnoCheck:
         return (transl_out, feat_loc)
 
     def for_unittest(self):
-        from Bio.Seq import Seq
-        from Bio.SeqFeature import FeatureLocation
         try:
             transl_out, feat_loc = AnnoCheck(
                 self.extract, self.feature, self.record_id, self.transl_table).check()
@@ -213,7 +212,6 @@ class QualifierCheck:
     def _enforce_ASCII(lst_of_dcts):
         ''' This function converts any non-ASCII characters among
             qualifier values to ASCII characters. '''
-        from unidecode import unidecode
         filtered_lst_of_dcts = [
             {k: unidecode(v.decode('utf-8')) for k, v in dct.items()}
             for dct in lst_of_dcts]
@@ -246,7 +244,6 @@ class QualifierCheck:
         ''' This function checks if every (!) dictionary key in a list of
             dictionaries is a valid INSDC qualifier.
         '''
-        from itertools import chain
         keys_present = list(chain.from_iterable([dct.keys() for dct in
                                                  lst_of_dcts]))
         not_valid = [k for k in keys_present if k not in

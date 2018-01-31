@@ -9,6 +9,7 @@ Custom operations for EMBL submission preparation tool
 
 import GlobalVariables as GlobVars
 import MyExceptions as ME
+
 from operator import itemgetter
 from itertools import groupby
 from Bio import SeqFeature

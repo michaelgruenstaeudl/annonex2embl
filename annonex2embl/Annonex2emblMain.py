@@ -6,6 +6,20 @@
 # IMPORT OPERATIONS #
 #####################
 
+
+import MyExceptions as ME
+import CheckingOps as CkOps
+import ChecklistOps as ClOps
+import DegappingOps as DgOps
+import GenerationOps as GnOps
+import GlobalVariables as GlobVars
+import ParsingOps as PrOps
+import IOOps as IOOps
+import sys
+import os
+import pdb
+
+
 from Bio import SeqIO
 #from Bio.Alphabet import generic_dna
 #from Bio.Seq import Seq
@@ -18,19 +32,8 @@ from distutils.util import strtobool
 # Add specific directory to sys.path in order to import its modules
 # NOTE: THIS RELATIVE IMPORTING IS AMATEURISH.
 # NOTE: COULD THE FOLLOWING IMPORT BE REPLACED WITH 'import annonex2embl'?
-import sys
-import os
-import pdb
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
 
-import MyExceptions as ME
-import CheckingOps as CkOps
-import ChecklistOps as ClOps
-import DegappingOps as DgOps
-import GenerationOps as GnOps
-import GlobalVariables as GlobVars
-import ParsingOps as PrOps
-import IOOps as IOOps
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
 
 
 ###############
@@ -73,7 +76,7 @@ def annonex2embl(path_to_nex,
                  transl_table='11',
                  seq_version='1'):
 
-########################################################################
+    ########################################################################
 
     # 0. MAKE SPECIFIC VARIABLES BOOLEAN
     taxcheck_bool = strtobool(tax_check)
@@ -295,7 +298,7 @@ def annonex2embl(path_to_nex,
 
 # 6.10. DECISION ON OUTPUT FORMAT
         if checklist_bool:
-# 6.10.1. 
+            # 6.10.1.
             if checklist_type == 'ITS':
                 # charset_sym should be ...
                 ClOps.Writer().ITS(seq_record, counter, outp_handle)
