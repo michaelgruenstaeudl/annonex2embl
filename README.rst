@@ -1,7 +1,7 @@
 # annonex2embl
 ### (future title: NEX2Webin)
 Converts an annotated DNA sequence alignment in NEXUS format to either 
-(a) TSV spreadsheets for submission to [ENA] (http://www.ebi.ac.uk/ena) via [Webin] (https://www.ebi.ac.uk/ena/submit/sra/#home) checklist submissions, or
+(a) TSV spreadsheets for submission to [ENA](http://www.ebi.ac.uk/ena) via [Webin](https://www.ebi.ac.uk/ena/submit/sra/#home) checklist submissions, or
 (b) ENA flat files for submission via Webin Entry Upload submissions, if no suitable checklist is available).
 
 #### CHANGELOG:
