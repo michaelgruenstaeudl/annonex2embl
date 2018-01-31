@@ -7,6 +7,8 @@ Classes to degap sequences but maintain annotations
 # IMPORT OPERATIONS #
 #####################
 
+import pdb
+
 ###############
 # AUTHOR INFO #
 ###############
@@ -20,7 +22,6 @@ __version__ = '2017.01.31.1900'
 # DEBUGGING #
 #############
 
-import pdb
 #pdb.set_trace()
 
 ###########
@@ -129,11 +130,3 @@ class RmAmbigsButMaintainAnno:
                 charsets[gene_name] = indices_new
             seq = seq[:trail_stripoff]
         return seq, charsets
-
-#############
-# FUNCTIONS #
-#############
-
-########
-# MAIN #
-########
