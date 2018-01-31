@@ -3,10 +3,6 @@
 Class for custom exceptions
 '''
 
-#####################
-# IMPORT OPERATIONS #
-#####################
-
 ###############
 # AUTHOR INFO #
 ###############
@@ -16,28 +12,9 @@ __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
 __version__ = '2016.02.18.1100'
 
-#############
-# DEBUGGING #
-#############
-
-#import pdb
-#pdb.set_trace()
-
-####################
-# GLOBAL VARIABLES #
-####################
-
 ###########
 # CLASSES #
 ###########
 
 class MyException(Exception):
     pass
-
-#############
-# FUNCTIONS #
-#############
-
-########
-# MAIN #
-########

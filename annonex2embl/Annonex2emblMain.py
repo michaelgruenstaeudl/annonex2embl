@@ -73,7 +73,7 @@ def annonex2embl(path_to_nex,
                  transl_table='11',
                  seq_version='1'):
 
-    ########################################################################
+########################################################################
 
     # 0. MAKE SPECIFIC VARIABLES BOOLEAN
     taxcheck_bool = strtobool(tax_check)
@@ -293,25 +293,25 @@ def annonex2embl(path_to_nex,
 
 ####################################
 
-# 6.10. DECISION OF WHICH OUTPUT FORMAT TO EMPLOY
+# 6.10. DECISION ON OUTPUT FORMAT
         if checklist_bool:
+# 6.10.1. 
             if checklist_type == 'ITS':
                 # charset_sym should be ...
-                ClOps.ChecklistWriter().ITS(seq_record, counter,
-                                            outp_handle)
+                ClOps.Writer().ITS(seq_record, counter, outp_handle)
             elif checklist_type == 'rRNA':
                 # charset_sym for rRNA should be '18S', '28S' or the like
-                ClOps.ChecklistWriter().rRNA(seq_record, counter,
-                                             charset_sym, outp_handle)
+                ClOps.Writer().rRNA(seq_record, counter, charset_sym,
+                                    outp_handle)
             elif checklist_type == 'trnK_matK':
-                ClOps.ChecklistWriter().trnK_matK(seq_record, counter,
-                                                  outp_handle)
+                ClOps.Writer().trnK_matK(seq_record, counter,
+                                         outp_handle)
             elif checklist_type == 'IGS':
-                ClOps.ChecklistWriter().IGS(seq_record, counter,
-                                            charset_sym, outp_handle)
+                ClOps.Writer().IGS(seq_record, counter,
+                                   charset_sym, outp_handle)
             elif checklist_type == 'genomic_CDS':
-                ClOps.ChecklistWriter().genomic_CDS(seq_record, counter,
-                                                    charset_sym, outp_handle)
+                ClOps.Writer().genomic_CDS(seq_record, counter,
+                                           charset_sym, outp_handle)
             else:
                 sys.exit('%s annonex2embl ERROR: Checklist type `%s` '
                          'not recognized.' % ('\n', checklist_type))

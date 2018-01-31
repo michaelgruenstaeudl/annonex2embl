@@ -7,7 +7,9 @@ Custom operations to generate ENA checklists
 # IMPORT OPERATIONS #
 #####################
 
+import Bio
 import MyExceptions as ME
+import pdb
 
 ###############
 # AUTHOR INFO #
@@ -16,22 +18,21 @@ import MyExceptions as ME
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.05.26.1400'
+__version__ = '2018.01.31.1600'
 
 #############
 # DEBUGGING #
 #############
 
-import pdb
 #pdb.set_trace()
 
 ###########
 # CLASSES #
 ###########
 
-class ChecklistWriter:
-    ''' This class writes checklist for a submission via ENA's 
-    checklist system.
+class Writer:
+    ''' This class writes a TSV spreadsheet for a submission via the 
+    WEBIN checklist submission system.
     Args:
         [specific to function]
     Returns:
@@ -43,10 +44,9 @@ class ChecklistWriter:
     def __init__(self):
         pass
 
-
     def genomic_CDS(self, seq_record, counter, charset_sym, outp_handle):
-        ''' This function writes a checklist in ENA format for a 
-            submission via ENA's checklist system.
+        ''' This function writes a TSV spreadsheet for submission via 
+            the WEBIN checklist submission system.
         Args:
             seq_record (obj)
             counter (int)
@@ -57,26 +57,20 @@ class ChecklistWriter:
         Raises:
             -
         '''
-        import Bio
         
         #ENTRYNUMBER
         entrynumber = str(counter+1) # enumerate counter starts counting at 0
-            
         #ORGANISM_NAME
         organism_name = seq_record.name
-        
         #ENV_SAMPLE
         env_sam = 'no'
-        
-        #GENE # Symbol of the gene corresponding to a sequence region., Example: RdRp, sigA, inv
+        #GENE               # Symbol of the gene corresponding to a sequence region; example: RdRp, sigA, inv
         gene_symbol = "foo bar"
-        
-        #PRODUCT # Name of the product associated with the feature., Example: RNA dependent RNA polymerase, sigma factor A
+        #PRODUCT            # Name of the product associated with the feature; example: RNA dependent RNA polymerase, sigma factor A
         product_name = "foo bar"
-        
-        #TRANSLATION TABLE # Translation table for this organism. Chose from a drop-down list., Example: 1, 2, 3, 5, 11
+        #TRANSLATION TABLE  # Translation table for this organism. Chose from a drop-down list; example: 1, 2, 3, 5, 11
         transl_table = "12345"
-        
+
         # the gene
         the_gene = [f for f in seq_record.features \
             if f.type=='gene']
@@ -89,11 +83,11 @@ class ChecklistWriter:
             except:
                 raise ME.MyException('%s annonex2embl ERROR: Problem \
                     with `%s`. %s gene not found.' % ('\n', seq_name, 'The gene'))
-        
+
         ## 5' CDS LOCATION and 5'_PARTIAL
-            # 5' CDS LOCATION # Start of the coding region relative to the submitted sequence. For a full length CDS this is the position of the first base of the start codon.
+            # 5' CDS LOCATION   # Start of the coding region relative to the submitted sequence. For a full length CDS this is the position of the first base of the start codon.
         fiveprime_cds = str(the_gene.location.start.position)
-            # PARTIAL AT 5'? (yes/no) # For an incomplete CDS with the start codon upstream of the submitted sequence.
+            # PARTIAL AT 5'? (yes/no)  # For an incomplete CDS with the start codon upstream of the submitted sequence.
         if type(the_gene.location.start) == Bio.SeqFeature.ExactPosition:
             fiveprime_partial = 'no'
         if type(the_gene.location.start) == Bio.SeqFeature.BeforePosition:
@@ -106,29 +100,25 @@ class ChecklistWriter:
             threeprime_partial = 'no'
         if type(the_gene.location.end) == Bio.SeqFeature.AfterPosition:
             threeprime_partial = 'yes'
-        
-        #READING FRAME # Mandatory if your CDS is 5' partial as it defines the reading frame. Location of the first base of the first fully-encoded amino acid., Example: 1,2 or 3
+        #READING FRAME  # Mandatory if your CDS is 5' partial as it defines the reading frame. Location of the first base of the first fully-encoded amino acid., Example: 1,2 or 3
         read_frame = "12345"
-        
+
         qualifiers = seq_record.features[0].qualifiers # source feature is always first in list
         #ISOLATE
         try:
             isolate = qualifiers['isolate']
         except:
             isolate = ''
-
         #SPEC_VOUCH
         try:
             spec_vouch = qualifiers['specimen_voucher']
         except:
             spec_vouch = ''
-
         #LOCALITY
         try:
             country = qualifiers['country']
         except:
             country = ''
-
         #ECOTYPE
         try:
             ecotype = qualifiers['ecotype']
@@ -137,7 +127,7 @@ class ChecklistWriter:
 
         #SEQUENCE
         sequence = str(seq_record.seq)
-            
+
         out_list = [entrynumber,
                     organism_name,
                     env_sam,
@@ -160,8 +150,8 @@ class ChecklistWriter:
 
 
     def trnK_matK(self, seq_record, counter, outp_handle):
-        ''' This function writes a checklist in ENA format for a 
-            submission via ENA's checklist system.
+        ''' This function writes a TSV spreadsheet for submission via 
+            the WEBIN checklist submission system.
         Args:
             seq_record (obj)
             counter (int)
@@ -171,14 +161,12 @@ class ChecklistWriter:
         Raises:
             -
         '''
-        import Bio
         
         #ENTRYNUMBER
         entrynumber = str(counter+1) # enumerate counter starts counting at 0
-            
         #ORGANISM_NAME
         organism_name = seq_record.name
-            
+
         # trnK_intron
         trnK_intron = [f for f in seq_record.features \
             if f.id=='trnK' and f.type=='intron']
@@ -187,7 +175,6 @@ class ChecklistWriter:
             trnK_intron_present = 'yes'
         except:
             trnK_intron_present = 'no'
-            
         # matK
         matK_gene = [f for f in seq_record.features \
             if f.id=='matK' and f.type=='gene']
@@ -200,6 +187,7 @@ class ChecklistWriter:
             except:
                 raise ME.MyException('%s annonex2embl ERROR: Problem \
                     with `%s`. %s gene not found.' % ('\n', seq_name, 'matK'))
+
         ## 5'_CDS and 5'_PARTIAL
             # 5'_CDS: Start of the matK coding region relative to the submitted sequence. For a full length CDS this is the position of the first base of the start codon.
         fiveprime_cds = str(matK_gene.location.start.position)
@@ -223,19 +211,16 @@ class ChecklistWriter:
             isolate = qualifiers['isolate']
         except:
             isolate = ''
-
         #SPEC_VOUCH
         try:
             spec_vouch = qualifiers['specimen_voucher']
         except:
             spec_vouch = ''
-
         #LOCALITY
         try:
             country = qualifiers['country']
         except:
             country = ''
-
         #ECOTYPE
         try:
             ecotype = qualifiers['ecotype']
@@ -244,7 +229,7 @@ class ChecklistWriter:
 
         #SEQUENCE
         sequence = str(seq_record.seq)
-            
+
         out_list = [entrynumber,
                     organism_name,
                     fiveprime_cds,
@@ -263,8 +248,8 @@ class ChecklistWriter:
 
 
     def rRNA(self, seq_record, counter, charset_sym, outp_handle):
-        ''' This function writes a checklist in ENA format for a 
-            submission via ENA's checklist system.
+        ''' This function writes a TSV spreadsheet for submission via 
+            the WEBIN checklist submission system.
         Args:
             seq_record (obj)
             counter (int)
@@ -275,14 +260,11 @@ class ChecklistWriter:
         Raises:
             -
         '''
-        import Bio
         
         #ENTRYNUMBER
         entrynumber = str(counter+1) # enumerate counter starts counting at 0
-            
         #ORGANISM_NAME
         organism_name = seq_record.name
-            
         #SEDIMENT
         sediment = charset_sym
         
@@ -292,25 +274,21 @@ class ChecklistWriter:
             isolate = qualifiers['isolate']
         except:
             isolate = ''
-
         #ISOLATION_SOURCE
         try:
             isol_source = qualifiers['isolation_source']
         except:
             isol_source = ''
-
         #COUNTRY
         try:
             country = qualifiers['country']
         except:
             country = ''
-
         #ECOTYPE
         try:
             lat_lon = qualifiers['lat_lon']
         except:
             lat_lon = ''
-
         #COLLECTION_DATE
         try:
             collection_date = qualifiers['collection_date']
@@ -335,8 +313,8 @@ class ChecklistWriter:
 
 
     def ITS(self, seq_record, counter, outp_handle):
-        ''' This function writes a checklist in ENA format for a 
-            submission via ENA's checklist system.
+        ''' This function writes a TSV spreadsheet for submission via 
+            the WEBIN checklist submission system.
         Args:
             seq_record (obj)
             counter (int)
@@ -424,8 +402,8 @@ class ChecklistWriter:
 
 
     def IGS(self, seq_record, counter, charset_sym, outp_handle):
-        ''' This function writes a checklist in ENA format for a 
-            submission via ENA's checklist system.
+        ''' This function writes a TSV spreadsheet for submission via 
+            the WEBIN checklist submission system.
         Args:
             seq_record (obj)
             counter (int)
@@ -436,43 +414,34 @@ class ChecklistWriter:
         Raises:
             -
         '''
-        import Bio
         
         #ENTRYNUMBER
         entrynumber = str(counter+1) # enumerate counter starts counting at 0
-        
         #ORGANISM_NAME
         organism_name = seq_record.name
         
-        qualifiers = seq_record.features[0].qualifiers # source feature is always first in list
-        
         #ENV_SAMPLE
         env_sam = 'no'
-        
         #GENE1
         gene1 = charset_sym[0:4]
-        
         #G1PRESENT
         g1present = 'no' # TO BE IMPROVED
-        
         #GENE2
         gene2 = charset_sym[4:8]
-        
         #G2PRESENT
         g2present = 'no' # TO BE IMPROVED
-        
+
+        qualifiers = seq_record.features[0].qualifiers # source feature is always first in list
         #ISOLATE
         try:
             isolate = qualifiers['isolate']
         except:
             isolate = ''
-        
         #SPEC_VOUCH
         try:
             spec_vouch = qualifiers['specimen_voucher']
         except:
             spec_vouch = ''
-        
         #COUNTRY
         try:
             country = qualifiers['country']
@@ -481,7 +450,6 @@ class ChecklistWriter:
         
         #SEQUENCE
         sequence = str(seq_record.seq)
-        
         
         out_list = [entrynumber,
                     organism_name,
@@ -497,4 +465,3 @@ class ChecklistWriter:
                    ]
         out_string = '\t'.join(out_list) + '\n'
         outp_handle.write(out_string)
-
