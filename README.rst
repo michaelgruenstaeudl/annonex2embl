@@ -35,25 +35,27 @@ python2 /path_to_annonex2embl/scripts/annonex2embl.py
 
 TO DO
 -----
-1. Improve internal checks
-1.1. Check at indicated position of "Annonex2emblMain.py" if all sequence names in NEXUS file have matching isolate names in CSV file. See line 110 of "Annonex2emblMain.py". Ths check should be done by a new function; the function should also have a unittest.
 
-2. Have the CLMODE automatically add the colum names for the final checklists
+###### 2.
+Have the CLMODE automatically add the colum names for the final checklists
 
-3. Have the CLMODE automatically add non-mandatory qualifiers as separate column
+###### 3.
+Have the CLMODE automatically add non-mandatory qualifiers as separate column
 
-4. Write a GUI interface for input.
-4.1. The GUI should consist of just one Window, where all functions are immediately visible; the GUI should not have any dropdown-menus. In general, the simpler the interface, the better.
+###### 4.
+Write a GUI interface for input
+* 4.1. The GUI should consist of just one Window, where all functions are immediately visible; the GUI should not have any dropdown-menus. In general, the simpler the interface, the better.
 
-5. Improvements of argparser (scripts/annonex2embl_CMD.py)
-5.1. Currently, the "required" and "optional" parameters are not displayed currently when calling scripts/annonex2embl_CMD.py. It incorrectly says "optional parameters" for all.
-5.2. Currently, --clmode requires "True" of "False" as parameters; how can I use it such that only the presence of --clmode indicates "True", whereas its abscence indicates "False"?
+###### 5. Improvements of argparser (scripts/annonex2embl_CMD.py)
+* 5.1. Currently, the "required" and "optional" parameters are not displayed currently when calling scripts/annonex2embl_CMD.py. It incorrectly says "optional parameters" for all.
+* 5.2. Currently, --clmode requires "True" of "False" as parameters; how can I use it such that only the presence of --clmode indicates "True", whereas its abscence indicates "False"?
 
 
 CHANGELOG
 ---------
 ###### Version 0.4.3 (2018.03.23)
 * Improved formatting of Python code
+* Checking if sequence names in NEX-file identical to sequence ids in csv-file
 ###### Version 0.4.2 (2017.02.01)
 * All qualifier values are formatted to consist of ASCII characters only.
 * If a coding region is among the sequence features, the qualifier /\trans_table/ is added to the source feature.

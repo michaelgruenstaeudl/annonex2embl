@@ -37,16 +37,19 @@ python2 $PWD/scripts/annonex2embl_CMD.py
 TO DO
 -----
 
-2. Have the CLMODE automatically add the colum names for the final checklists
+###### 2.
+Have the CLMODE automatically add the colum names for the final checklists
 
-3. Have the CLMODE automatically add non-mandatory qualifiers as separate column
+###### 3.
+Have the CLMODE automatically add non-mandatory qualifiers as separate column
 
-4. Write a GUI interface for input.
-4.1. The GUI should consist of just one Window, where all functions are immediately visible; the GUI should not have any dropdown-menus. In general, the simpler the interface, the better.
+###### 4.
+Write a GUI interface for input
+* 4.1. The GUI should consist of just one Window, where all functions are immediately visible; the GUI should not have any dropdown-menus. In general, the simpler the interface, the better.
 
-5. Improvements of argparser (scripts/annonex2embl_CMD.py)
-5.1. Currently, the "required" and "optional" parameters are not displayed currently when calling scripts/annonex2embl_CMD.py. It incorrectly says "optional parameters" for all.
-5.2. Currently, --clmode requires "True" of "False" as parameters; how can I use it such that only the presence of --clmode indicates "True", whereas its abscence indicates "False"?
+###### 5. Improvements of argparser (scripts/annonex2embl_CMD.py)
+* 5.1. Currently, the "required" and "optional" parameters are not displayed currently when calling scripts/annonex2embl_CMD.py. It incorrectly says "optional parameters" for all.
+* 5.2. Currently, --clmode requires "True" of "False" as parameters; how can I use it such that only the presence of --clmode indicates "True", whereas its abscence indicates "False"?
 
 
 CHANGELOG
