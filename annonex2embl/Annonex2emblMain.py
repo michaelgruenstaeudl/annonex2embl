@@ -76,9 +76,9 @@ def annonex2embl(path_to_nex,
                  transl_table='11',
                  seq_version='1'):
 
-    ########################################################################
+########################################################################
 
-    # 0. MAKE SPECIFIC VARIABLES BOOLEAN
+# 0. MAKE SPECIFIC VARIABLES BOOLEAN
     taxcheck_bool = strtobool(tax_check)
     checklist_bool = strtobool(checklist_mode)
     linemask_bool = strtobool(linemask)
@@ -106,6 +106,8 @@ def annonex2embl(path_to_nex,
         sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
 
 ########################################################################
+
+### [Location for TO DO check 1.1. Please integrate code here.]
 
 # 4. CHECK QUALIFIERS
 # 4. Perform quality checks on qualifiers
