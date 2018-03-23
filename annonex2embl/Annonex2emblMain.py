@@ -245,18 +245,24 @@ def annonex2embl(path_to_nex,
 #      full to the list "SeqRecord.features"
         for charset_name, charset_range in charsets_degapped.items():
 
-            # 6.6.1. Convert charset_range into Location Object
-            location_object = GnOps.GenerateFeatLoc().make_location(charset_range)
+# 6.6.1. Proceed in loop only if charset_range is not empty
+#        An empty charset_range could be the case if the charset only 
+#        consisted of '?' (which were removed in previous step).
+            if charset_range:
 
-# 6.6.2. Assign a gene product to a gene name
-            charset_sym, charset_type, charset_product = charset_dict[charset_name]
+# 6.6.2. Convert charset_range into Location Object
+                location_object = GnOps.GenerateFeatLoc().make_location(charset_range)
 
-# 6.6.3. Generate a regular SeqFeature and append to seq_record.features
+# 6.6.3. Assign a gene product to a gene name
+                charset_sym, charset_type, charset_product = charset_dict[charset_name]
+
+# 6.6.4. Generate a regular SeqFeature and append to seq_record.features
 #        Note: The position indices for the stop codon are truncated in
 #              this step.
-            seq_feature = GnOps.GenerateSeqFeature().regular_feat(
-                charset_sym, charset_type, location_object, charset_product)
-            seq_record.features.append(seq_feature)
+                seq_feature = GnOps.GenerateSeqFeature().regular_feat(
+                    charset_sym, charset_type, location_object, 
+                    charset_product)
+                seq_record.features.append(seq_feature)
 
 ####################################
 

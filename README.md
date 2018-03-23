@@ -57,6 +57,7 @@ CHANGELOG
 ###### Version 0.4.3 (2018.03.23)
 * Improved formatting of Python code
 * Checking if sequence names in NEX-file identical to sequence ids in csv-file
+* Discarding charset_ranges that are empty
 ###### Version 0.4.2 (2017.02.01)
 * All qualifier values are formatted to consist of ASCII characters only.
 * If a coding region is among the sequence features, the qualifier /\trans_table/ is added to the source feature.
