@@ -6,29 +6,29 @@ Converts an annotated DNA sequence alignment in NEXUS format to either
 (b) ENA flat files for submission via Webin Entry Upload submissions, if no suitable checklist is available).
 
 
-EXAMPLE USAGE
+GENERAL USAGE
 -------------
 
 ###### Example for EMBL mode
 
 ```
-python2 /path_to_annonex2embl/scripts/annonex2embl.py
--n alignment.nex
--c metadata_table.csv
+python2 $PWD/scripts/annonex2embl_CMD.py
+-n examples/TestData1.nex
+-c examples/TestData1.csv
 -d "description of alignment"
 -e your_email_address@gmail.com
--o output_embl_file.embl
+-o examples/output_file.embl
 ```
 
 ###### Example for checklist mode
 
 ```
-python2 /path_to_annonex2embl/scripts/annonex2embl.py
--n alignment.nex
--c metadata_table.csv
+python2 $PWD/scripts/annonex2embl_CMD.py
+-n examples/TestData1.nex
+-c examples/TestData1.csv
 -d "description of alignment"
 -e your_email_address@gmail.com
--o output_checklist_file.csv
+-o examples/output_file.csv
 --clmode TRUE
 --cltype trnK_matK
 ```
@@ -36,8 +36,6 @@ python2 /path_to_annonex2embl/scripts/annonex2embl.py
 
 TO DO
 -----
-1. Improve internal checks
-1.1. Check at indicated position of "Annonex2emblMain.py" if all sequence names in NEXUS file have matching isolate names in CSV file. See line 110 of "Annonex2emblMain.py". Ths check should be done by a new function; the function should also have a unittest.
 
 2. Have the CLMODE automatically add the colum names for the final checklists
 
@@ -55,6 +53,7 @@ CHANGELOG
 ---------
 ###### Version 0.4.3 (2018.03.23)
 * Improved formatting of Python code
+* Checking if sequence names in NEX-file identical to sequence ids in csv-file
 ###### Version 0.4.2 (2017.02.01)
 * All qualifier values are formatted to consist of ASCII characters only.
 * If a coding region is among the sequence features, the qualifier /\trans_table/ is added to the source feature.

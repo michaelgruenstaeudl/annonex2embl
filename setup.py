@@ -30,7 +30,7 @@ setup(
     license='GPLv3',
     packages=['annonex2embl'], # So that the subfolder 'annonex2embl' is read immediately.
     #packages = find_packages(),
-    install_requires=['biopython', 'unidecode'],
+    install_requires=['biopython', 'unidecode', 'termcolor'],
     scripts=glob.glob('scripts/*'),
     test_suite='setup.my_test_suite',
     include_package_data=True,

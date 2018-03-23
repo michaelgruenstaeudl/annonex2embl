@@ -27,6 +27,7 @@ from Bio import SeqFeature
 from collections import OrderedDict
 from copy import copy
 from distutils.util import strtobool
+from termcolor import colored
 
 
 # Add specific directory to sys.path in order to import its modules
@@ -107,21 +108,34 @@ def annonex2embl(path_to_nex,
 
 ########################################################################
 
-### [Location for TO DO check 1.1. Please integrate code here.]
-
-# 4. CHECK QUALIFIERS
-# 4. Perform quality checks on qualifiers
+# 4.1 CHECK QUALIFIERS
+# 4.1.1 Perform quality checks on qualifiers
     try:
         CkOps.QualifierCheck(raw_qualifiers, uniq_seqid_col).\
             quality_of_qualifiers()
     except ME.MyException as e:
         sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
-# 4.2. Remove qualifiers without content (i.e. empty qualifiers)
+# 4.1.2 Remove qualifiers without content (i.e. empty qualifiers)
     nonempty_qualifiers = CkOps.QualifierCheck.\
         _rm_empty_qual(raw_qualifiers)
-# 4.3. Enforce that all qualifier values consist of ASCII characters
+# 4.1.3 Enforce that all qualifier values consist of ASCII characters
     filtered_qualifiers = CkOps.QualifierCheck.\
         _enforce_ASCII(nonempty_qualifiers)
+
+####################################
+
+# 4.2 CHECK SEQUENCES
+    sorted_seqnames = sorted(alignm_global.keys())
+    sorted_seqids = sorted([d[uniq_seqid_col] for d in filtered_qualifiers])
+# 4.2.1. Exit if seq names in NEX-file not identical to seq ids in csv-file
+    not_shared = list(set(sorted_seqnames) - set(sorted_seqids))
+    if not_shared:
+        sys.exit('%s annonex2embl ERROR: Sequence names in `%s` '
+                 'are NOT IDENTICAL to sequence IDs in `%s`.'
+                 '%s The following sequence names don\'t have a match: `%s`'
+                 % ('\n', colored(path_to_nex, 'red'), 
+                 colored(path_to_csv, 'red'), '\n',
+                 colored(','.join(not_shared), 'red')))
 
 ########################################################################
 
@@ -141,7 +155,6 @@ def annonex2embl(path_to_nex,
 
 # 6. GENERATING SEQ_RECORDS BY LOOPING THROUGH EACH SEQUENCE OF THE ALIGNMENT
 #    Work off the sequences alphabetically.
-    sorted_seqnames = sorted(alignm_global.keys())
     for counter, seq_name in enumerate(sorted_seqnames):
         # TFLs generate safe copies of charset and alignment for every
         # loop iteration
