@@ -14,7 +14,7 @@ import GlobalVariables as GlobVars
 from Bio.Seq import Seq
 from Bio.SeqFeature import FeatureLocation
 from unidecode import unidecode
-
+from itertools import chain
 
 ###############
 # AUTHOR INFO #
