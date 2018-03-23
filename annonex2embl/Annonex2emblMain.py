@@ -225,8 +225,7 @@ def annonex2embl(path_to_nex,
 # 6.4.1. Generate SeqFeature 'source' and append to features list
         charset_names = charsets_degapped.keys()
         source_feature = GnOps.GenerateSeqFeature().\
-            source_feat(len(seq_record), current_quals, charset_names,
-                        transl_table)
+            source_feat(len(seq_record), current_quals, charset_names)
         seq_record.features.append(source_feature)
 
 ####################################
@@ -261,7 +260,7 @@ def annonex2embl(path_to_nex,
 #        Note: The position indices for the stop codon are truncated in
 #              this step.
                 seq_feature = GnOps.GenerateSeqFeature().regular_feat(
-                    charset_sym, charset_type, location_object, 
+                    charset_sym, charset_type, location_object, transl_table,
                     charset_product)
                 seq_record.features.append(seq_feature)
 
@@ -323,8 +322,6 @@ def annonex2embl(path_to_nex,
                     feature.location.end.position)
                 coding_seq = ''.join([seq_record.seq[i] for i in charset_range_updated])
                 
-                #pdb.set_trace()
-                
                 if not coding_seq.startswith(GlobVars.nex2ena_start_codon):
                     feature.location = GnOps.GenerateFeatLoc().\
                         make_start_fuzzy(feature.location)
@@ -369,3 +366,9 @@ def annonex2embl(path_to_nex,
 
 # 7. CLOSE OUTFILE
     outp_handle.close()
+
+########################################################################
+
+# 8. POST-PROCESSING OF EntryUpload FILES
+    if not checklist_bool:
+        os.system("sed -i 's/\; DNA\;/\; genomic DNA\;/g' "+path_to_outfile)

@@ -6,6 +6,25 @@ Converts an annotated DNA sequence alignment in NEXUS format to either
 (b) ENA flat files for submission via Webin Entry Upload submissions, if no suitable checklist is available).
 
 
+FILE PREPARATION
+----------------
+Annotations are specified via a SETS-BLOCK. Every gene and every exon charset must be accompanied by one CDS charset.
+How do you add a SETS-BLOCK to a DATA-BLOCK in a NEXUS file?
+
+###### Example for a SETS-BLOCK
+```
+BEGIN SETS;
+CharSet trnK_intron = 0-928 2531-2813 2849-3152;
+CharSet matK_gene = 929-2530;
+CharSet matK_CDS = 929-2530;
+CharSet trnK_exon = 2814-2848;
+CharSet trnK_CDS = 2814-2848;
+CharSet psbA_gene = 3153-3200;
+CharSet psbA_CDS = 3153-3200;
+END;
+```
+
+
 GENERAL USAGE
 -------------
 
@@ -37,7 +56,12 @@ python2 $PWD/scripts/annonex2embl_CMD.py
 TO DO
 -----
 
-###### 1. Function to compensate contraction of annotation due to identification of internal stop codons (see line 304 in Annonex2embl.py)
+###### 1. Add a function that does the following in order:
+* reads and parses a bibtex file,
+* extracts (a) the citation info and (b) the submitter references as required by EMBL, and 
+* write the correctly formatted string-lines into the final file during post-processing.
+
+###### 2. Add a function to compensate contraction of annotation due to identification of internal stop codons (see line 304 in Annonex2embl.py)
 Since "CkOps.TranslCheck().transl_and_quality_of_transl()" shortens annotations to the first internal stop codon 
 encountered, the subsequent intron or IGS needs to be extended towards 5' to compensate. This can be a general function without a priori info passed to it. The important aspect is that only the SUBSEQUENT feature (if it is an intron or an IGS!) can be extended; all other features cannot be extended and need to produce a warning.
 Pseudocode:
@@ -49,17 +73,14 @@ Does a gap in the annotations exist?
   If no, continue without action.
 ```
 
-###### 2.
-Have the CLMODE automatically add the colum names for the final checklists
+###### 3. Implement various improvements of the checklist function
+* 3.1. Have the CLMODE automatically add the colum names for the final checklists
+* 3.2. Have the CLMODE automatically add non-mandatory qualifiers as separate column
 
-###### 3.
-Have the CLMODE automatically add non-mandatory qualifiers as separate column
-
-###### 4.
-Write a GUI interface for input
+###### 4. Write a GUI interface for input
 * 4.1. The GUI should consist of just one Window, where all functions are immediately visible; the GUI should not have any dropdown-menus. In general, the simpler the interface, the better.
 
-###### 5. Improvements of argparser (scripts/annonex2embl_CMD.py)
+###### 5. Implement improvements of argparser (scripts/annonex2embl_CMD.py)
 * 5.1. Currently, the "required" and "optional" parameters are not displayed currently when calling scripts/annonex2embl_CMD.py. It incorrectly says "optional parameters" for all.
 * 5.2. Currently, --clmode requires "True" of "False" as parameters; how can I use it such that only the presence of --clmode indicates "True", whereas its abscence indicates "False"?
 

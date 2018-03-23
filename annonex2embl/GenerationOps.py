@@ -30,7 +30,6 @@ __version__ = '2017.02.01.2000'
 # DEBUGGING #
 #############
 
-
 # pdb.set_trace()
 
 ###########
@@ -160,7 +159,7 @@ class GenerateSeqFeature:
     def __init__(self):
         pass
 
-    def source_feat(self, full_len, quals, charset_names, transl_table):
+    def source_feat(self, full_len, quals, charset_names):
         ''' This function generates the SeqFeature `source` for a
             SeqRecord. The SeqFeature `source` is critical for
             submissions to EMBL or GenBank, as it contains all the
@@ -175,7 +174,6 @@ class GenerateSeqFeature:
                             {'isolate': 'taxon_B', 'country': 'Ecuador'}
             charset_names (list): a list of gene names; example:
                             ['foo_gene', 'foo_CDS']
-            transl_table (int): an integer; example: 11 (for bacterial code)
         Returns:
             SeqFeature (obj):   A SeqFeature object
         Raises:
@@ -183,16 +181,16 @@ class GenerateSeqFeature:
         '''
         full_index = range(0, full_len)
         feature_loc = GenerateFeatLoc().make_location(full_index)
-        source_feature = SeqFeature.SeqFeature(feature_loc, id='source',
-                                               type='source', qualifiers=quals)
-        # If a CDS among the gene names, add qualifier trans_table
-        # to source feature
-        if any(['CDS' in gene_name for gene_name in charset_names]):
-            source_feature.qualifiers["transl_table"] = transl_table
+        quals['mol_type'] = "genomic DNA"
+        source_feature = SeqFeature.SeqFeature(
+            feature_loc,
+            id='source',
+            type='source',
+            qualifiers=quals)
         return source_feature
 
     def regular_feat(self, feature_name, feature_type, feature_loc,
-                     feature_product=None):
+                     transl_table, feature_product=None):
         ''' This function generates a regular SeqFeature for a SeqRecord.
         Args:
             feature_name (str):  usually a gene symbol; example: 'matK'
@@ -200,6 +198,7 @@ class GenerateSeqFeature:
                                  example: 'intron'
             feature_loc (object): a SeqFeature object specifying a simple
                                   or compund location on a DNA string
+            transl_table (int): an integer; example: 11 (for bacterial code)
             feature_product (str): the product of the feature in question;
                                    example: 'maturase K'
         Returns:
@@ -212,16 +211,18 @@ class GenerateSeqFeature:
             raise ME.MyException('%s nex2embl ERROR: Internal error: '
                                  'Name of feature key not passed correctly.')
         # 2. Generate qualifiers
-        qualifiers = {'note': feature_name}
-        # 3. Include product, if a coding feature
+        quals = {'note': feature_name}
+        # 3. If a coding feature, add special qualifiers
         if feature_product:
             if feature_type == 'CDS' or feature_type == 'gene':
-                qualifiers['product'] = feature_product
+                quals['product'] = feature_product
+        if feature_type == 'CDS':
+            quals['transl_table'] = transl_table
         seq_feature = SeqFeature.SeqFeature(
             feature_loc,
             id=feature_name,
             type=feature_type,
-            qualifiers=qualifiers)
+            qualifiers=quals)
         return seq_feature
 
 

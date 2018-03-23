@@ -21,9 +21,9 @@ from collections import Counter
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2018 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.02.01.1400'
+__version__ = '2018.03.23.2000'
 
 #############
 # DEBUGGING #
@@ -324,14 +324,14 @@ class ParseCharsetName:
         ''' An internal static function to extract the charset symbol from a
         string. '''
         try:
-            charset_sym = charset_name.strip(charset_type)
+            charset_sym = charset_name.replace('_'+charset_type, "")
         except BaseException:
             raise ME.MyException(
                 '%s annonex2embl ERROR: No charset '
                 'symbol encountered in the name of charset `%s`.' %
                 ('\n', charset_name))
-        charset_sym = charset_sym.strip('_')
-        charset_sym = charset_sym.rstrip('_')  # Remove trailing underscores
+        #charset_sym = charset_sym.strip('_')
+        #charset_sym = charset_sym.rstrip('_')  # Remove trailing underscores
         return charset_sym
 
     def parse(self):

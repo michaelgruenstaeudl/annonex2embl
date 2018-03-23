@@ -192,7 +192,8 @@ class TranslCheck:
         try:
             transl, loc = AnnoCheck(extract.seq, feature, seq_record.id,
                                     transl_table).check()
-            feature.qualifiers["translation"] = transl
+            if feature.type == 'CDS':
+                feature.qualifiers["translation"] = transl
             feature.location = loc
         except ME.MyException as e:
             raise e
