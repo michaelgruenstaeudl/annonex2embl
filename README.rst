@@ -10,6 +10,7 @@ EXAMPLE USAGE
 -------------
 
 ###### Example for EMBL mode
+
 ```
 python2 /path_to_annonex2embl/scripts/annonex2embl.py
 -n alignment.nex
@@ -20,6 +21,7 @@ python2 /path_to_annonex2embl/scripts/annonex2embl.py
 ```
 
 ###### Example for checklist mode
+
 ```
 python2 /path_to_annonex2embl/scripts/annonex2embl.py
 -n alignment.nex
