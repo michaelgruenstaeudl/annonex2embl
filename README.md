@@ -37,6 +37,18 @@ python2 $PWD/scripts/annonex2embl_CMD.py
 TO DO
 -----
 
+###### 1. Function to compensate contraction of annotation due to identification of internal stop codons (see line 304 in Annonex2embl.py)
+Since "CkOps.TranslCheck().transl_and_quality_of_transl()" shortens annotations to the first internal stop codon 
+encountered, the subsequent intron or IGS needs to be extended towards 5' to compensate. This can be a general function without a priori info passed to it. The important aspect is that only the SUBSEQUENT feature (if it is an intron or an IGS!) can be extended; all other features cannot be extended and need to produce a warning.
+Pseudocode:
+```
+Does a gap in the annotations exist?
+  If yes, is the gap followed by an intron or an IGS?
+    If yes, extend the intron or the IGS towards 5' to compensate.
+    If no, print a warning.
+  If no, continue without action.
+```
+
 ###### 2.
 Have the CLMODE automatically add the colum names for the final checklists
 

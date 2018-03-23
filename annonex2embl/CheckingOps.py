@@ -23,7 +23,7 @@ from itertools import chain
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2018 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2018.03.23.1400'
+__version__ = '2018.03.23.2000'
 
 #############
 # DEBUGGING #
@@ -89,14 +89,15 @@ class AnnoCheck:
 
         if len(transl_without_internStop) > len(transl_with_internStop):
             # 1. Unnest the nested lists
-            contiguous_subsets = [
-                range(
-                    e.start.position,
-                    e.end.position) for e in location_object.parts]
+            contiguous_subsets = [range(e.start.position, e.end.position)
+                for e in location_object.parts]
             compound_integer_range = sum(contiguous_subsets, [])
             # 2. Adjust location range
             len_with_internStop = len(transl_with_internStop) * 3
-            adjusted_range = compound_integer_range[:len_with_internStop]
+            # IMPORTANT!: In TFL, the "+3" is for the stop codon, which is 
+            # counted in the location range, but is not part of the AA 
+            # sequence of the translation.
+            adjusted_range = compound_integer_range[:(len_with_internStop+3)]
             # 3. Establish location
             feat_loc = GnOps.GenerateFeatLoc().make_location(adjusted_range)
         if len(transl_without_internStop) == len(transl_with_internStop):
@@ -119,6 +120,7 @@ class AnnoCheck:
             _transl(to_stop=True) and must consequently be added again
             (see line 137).
         '''
+        
         try:
             # Note: TFL must contain "cds=True"; don't delete it
             transl_out = AnnoCheck._transl(self.extract,
@@ -144,6 +146,13 @@ class AnnoCheck:
                 'sequence `%s` indicates a protein length of only a '
                 'single amino acid.' %
                 (self.feature.id, self.record_id))
+
+        # IMPORTANT!!!: In an ENA record, the translation does not display the 
+        # stop codon (i.e., the '*'), while the feature location range (i.e., 738..2291)
+        # very much includes its position, which is biologically logical, as
+        # a stop codon is not an amino acid in a translation.
+        
+        # Thus, TFL would be incorrect, because it would add back an asterisk into the translation.
         #transl_out = transl_out + "*"
         return (transl_out, feat_loc)
 

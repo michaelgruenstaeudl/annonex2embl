@@ -42,9 +42,9 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2018 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2017.09.26.1400'
+__version__ = '2018.03.23.2000'
 
 #############
 # DEBUGGING #
@@ -146,7 +146,8 @@ def annonex2embl(path_to_nex,
             charset_sym, charset_type, charset_product = PrOps.\
                 ParseCharsetName(charset_name, email_addr).parse()
         except ME.MyException as e:
-            sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
+            sys.exit('%s annonex2embl ERROR: %s' % ('\n', 
+                    colored(e, 'red')))
 
         charset_dict[charset_name] = (charset_sym, charset_type,
                                       charset_product)
@@ -247,7 +248,7 @@ def annonex2embl(path_to_nex,
 
 # 6.6.1. Proceed in loop only if charset_range is not empty
 #        An empty charset_range could be the case if the charset only 
-#        consisted of '?' (which were removed in previous step).
+#        consisted of 'N' (which were removed in steps 6.3.2 and 6.3.3).
             if charset_range:
 
 # 6.6.2. Convert charset_range into Location Object
@@ -281,19 +282,29 @@ def annonex2embl(path_to_nex,
             # Check if feature is a coding region
             if feature.type == 'CDS' or feature.type == 'gene':
                 try:
+                    # In TFL, features are truncated to the first 
+                    # internal stop codon, if present.
                     feature = CkOps.TranslCheck().\
                         transl_and_quality_of_transl(seq_record,
                                                      feature, transl_table)
                 except ME.MyException as e:
                     print('%s annonex2embl WARNING: %s Feature `%s` '
                           '(type: `%s`) of sequence `%s` is not saved to '
-                          'output.' % ('\n', e, feature.id, feature.type,
-                                       seq_record.id))
+                          'output.' % ('\n', colored(e, 'red'), 
+                                       colored(feature.id, 'red'),
+                                       colored(feature.type, 'red'),
+                                       colored(seq_record.id, 'red')))
                     removal_list.append(indx)
-        # TFL removes the objects in reverse order, as each removal
-        # shifts the indices of subsequent objects to the left
+        # TFL removes the objects in reverse order, because otherwise 
+        # each removal would shift the indices of subsequent objects 
+        # to the left.
         for indx in sorted(removal_list, reverse=True):
             seq_record.features.pop(indx)
+
+# (FUTURE)  Since "CkOps.TranslCheck().transl_and_quality_of_transl()" 
+#           shortens annotations to the first internal stop codon
+#           encountered, the subsequent intron or IGS needs to be 
+#           extended towards 5' to compensate.
 
 ####################################
 
@@ -301,19 +312,29 @@ def annonex2embl(path_to_nex,
         for feature in seq_record.features:
             # Check if feature is a coding region
             if feature.type == 'CDS' or feature.type == 'gene':
-                # Note: Don't use "feature.extract(seq_record.seq)" in TFL,
+                # Note: Don't use "feature.extract(seq_record.seq)" in TFLs,
                 #       as stop codon was truncated from feature under
-                #       Step 6.5.3.
-                coding_seq = ''.join([seq_record.seq[i]
-                                      for i in charset_range])
+                #       Step 6.8, because in an ENA record, the AA sequence
+                #       of the translation does not have the stop codon 
+                #       (i.e., the '*'), while the feature location 
+                #       range (i.e., 738..2291) very much includes 
+                #       its position (which is biologically logical).
+                charset_range_updated = range(feature.location.start.position,
+                    feature.location.end.position)
+                coding_seq = ''.join([seq_record.seq[i] for i in charset_range_updated])
+                
+                #pdb.set_trace()
+                
                 if not coding_seq.startswith(GlobVars.nex2ena_start_codon):
-                    feature.location = GnOps.GenerateFeatLoc(
-                    ).make_start_fuzzy(feature.location)
+                    feature.location = GnOps.GenerateFeatLoc().\
+                        make_start_fuzzy(feature.location)
                 if all([not coding_seq.endswith(c)
                         for c in GlobVars.nex2ena_stop_codons]):
-                    feature.location = GnOps.GenerateFeatLoc(
-                    ).make_end_fuzzy(feature.location)
-# (FUTURE) Also introduce fuzzy ends when leading or trailing Ns were removed
+                    feature.location = GnOps.GenerateFeatLoc().\
+                        make_end_fuzzy(feature.location)
+
+# (FUTURE)  Also introduce fuzzy ends to features when those had leading or trailing Ns removed,
+#           because the removed Ns may constitute start of stop codons.
 
 ####################################
 
@@ -338,7 +359,8 @@ def annonex2embl(path_to_nex,
                                            charset_sym, outp_handle)
             else:
                 sys.exit('%s annonex2embl ERROR: Checklist type `%s` '
-                         'not recognized.' % ('\n', checklist_type))
+                         'not recognized.' % ('\n', 
+                         colored(checklist_type, 'red')))
         else:
             IOOps.Outp().write_EntryUpload(seq_record, outp_handle,
                                            linemask_bool)
