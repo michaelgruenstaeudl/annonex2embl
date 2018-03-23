@@ -7,6 +7,10 @@ Classes to degap sequences but maintain annotations
 # IMPORT OPERATIONS #
 #####################
 
+import pdb
+
+from copy import copy
+
 ###############
 # AUTHOR INFO #
 ###############
@@ -20,12 +24,12 @@ __version__ = '2017.01.31.1900'
 # DEBUGGING #
 #############
 
-import pdb
-#pdb.set_trace()
+# pdb.set_trace()
 
 ###########
 # CLASSES #
 ###########
+
 
 class DegapButMaintainAnno:
     ''' This class contains functions to degap DNA sequences while 
@@ -46,35 +50,35 @@ class DegapButMaintainAnno:
     Raises:
         currently nothing
     '''
-    
+
     def __init__(self, seq, rmchar, charsets):
         self.seq = seq
         self.rmchar = rmchar
         self.charsets = charsets
-    
+
     def degap(self):
         ''' This function works on overlapping charsets and is preferable over 
         "degap_legacy".
         Source: http://stackoverflow.com/questions/35233714/
         maintaining-overlapping-annotations-while-removing-dashes-from-string
         '''
-        from copy import copy
-        
+
         seq = self.seq
         rmchar = self.rmchar
         charsets = self.charsets
-        
+
         annotations = copy(charsets)
         index = seq.find(rmchar)
-        while index > -1: # if any occurrence is found
+        while index > -1:  # if any occurrence is found
             for gene_name, indices in annotations.items():
                 if index in indices:
                     indices.remove(index)
-                annotations[gene_name] = [e-1 if e > index else e \
-                    for e in indices]
+                annotations[gene_name] = [e-1 if e > index else e
+                                          for e in indices]
             seq = seq[:index] + seq[index+1:]
             index = seq.find(rmchar)
         return seq, annotations
+
 
 class RmAmbigsButMaintainAnno:
     ''' This class removes ambiguous nucleotides from a DNA sequence
@@ -92,10 +96,10 @@ class RmAmbigsButMaintainAnno:
     Raises:
         currently nothing
     '''
-    
+
     def __init__(self):
         pass
-    
+
     @staticmethod
     def rm_leadambig(seq, rmchar, charsets):
         ''' This class removes leading ambiguous nucleotides from a DNA
@@ -107,15 +111,14 @@ class RmAmbigsButMaintainAnno:
                 indices_shifted = [i-lead_stripoff for i in indices]
                 charsets[gene_name] = [i for i in indices_shifted if i >= 0]
             seq = seq[lead_stripoff:]
-        
+
         return seq, charsets
-    
+
     @staticmethod
     def rm_trailambig(seq, rmchar, charsets):
         ''' This class removes trailing ambiguous nucleotides from a DNA
             sequence while maintaining the annotations.
         '''
-        from copy import copy
         if seq[-1] == rmchar:
             trail_stripoff = len(seq.rstrip(rmchar))
             range_stripoff = range(trail_stripoff, len(seq))
@@ -129,11 +132,3 @@ class RmAmbigsButMaintainAnno:
                 charsets[gene_name] = indices_new
             seq = seq[:trail_stripoff]
         return seq, charsets
-
-#############
-# FUNCTIONS #
-#############
-
-########
-# MAIN #
-########
