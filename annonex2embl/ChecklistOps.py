@@ -16,9 +16,9 @@ import pdb
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2018 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
-__version__ = '2018.01.31.1600'
+__version__ = '2018.03.26.1700'
 
 #############
 # DEBUGGING #
@@ -191,7 +191,8 @@ class Writer:
 
         # 5'_CDS and 5'_PARTIAL
             # 5'_CDS: Start of the matK coding region relative to the submitted sequence. For a full length CDS this is the position of the first base of the start codon.
-        fiveprime_cds = str(matK_gene.location.start.position)
+            # NOTE: One nucleotide position has to be added to the start position to make it correct.
+        fiveprime_cds = str(matK_gene.location.start.position+1)
         # 5'_PARTIAL: cds partial at 5'? (yes/no) For an incomplete CDS with the start codon upstream of the submitted sequence.
         if type(matK_gene.location.start) == Bio.SeqFeature.ExactPosition:
             fiveprime_partial = 'no'
