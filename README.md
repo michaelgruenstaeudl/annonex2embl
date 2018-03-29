@@ -59,19 +59,17 @@ TO DO
 
 ###### 1. Convert the code from Python2.7 to Python3.6.
 
-###### 2. Include a function that converts missing sections of a sequence that are longer than 10 nucleotides into a "gap"-feature; that gap-feature has to have a mandatory qualifiers (/estimated_length=<integer>) and an optional qualifiers (/note="text").
-
-###### 3. Separate the annonex2embl from the embl2checklist function.
-* 2.1. In the checklist function, ensure that all features that are not mandatory are added as separate columns into the checklist output (and not dropped, as they are now).
-
-###### 4. Add a function that does the following in order:
+###### 2. Add a function that does the following in order:
 * reads and parses a bibtex file,
 * extracts (a) the citation info and (b) the submitter references as required by EMBL, and 
 * write the correctly formatted string-lines into the final file during post-processing.
 
-###### 5. Add functions to read in a charset spec is forward or reverse and to adjust the info in the feature table.
+###### 3. Include additional functions 
+* A function that converts missing sections of a sequence that are longer than 10 nucleotides into a "gap"-feature; that gap-feature has to have a mandatory qualifiers (/estimated_length=<integer>) and an optional qualifiers (/note="text").
 
-###### 6. Add a function to compensate contraction of annotation due to identification of internal stop codons (see line 304 in Annonex2embl.py)
+###### 4. Add functions to read in a charset spec is forward or reverse and to adjust the info in the feature table.
+
+###### 5. Add a function to compensate contraction of annotation due to identification of internal stop codons (see line 304 in Annonex2embl.py)
 Since "CkOps.TranslCheck().transl_and_quality_of_transl()" shortens annotations to the first internal stop codon 
 encountered, the subsequent intron or IGS needs to be extended towards 5' to compensate. This can be a general function without a priori info passed to it. The important aspect is that only the SUBSEQUENT feature (if it is an intron or an IGS!) can be extended; all other features cannot be extended and need to produce a warning.
 Pseudocode:
@@ -83,16 +81,9 @@ Does a gap in the annotations exist?
   If no, continue without action.
 ```
 
-###### 7. Implement various improvements of the checklist function
-* 3.1. Have the CLMODE automatically add the colum names for the final checklists
-* 3.2. Have the CLMODE automatically add non-mandatory qualifiers as separate column
-
-###### 8. Write a GUI interface for input
-* 4.1. The GUI should consist of just one Window, where all functions are immediately visible; the GUI should not have any dropdown-menus. In general, the simpler the interface, the better.
-
-###### 9. Implement improvements of argparser (scripts/annonex2embl_CMD.py)
-* 5.1. Currently, the "required" and "optional" parameters are not displayed currently when calling scripts/annonex2embl_CMD.py. It incorrectly says "optional parameters" for all.
-* 5.2. Currently, --clmode requires "True" of "False" as parameters; how can I use it such that only the presence of --clmode indicates "True", whereas its abscence indicates "False"?
+###### 6. Implement improvements of argparser (scripts/annonex2embl_CMD.py)
+* Currently, the "required" and "optional" parameters are not displayed currently when calling scripts/annonex2embl_CMD.py. It incorrectly says "optional parameters" for all.
+* Currently, --taxcheck requires "True" of "False" as parameters; how can I use it such that only the presence of --taxcheck indicates "True", whereas its abscence indicates "False"?
 
 
 DEVELOPMENT
@@ -106,6 +97,8 @@ python -m unittest discover -s /home/michael_science/git/michaelgruenstaeudl_ann
 
 CHANGELOG
 ---------
+###### Version 0.4.4 (2018.03.29)
+* Separate the annonex2embl from the embl2checklist function.
 ###### Version 0.4.3 (2018.03.23)
 * Improved formatting of Python code
 * Checking if sequence names in NEX-file identical to sequence ids in csv-file
