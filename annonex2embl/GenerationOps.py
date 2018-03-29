@@ -15,21 +15,21 @@ from itertools import groupby
 from Bio import SeqFeature
 from Bio.SeqRecord import SeqRecord
 from Bio.SeqFeature import ExactPosition, FeatureLocation, CompoundLocation
-import pdb
 
 ###############
 # AUTHOR INFO #
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
-__info__ = 'nex2embl'
-__version__ = '2017.02.01.2000'
+__copyright__ = 'Copyright (C) 2016-2018 Michael Gruenstaeudl'
+__info__ = 'annonex2embl'
+__version__ = '2018.03.26.2000'
 
 #############
 # DEBUGGING #
 #############
 
+import pdb
 # pdb.set_trace()
 
 ###########
@@ -233,7 +233,8 @@ class GenerateSeqRecord:
         pass
 
     def base_record(self, current_seq, current_qual, uniq_seqid_col,
-                    seq_version, descr_DEline, topology, tax_division):
+                    seq_version, descr_DEline, topology, tax_division,
+                    organelle):
         ''' This function generates a base SeqRecord (i.e., the foundation to
             subsequent SeqRecords).
         Args:
@@ -249,6 +250,8 @@ class GenerateSeqRecord:
                                   specifications
             tax_division (str):   one of the valid ENA taxonomic
                                   divisions
+            organelle (str):      one of the valid INDSC organelle
+                                  descriptors
         Returns:
             SeqRecord (obj):      A SeqRecord object
         '''
@@ -272,20 +275,14 @@ class GenerateSeqRecord:
         # 5. Specify the topology of the sequence
         if topology in GlobVars.nex2ena_valid_topologies:
             seq_record.annotations['topology'] = topology
-        else:
-            seq_record.annotations['topology'] = 'linear'
+        #else:
+        #    seq_record.annotations['topology'] = 'linear'
         # 6. Add ID line info on 'taxonomic division'
         if tax_division in GlobVars.nex2ena_valid_tax_divisions:
             seq_record.annotations['data_file_division'] = tax_division
-        else:
-            seq_record.annotations['data_file_division'] = 'UNC'
+        #else:
+        #    seq_record.annotations['data_file_division'] = 'UNC'
+        # 7. Specify the organelle of the sequence
+        if organelle in GlobVars.nex2ena_valid_INSDC_organelle:
+            seq_record.annotations['organelle'] = organelle
         return seq_record
-
-
-#############
-# FUNCTIONS #
-#############
-
-########
-# MAIN #
-########

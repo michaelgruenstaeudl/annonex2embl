@@ -6,10 +6,8 @@
 # IMPORT OPERATIONS #
 #####################
 
-
 import MyExceptions as ME
 import CheckingOps as CkOps
-import ChecklistOps as ClOps
 import DegappingOps as DgOps
 import GenerationOps as GnOps
 import GlobalVariables as GlobVars
@@ -17,8 +15,6 @@ import ParsingOps as PrOps
 import IOOps as IOOps
 import sys
 import os
-import pdb
-
 
 from Bio import SeqIO
 #from Bio.Alphabet import generic_dna
@@ -29,13 +25,11 @@ from copy import copy
 from distutils.util import strtobool
 from termcolor import colored
 
-
 # Add specific directory to sys.path in order to import its modules
 # NOTE: THIS RELATIVE IMPORTING IS AMATEURISH.
 # NOTE: COULD THE FOLLOWING IMPORT BE REPLACED WITH 'import annonex2embl'?
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
-
 
 ###############
 # AUTHOR INFO #
@@ -43,13 +37,14 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2018 Michael Gruenstaeudl'
-__info__ = 'nex2embl'
-__version__ = '2018.03.23.2000'
+__info__ = 'annonex2embl'
+__version__ = '2018.03.26.2000'
 
 #############
 # DEBUGGING #
 #############
 
+import pdb
 # pdb.set_trace()
 
 ###########
@@ -60,7 +55,6 @@ __version__ = '2018.03.23.2000'
 # FUNCTIONS #
 #############
 
-
 def annonex2embl(path_to_nex,
                  path_to_csv,
                  descr_DEline,
@@ -68,20 +62,18 @@ def annonex2embl(path_to_nex,
                  path_to_outfile,
 
                  tax_check='False',
-                 checklist_mode='False',
-                 checklist_type=None,
                  linemask='False',
                  topology='linear',
                  tax_division='PLN',
                  uniq_seqid_col='isolate',
                  transl_table='11',
+                 organelle='plastid',
                  seq_version='1'):
 
 ########################################################################
 
 # 0. MAKE SPECIFIC VARIABLES BOOLEAN
     taxcheck_bool = strtobool(tax_check)
-    checklist_bool = strtobool(checklist_mode)
     linemask_bool = strtobool(linemask)
 
 ########################################################################
@@ -176,7 +168,7 @@ def annonex2embl(path_to_nex,
 # 6.2.1. Generate the basic SeqRecord
         seq_record = GnOps.GenerateSeqRecord().base_record(
             current_seq, current_quals, uniq_seqid_col, seq_version,
-            descr_DEline, topology, tax_division)
+            descr_DEline, topology, tax_division, organelle)
 
 ####################################
 
@@ -336,31 +328,8 @@ def annonex2embl(path_to_nex,
 ####################################
 
 # 6.10. DECISION ON OUTPUT FORMAT
-        if checklist_bool:
-            # 6.10.1.
-            if checklist_type == 'ITS':
-                # charset_sym should be ...
-                ClOps.Writer().ITS(seq_record, counter, outp_handle)
-            elif checklist_type == 'rRNA':
-                # charset_sym for rRNA should be '18S', '28S' or the like
-                ClOps.Writer().rRNA(seq_record, counter, charset_sym,
-                                    outp_handle)
-            elif checklist_type == 'trnK_matK':
-                ClOps.Writer().trnK_matK(seq_record, counter,
-                                         outp_handle)
-            elif checklist_type == 'IGS':
-                ClOps.Writer().IGS(seq_record, counter,
-                                   charset_sym, outp_handle)
-            elif checklist_type == 'genomic_CDS':
-                ClOps.Writer().genomic_CDS(seq_record, counter,
-                                           charset_sym, outp_handle)
-            else:
-                sys.exit('%s annonex2embl ERROR: Checklist type `%s` '
-                         'not recognized.' % ('\n', 
-                         colored(checklist_type, 'red')))
-        else:
-            IOOps.Outp().write_EntryUpload(seq_record, outp_handle,
-                                           linemask_bool)
+        IOOps.Outp().write_EntryUpload(seq_record, outp_handle,
+                                       linemask_bool)
 
 ########################################################################
 

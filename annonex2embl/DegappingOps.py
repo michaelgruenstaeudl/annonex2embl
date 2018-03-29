@@ -7,8 +7,6 @@ Classes to degap sequences but maintain annotations
 # IMPORT OPERATIONS #
 #####################
 
-import pdb
-
 from copy import copy
 
 ###############
@@ -16,20 +14,20 @@ from copy import copy
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
-__info__ = 'nex2embl'
-__version__ = '2017.01.31.1900'
+__copyright__ = 'Copyright (C) 2016-2018 Michael Gruenstaeudl'
+__info__ = 'annonex2embl'
+__version__ = '2018.03.26.2000'
 
 #############
 # DEBUGGING #
 #############
 
+import pdb
 # pdb.set_trace()
 
 ###########
 # CLASSES #
 ###########
-
 
 class DegapButMaintainAnno:
     ''' This class contains functions to degap DNA sequences while 
