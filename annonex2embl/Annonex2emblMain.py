@@ -339,5 +339,4 @@ def annonex2embl(path_to_nex,
 ########################################################################
 
 # 8. POST-PROCESSING OF EntryUpload FILES
-    if not checklist_bool:
-        os.system("sed -i 's/\; DNA\;/\; genomic DNA\;/g' "+path_to_outfile)
+    os.system("sed -i 's/\; DNA\;/\; genomic DNA\;/g' "+path_to_outfile)

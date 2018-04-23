@@ -1,9 +1,7 @@
 *annonex2embl*
 ===================
 
-Converts an annotated DNA sequence alignment in NEXUS format to either 
-(a) TSV spreadsheets for submission to [ENA](http://www.ebi.ac.uk/ena) via [Webin](https://www.ebi.ac.uk/ena/submit/sra/#home) checklist submissions, or
-(b) ENA flat files for submission via Webin Entry Upload submissions, if no suitable checklist is available).
+Converts an annotated DNA sequence alignment in NEXUS format to an ENA flatfile for submission via an analysis XML (http://ena-docs.readthedocs.io/en/latest/prog_12.html#object-relationships).
 
 
 INSTALLATION AND TESTING
@@ -64,12 +62,22 @@ TO DO
 * extracts (a) the citation info and (b) the submitter references as required by EMBL, and 
 * write the correctly formatted string-lines into the final file during post-processing.
 
-###### 3. Include additional functions 
+###### 3. 
+* The accession number shall be removed from the AC line ("AC   AC0663; SV 1; ..." --> "AC   XXX; SV 1; ...")
+* The accession number shall be removed from the ID line ("ID   AC0663;" --> "ID   XXX;")
+
+###### 4. Include additional functions 
 * A function that converts missing sections of a sequence that are longer than 10 nucleotides into a "gap"-feature; that gap-feature has to have a mandatory qualifiers (/estimated_length=<integer>) and an optional qualifiers (/note="text").
+Example error: 'Sequence contains a stretch of n characters between base 290 and 1.173 that is not represented with a "gap" feature (stretches of n greater than 0 gives a warning, greater than 10 gives an error). line: 2348-2373 of AC_trnLF_taxnamesIncl_adjusted_2018.04.03.1100.embl - AC_trnLF_taxnamesIncl_adjusted_2018.04.03.1100.embl'
 
-###### 4. Add functions to read in a charset spec is forward or reverse and to adjust the info in the feature table.
+What is needed is a function that return the start and stop of a poly-N strech in a string; see the following for a possible answer: https://stackoverflow.com/questions/25211905/determine-length-of-polypurine-tract
 
-###### 5. Add a function to compensate contraction of annotation due to identification of internal stop codons (see line 304 in Annonex2embl.py)
+* Ensure that the sequence does not start and/or end with an 'n'
+i.e., trim away any Ns from the start of the end of a sequence while adjusting all annotations
+
+###### 5. Add functions to read in a charset spec is forward or reverse and to adjust the info in the feature table.
+
+###### 6. Add a function to compensate contraction of annotation due to identification of internal stop codons (see line 304 in Annonex2embl.py)
 Since "CkOps.TranslCheck().transl_and_quality_of_transl()" shortens annotations to the first internal stop codon 
 encountered, the subsequent intron or IGS needs to be extended towards 5' to compensate. This can be a general function without a priori info passed to it. The important aspect is that only the SUBSEQUENT feature (if it is an intron or an IGS!) can be extended; all other features cannot be extended and need to produce a warning.
 Pseudocode:
@@ -81,7 +89,7 @@ Does a gap in the annotations exist?
   If no, continue without action.
 ```
 
-###### 6. Implement improvements of argparser (scripts/annonex2embl_CMD.py)
+###### 7. Implement improvements of argparser (scripts/annonex2embl_CMD.py)
 * Currently, the "required" and "optional" parameters are not displayed currently when calling scripts/annonex2embl_CMD.py. It incorrectly says "optional parameters" for all.
 * Currently, --taxcheck requires "True" of "False" as parameters; how can I use it such that only the presence of --taxcheck indicates "True", whereas its abscence indicates "False"?
 
