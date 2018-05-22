@@ -38,7 +38,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2018 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2018.03.26.2000'
+__version__ = '2018.05.22.1800'
 
 #############
 # DEBUGGING #
@@ -206,8 +206,11 @@ def annonex2embl(path_to_nex,
         seq_nogaps, charsets_degapped = DgOps.\
             DegapButMaintainAnno(seq_notrailambigs, '-',
                                  charsets_notrailambigs).degap()
+# 6.3.6. Add gap features where stretches of Ns in sequence
+        seq_final, charsets_final = DgOps.\
+            AddGapFeature(seq_nogaps, charsets_degapped).add()
         # TFL assigns the deambiged and degapped sequence back
-        seq_record.seq = seq_nogaps
+        seq_record.seq = seq_final
 
 ####################################
 
@@ -215,7 +218,7 @@ def annonex2embl(path_to_nex,
 #      NCBI TAXONOMY
 
 # 6.4.1. Generate SeqFeature 'source' and append to features list
-        charset_names = charsets_degapped.keys()
+        charset_names = charsets_final.keys()
         source_feature = GnOps.GenerateSeqFeature().\
             source_feat(len(seq_record), current_quals, charset_names)
         seq_record.features.append(source_feature)
@@ -235,7 +238,7 @@ def annonex2embl(path_to_nex,
 # 6.6. POPULATE THE FEATURE KEYS WITH THE CHARSET INFORMATION
 #      Note: Each charset represents a dictionary that must be added in
 #      full to the list "SeqRecord.features"
-        for charset_name, charset_range in charsets_degapped.items():
+        for charset_name, charset_range in charsets_final.items():
 
 # 6.6.1. Proceed in loop only if charset_range is not empty
 #        An empty charset_range could be the case if the charset only 
@@ -245,8 +248,13 @@ def annonex2embl(path_to_nex,
 # 6.6.2. Convert charset_range into Location Object
                 location_object = GnOps.GenerateFeatLoc().make_location(charset_range)
 
-# 6.6.3. Assign a gene product to a gene name
-                charset_sym, charset_type, charset_product = charset_dict[charset_name]
+# 6.6.3. Assign a gene product to a gene name, unless it's a gap feature
+                if charset_name[0:3] == "gap":
+                    charset_sym = None
+                    charset_type = "gap"
+                    charset_product = None
+                else:
+                    charset_sym, charset_type, charset_product = charset_dict[charset_name]
 
 # 6.6.4. Generate a regular SeqFeature and append to seq_record.features
 #        Note: The position indices for the stop codon are truncated in

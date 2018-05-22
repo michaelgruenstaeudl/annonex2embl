@@ -8,6 +8,7 @@ Classes to degap sequences but maintain annotations
 #####################
 
 from copy import copy
+from itertools import count, groupby
 
 ###############
 # AUTHOR INFO #
@@ -16,7 +17,7 @@ from copy import copy
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2018 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2018.03.26.2000'
+__version__ = '2018.05.22.1800'
 
 #############
 # DEBUGGING #
@@ -29,8 +30,50 @@ import pdb
 # CLASSES #
 ###########
 
+class AddGapFeature:
+    ''' This class contains a function that identifies a stretch of Ns 
+        in an input sequence and automatically adds a gap charset in 
+        its position.
+    Args:
+        seq (str):      a string that represents an aligned, degapped 
+                        DNA sequence; example: "ATGNNNC"
+        charsets (dict):a dictionary with gene names (str) as keys and lists 
+                        of nucleotide positions (list) as values; example: 
+                        {"gene_1":[0,1],"gene_2":[2,3,4]}
+    Returns:
+        tupl.   The return consists of the input sequence and the 
+                corresponding charsets (plus a gap charset, if 
+                appropriate); example: (degapped_seq, degapped_charsets)
+    Raises:
+        currently nothing
+    '''
+
+    def __init__(self, seq, charsets):
+        self.seq = seq
+        self.charsets = charsets
+
+    def add(self):
+        ''' This function was developed while reviewing the 
+            following answer on SO:
+            https://stackoverflow.com/questions/25211905/determine-length-of-polypurine-tract
+        '''
+
+        seq = self.seq
+        charsets = self.charsets
+        annotations = copy(charsets)
+
+        gap_indices = [i for i, nucl in enumerate(seq) if nucl=="N"]  # Indexing all 'N' in seq
+        gap_ranges = [list(g) for _,g in groupby(gap_indices, key=lambda n, c=count(): n-next(c))]
+        if gap_ranges:
+            for countr, rnge in enumerate(gap_ranges):
+                try:
+                    annotations["gap"+str(countr)] = rnge
+                except:
+                    print "Warning: Cannot process Ns in positions `%s`." %(','.join(rnge))
+        return seq, annotations
+
 class DegapButMaintainAnno:
-    ''' This class contains functions to degap DNA sequences while 
+    ''' This class contains a function to degap DNA sequences while 
         maintaining annotations. Specifically, the functions remove 
         dashes from strings while maintaining annotations on these 
         strings. Only some of the implementations work if the charsets 

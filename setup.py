@@ -13,9 +13,9 @@ def my_test_suite():
 
 setup(
     name='annonex2embl',
-    version='0.4.4',
+    version='0.4.5',
     description='Converts annotated DNA sequence alignments in NEXUS format to ENA submission files',
-    long_description=read('README.rst'),
+    long_description=read('README.md'),
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'License :: OSI Approved :: GNU General Public License (GPLv3)',
@@ -23,7 +23,7 @@ setup(
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Bio-Informatics'
         ],
-    keywords='EMBL DNA sequence submission',
+    keywords='DNA sequence submission to ENA',
     url='https://github.com/michaelgruenstaeudl/annonex2embl',
     author='Michael Gruenstaeudl',
     author_email='m.gruenstaeudl@fu-berlin.de',

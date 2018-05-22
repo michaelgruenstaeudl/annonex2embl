@@ -23,7 +23,7 @@ from Bio.SeqFeature import ExactPosition, FeatureLocation, CompoundLocation
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2018 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2018.03.26.2000'
+__version__ = '2018.05.22.1800'
 
 #############
 # DEBUGGING #
@@ -85,8 +85,8 @@ class GenerateFeatLoc:
         contiguous_ranges = GenerateFeatLoc._extract_contiguous_subsets(
             charset_range)
         # Convert each contiguous range into an exact feature location
-        for i, r in enumerate(contiguous_ranges):
-            contiguous_ranges[i] = GenerateFeatLoc._exact(r)
+        for countr, rnge in enumerate(contiguous_ranges):
+            contiguous_ranges[countr] = GenerateFeatLoc._exact(rnge)
         if len(contiguous_ranges) > 1:
             return CompoundLocation(contiguous_ranges)
         else:
@@ -211,13 +211,18 @@ class GenerateSeqFeature:
             raise ME.MyException('%s nex2embl ERROR: Internal error: '
                                  'Name of feature key not passed correctly.')
         # 2. Generate qualifiers
-        quals = {'note': feature_name}
+        quals = {}
+        if feature_name:
+            quals = {'note': feature_name}
         # 3. If a coding feature, add special qualifiers
         if feature_product:
             if feature_type == 'CDS' or feature_type == 'gene':
                 quals['product'] = feature_product
         if feature_type == 'CDS':
             quals['transl_table'] = transl_table
+        if feature_type == 'gap':
+            #quals['estimated_length'] = str(feature_loc.end.position-feature_loc.start.position)
+            quals['estimated_length'] = str(feature_loc.end.real-feature_loc.start.real+1)
         seq_feature = SeqFeature.SeqFeature(
             feature_loc,
             id=feature_name,
