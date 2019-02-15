@@ -1,7 +1,7 @@
 *annonex2embl*
 ===================
 
-Converts an annotated DNA sequence alignment in NEXUS format to an ENA flatfile for submission via an analysis XML (http://ena-docs.readthedocs.io/en/latest/prog_12.html#object-relationships).
+Converts an annotated DNA multi-sequence alignment (in NEXUS format) to an EMBL flatfile for submission via an analysis XML (http://ena-docs.readthedocs.io/en/latest/prog_12.html#object-relationships).
 
 
 INSTALLATION AND TESTING
@@ -41,19 +41,24 @@ GENERAL USAGE
 
 ###### Example with supplied test data
 ```
-SCRIPT=$PWD/scripts/annonex2embl_CMD.py
-INF1=examples/TestData1.nex
-INF2=examples/TestData1.csv
-OUTF=examples/output_file.csv
+SCRPT=$PWD/scripts/annonex2embl_CMD.py
+INPUT=examples/DNA_Alignment.nex
+METAD=examples/Metadata.csv
 DESCR="description of alignment"
-EMAIL=mi.gruenstaeudl@gmail.com
+EMAIL=your_email_here@gmail.com
+AUTHR="Your_name_here"
 
-python2 $SCRIPT -n $INF1 -c $INF2 -o $OUTF -d $DESCR -e $EMAIL
+python2 $SCRPT -n $INPUT -c $METAD -o ${INP%.nex*}.embl -d $DESCR -e $EMAIL -a $AUTHR
 ```
 
 
 TO DO
 -----
+###### 0. Integrate conversion of lat_long data via Canadensys API
+
+###### 0. Add "/codon_start=1" in CDS feature, if start and stop position of feature is uncertain (i.e., <100..>200)
+
+###### 0. Remove all sequences that consist only of Ns (or ?s).
 
 ###### 1. Add a function that does the following in order:
 * reads and parses a bibtex file,
@@ -82,10 +87,7 @@ Does a gap in the annotations exist?
 * Currently, the "required" and "optional" parameters are not displayed currently when calling scripts/annonex2embl_CMD.py. It incorrectly says "optional parameters" for all.
 * Currently, --taxcheck requires "True" of "False" as parameters; how can I use it such that only the presence of --taxcheck indicates "True", whereas its abscence indicates "False"?
 
-###### 6. Write GUI with the help of an argparse-GUI-library
-Possible options are
-* ArgparseUi
-* Gooey
+###### 6. Write GUI with similar to GUI of EMBL2checklists
 
 
 DEVELOPMENT

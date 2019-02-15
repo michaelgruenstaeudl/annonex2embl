@@ -13,6 +13,7 @@ import GenerationOps as GnOps
 import GlobalVariables as GlobVars
 import ParsingOps as PrOps
 import IOOps as IOOps
+import datetime
 import sys
 import os
 
@@ -59,6 +60,7 @@ def annonex2embl(path_to_nex,
                  path_to_csv,
                  descr_DEline,
                  email_addr,
+                 author_names,
                  path_to_outfile,
 
                  tax_check='False',
@@ -347,4 +349,14 @@ def annonex2embl(path_to_nex,
 ########################################################################
 
 # 8. POST-PROCESSING OF EntryUpload FILES
+# 8.1. Addition of author name
+    date_today = datetime.date.today().strftime("%d-%b-%Y").upper()
+    os.system("sed -i $'s/FH   Key             Location\/Qualifiers/" +
+              "RN   \[1\]" +
+              "\\\nRA   " + author_names +
+              "\\\nRT   \;" +
+              "\\\nRL   Submitted \(" + date_today + "\) to the INSDC." +
+              "\\\nXX" +
+              "\\\nFH   Key             Location\/Qualifiers/g' " + path_to_outfile)
+# 8.2. Corrections
     os.system("sed -i 's/\; DNA\;/\; genomic DNA\;/g' "+path_to_outfile)

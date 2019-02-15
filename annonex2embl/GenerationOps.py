@@ -221,8 +221,8 @@ class GenerateSeqFeature:
         if feature_type == 'CDS':
             quals['transl_table'] = transl_table
         if feature_type == 'gap':
-            #quals['estimated_length'] = str(feature_loc.end.position-feature_loc.start.position)
-            quals['estimated_length'] = str(feature_loc.end.real-feature_loc.start.real+1)
+            quals['estimated_length'] = str(feature_loc.end.position-feature_loc.start.position)
+            #quals['estimated_length'] = str(feature_loc.end.real-feature_loc.start.real+1)
         seq_feature = SeqFeature.SeqFeature(
             feature_loc,
             id=feature_name,

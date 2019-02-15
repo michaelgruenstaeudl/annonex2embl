@@ -26,7 +26,7 @@ import Annonex2emblMain as AN2EMBLMain
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2018 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2018.03.26.2000'
+__version__ = '2018.05.22.2100'
 
 #############
 # DEBUGGING #
@@ -74,8 +74,14 @@ if __name__ == '__main__':
 
     parser.add_argument('-e',
                         '--email',
-                        help='Your email address.',
+                        help='Your email address; Example: "my.username@gmail.com"',
                         default='my.username@gmail.com',
+                        required=True)
+
+    parser.add_argument('-a',
+                        '--authors',
+                        help='Author names; Example: "Gruenstaeudl M.; LastName I."',
+                        default='Gruenstaeudl M.; LastName I.',
                         required=True)
 
     parser.add_argument('-o',
@@ -147,6 +153,7 @@ if __name__ == '__main__':
                                 args.csv,
                                 args.descript,
                                 args.email,
+                                args.authors,
                                 args.outfile,
                                 
                                 args.taxcheck,
