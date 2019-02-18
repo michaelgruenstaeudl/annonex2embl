@@ -15,8 +15,8 @@ python2 setup.py test
 ```
 
 ## FILE PREPARATION
-The annotations of a NEXUS file are specified via [SETS-block](http://hydrodictyon.eeb.uconn.edu/eebedia/index.php/Phylogenetics:_NEXUS_Format), which is located beneath a DATA-block and defines sets of characters in the DNA alignment. In such a SETS-block, every gene and every exon charset must be accompanied by one CDS charset. Other charsets can be defined unaccompanied. The code below illustrates how every gene and every exon charset must be accompanied by one CDS charset.
-#### Example for a SETS-BLOCK
+The annotations of a NEXUS file are specified via [SETS-block](http://hydrodictyon.eeb.uconn.edu/eebedia/index.php/Phylogenetics:_NEXUS_Format), which is located beneath a DATA-block and defines sets of characters in the DNA alignment. In such a SETS-block, every gene and every exon charset must be accompanied by one CDS charset. Other charsets can be defined unaccompanied.
+#### Example of a complete SETS-BLOCK
 ```
 BEGIN SETS;
 CharSet trnK_intron = 0-928 2531-2813 2849-3152;
@@ -43,10 +43,10 @@ python2 $SCRPT -n $INPUT -c $METAD -o ${INP%.nex*}.embl -d $DESCR -e $EMAIL -a $
 ```
 
 ## TO DO
-- [ ] Add a function to add "/codon_start=1" in CDS feature, if start and stop position of feature is uncertain (i.e., <100..>200).
-- [ ] Add a function that automatically removes all sequences that consist only of Ns (or ?s).
-- [ ] Add a function to compensate the contraction of an annotation due to the identification of an internal stop codon (see line 304 in Annonex2embl.py)
-Comment:
+1. Add a function to add "/codon_start=1" in CDS feature, if start and stop position of feature is uncertain (i.e., <100..>200).
+2. Add a function that automatically removes all sequences that consist only of Ns (or ?s).
+3. Add a function to compensate the contraction of an annotation due to the identification of an internal stop codon (see line 304 in Annonex2embl.py)
+> Comment:
 > Since "CkOps.TranslCheck().transl_and_quality_of_transl()" shortens annotations to the first internal stop codon encountered, the subsequent intron or IGS needs to be extended towards 5' to compensate. This can be a general function without a priori info passed to it. The important aspect is that only the SUBSEQUENT feature (if it is an intron or an IGS!) can be extended; all other features cannot be extended and need to produce a warning.
 > Pseudocode:
 ```
@@ -56,9 +56,9 @@ Does a gap in the annotations exist?
     If no, print a warning.
   If no, continue without action.
 ```
-- [ ] Add a function to read in if a charset is forward or reverse and to adjust the info in the feature table.
-- [ ] Add a function that removes the accession number from the AC line ("AC   AC0663; SV 1; ..." --> "AC   XXX; SV 1; ...") and from the ID line ("ID   AC0663;" --> "ID   XXX;")
-- [ ] Add a function that automatically generates a [manifest file](https://ena-docs.readthedocs.io/en/latest/cli_01.html#manifest-file-types)
+4. Add a function to read in if a charset is forward or reverse and to adjust the info in the feature table.
+5. Add a function that removes the accession number from the AC line ("AC   AC0663; SV 1; ..." --> "AC   XXX; SV 1; ...") and from the ID line ("ID   AC0663;" --> "ID   XXX;")
+6. Add a function that automatically generates a [manifest file](https://ena-docs.readthedocs.io/en/latest/cli_01.html#manifest-file-types)
 
 <!---
 NOT NECCESARY AT THIS POINT
