@@ -1,28 +1,23 @@
 *annonex2embl*
-===================
+==============
 
-Converts an annotated DNA multi-sequence alignment (in NEXUS format) to an EMBL flatfile for submission via an analysis XML (http://ena-docs.readthedocs.io/en/latest/prog_12.html#object-relationships).
+Converts an annotated DNA multi-sequence alignment (in NEXUS format) to an EMBL flatfile for submission to [ENA](http://www.ebi.ac.uk/ena) via the [commandline submission system](https://ena-docs.readthedocs.io/en/latest/cli_05.html) of Webin.
 
 
-INSTALLATION AND TESTING
-------------------------
-###### Installation
+## INSTALLATION AND TESTING
+#### Installation
 ```
 python2 setup.py install
 ```
-
-###### Testing
+#### Testing
 ```
 python2 setup.py test
 ```
 
-
-FILE PREPARATION
-----------------
+## FILE PREPARATION
 Annotations are specified via a SETS-BLOCK. Every gene and every exon charset must be accompanied by one CDS charset.
 How do you add a SETS-BLOCK to a DATA-BLOCK in a NEXUS file?
-
-###### Example for a SETS-BLOCK
+#### Example for a SETS-BLOCK
 ```
 BEGIN SETS;
 CharSet trnK_intron = 0-928 2531-2813 2849-3152;
@@ -35,11 +30,8 @@ CharSet psbA_CDS = 3153-3200;
 END;
 ```
 
-
-GENERAL USAGE
--------------
-
-###### Example with supplied test data
+## GENERAL USAGE
+#### Example with supplied test data
 ```
 SCRPT=$PWD/scripts/annonex2embl_CMD.py
 INPUT=examples/DNA_Alignment.nex
@@ -51,21 +43,10 @@ AUTHR="Your_name_here"
 python2 $SCRPT -n $INPUT -c $METAD -o ${INP%.nex*}.embl -d $DESCR -e $EMAIL -a $AUTHR
 ```
 
-
-TO DO
------
-###### 0. Integrate conversion of lat_long data via Canadensys API
-
-###### 0. Add "/codon_start=1" in CDS feature, if start and stop position of feature is uncertain (i.e., <100..>200)
-
-###### 0. Remove all sequences that consist only of Ns (or ?s).
-
-###### 1. Add a function that does the following in order:
-* reads and parses a bibtex file,
-* extracts (a) the citation info and (b) the submitter references as required by EMBL, and
-* write the correctly formatted string-lines into the final file during post-processing.
-
-###### 2. Add a function to compensate contraction of annotation due to identification of internal stop codons (see line 304 in Annonex2embl.py)
+## TO DO
+#### 1. Add "/codon_start=1" in CDS feature, if start and stop position of feature is uncertain (i.e., <100..>200)
+#### 2. Remove all sequences that consist only of Ns (or ?s).
+#### 3. Add a function to compensate contraction of annotation due to identification of internal stop codons (see line 304 in Annonex2embl.py)
 Since "CkOps.TranslCheck().transl_and_quality_of_transl()" shortens annotations to the first internal stop codon
 encountered, the subsequent intron or IGS needs to be extended towards 5' to compensate. This can be a general function without a priori info passed to it. The important aspect is that only the SUBSEQUENT feature (if it is an intron or an IGS!) can be extended; all other features cannot be extended and need to produce a warning.
 Pseudocode:
@@ -76,49 +57,28 @@ Does a gap in the annotations exist?
     If no, print a warning.
   If no, continue without action.
 ```
-
-###### 3. Add functions to read in a charset spec is forward or reverse and to adjust the info in the feature table.
-
-###### 4.
+#### 4. Add a function that does the following in order:
+* reads and parses a bibtex file,
+* extracts (a) the citation info and (b) the submitter references as required by EMBL, and
+* write the correctly formatted string-lines into the final file during post-processing.
+#### 5. Add functions to read in a charset spec is forward or reverse and to adjust the info in the feature table.
+#### 6.
 * The accession number shall be removed from the AC line ("AC   AC0663; SV 1; ..." --> "AC   XXX; SV 1; ...")
 * The accession number shall be removed from the ID line ("ID   AC0663;" --> "ID   XXX;")
-
-###### 5. Implement improvements of argparser (scripts/annonex2embl_CMD.py)
+#### 7. Implement improvements of argparser (scripts/annonex2embl_CMD.py)
 * Currently, the "required" and "optional" parameters are not displayed currently when calling scripts/annonex2embl_CMD.py. It incorrectly says "optional parameters" for all.
 * Currently, --taxcheck requires "True" of "False" as parameters; how can I use it such that only the presence of --taxcheck indicates "True", whereas its abscence indicates "False"?
+#### 8. Write GUI with similar to GUI of EMBL2checklists
+#### 9. Integrate conversion of lat_long data via Canadensys API
 
-###### 6. Write GUI with similar to GUI of EMBL2checklists
 
-
-DEVELOPMENT
------------
-###### Testing for development
+## DEVELOPMENT
+#### Testing for development
 To run the unittests outside of 'python setup.py test':
 ```
 python -m unittest discover -s /home/michael_science/git/michaelgruenstaeudl_annonex2embl/tests -p "*_test.py"
 ```
 
+## CHANGELOG
+See [`CHANGELOG.md`](CHANGELOG.md) for a list of recent changes to the software.
 
-CHANGELOG
----------
-###### Version 0.4.5 (2018.05.22)
-* Added function that converts missing sections of a sequence that are longer than 2 nucleotides into a "gap"-feature
-###### Version 0.4.4 (2018.03.29)
-* Separate the annonex2embl from the embl2checklist function.
-###### Version 0.4.3 (2018.03.23)
-* Improved formatting of Python code
-* Checking if sequence names in NEX-file identical to sequence ids in csv-file
-* Discarding charset_ranges that are empty
-* Source feature 'organelle' implemented
-###### Version 0.4.2 (2017.02.01)
-* All qualifier values are formatted to consist of ASCII characters only.
-* If a coding region is among the sequence features, the qualifier /\trans_table/ is added to the source feature.
-* Implementation of customization of DE line.
-###### Version 0.3 (2017.01.25)
-* Rudimentary checklist output has been implemented.
-* Taxon names are compared to [NCBI Taxonomy](https://www.ncbi.nlm.nih.gov/taxonomy) and converted to informal names if not listed there.
-###### Version 0.2 (2017.01.22)
-* Leading and trailing ambiguities per sequence are removed while maintaining correct annotations.
-* Modifiers without content are no longer included in the output.
-* Specification of taxonomic division and sequence version has been implemented.
-* A submission mode that masks the ID line and the AC line has been implemented.
