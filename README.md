@@ -39,7 +39,9 @@ python2 $SCRPT -n $INPUT -c $METAD -o ${INP%.nex*}.embl -d $DESCR -e $EMAIL -a $
 ```
 
 ## TO DO
-1. Add a function to add "/codon_start=1" in CDS feature, if start and stop position of feature is uncertain (i.e., <100..>200).
+1.a. Add a function to add "/codon_start=1" in CDS feature, if start and stop position of feature is uncertain (i.e., <100..>200).
+
+1.b. With gene and exon features than are less than 15 nt long, the annotation should be dropped from the output.
 
 2. Add a function that automatically removes all sequences that consist only of Ns (or ?s).
 
