@@ -35,7 +35,11 @@ DESCR="description of alignment"
 EMAIL=your_email_here@gmail.com
 AUTHR="Your_name_here"
 
+# UNIX / MacOS
 python2 $SCRPT -n $INPUT -c $METAD -o ${INP%.nex*}.embl -d $DESCR -e $EMAIL -a $AUTHR
+
+# Windows
+python %SCRPT% -n %INPUT% -c %METAD% -o output.embl -d %DESCR% -e %EMAIL% -a %AUTHR%
 ```
 
 ## TO DO
@@ -62,7 +66,10 @@ Does a gap in the annotations exist?
 
 5. Add a function that removes the accession number from the AC line ("AC   AC0663; SV 1; ..." --> "AC   XXX; SV 1; ...") and from the ID line ("ID   AC0663;" --> "ID   XXX;")
 
-6. Add a function that automatically generates a [manifest file](https://ena-docs.readthedocs.io/en/latest/cli_01.html#manifest-file-types)
+6. Give note that leading or trailing ambiguities were removed. Also introduce fuzzy ends to features when those had leading or trailing Ns removed, because the removed Ns may constitute start of stop codons.
+
+7. Add a function that automatically generates a [manifest file](https://ena-docs.readthedocs.io/en/latest/cli_01.html#manifest-file-types)
+
 
 <!---
 NOT NECCESARY AT THIS POINT
