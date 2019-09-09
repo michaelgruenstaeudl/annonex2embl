@@ -13,7 +13,7 @@ def my_test_suite():
 
 setup(
     name='annonex2embl',
-    version='0.4.5',
+    version='0.4.6',
     description='Converts annotated DNA sequence alignments in NEXUS format to ENA submission files',
     long_description=read('README.md'),
     classifiers=[
@@ -34,5 +34,10 @@ setup(
     scripts=glob.glob('scripts/*'),
     test_suite='setup.my_test_suite',
     include_package_data=True,
-    zip_safe=False
+    zip_safe=False,
+    entry_points={
+        'console_scripts': [
+            'annonex2embl = annonex2embl.CLIOps:start_annonex2embl'
+        ],
+    },
 )

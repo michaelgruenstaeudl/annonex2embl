@@ -24,9 +24,9 @@ import Annonex2emblMain as AN2EMBLMain
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2018 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2018.05.22.2100'
+__version__ = '2019.05.15.1500'
 
 #############
 # DEBUGGING #
@@ -48,11 +48,10 @@ import pdb
 ############
 # ARGPARSE #
 ############
-
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description="  --  ".join([__author__, __copyright__, __info__, __version__]))
-    
+
     ### REQUIRED ###
     parser.add_argument('-n',
                         '--nexus',
@@ -91,6 +90,23 @@ if __name__ == '__main__':
                         required=True)
 
     ### OPTIONAL ###
+    parser.add_argument('-ms',
+                        '--manifeststudy',
+                        help='Name of the study which appears in the manifest file',
+                        default='',
+                        required=False)
+
+    parser.add_argument('-mn',
+                        '--manifestname',
+                        help='Name which appears in the manifest file',
+                        required=False)
+
+    parser.add_argument('-md',
+                        '--manifestdescription',
+                        help='Description for the manifest file',
+                        default='',
+                        required=False)
+
     parser.add_argument('--taxcheck',
                         help='A logical; Shall taxon names be checked against NCBI Taxonomy?',
                         default='False',
@@ -100,14 +116,14 @@ if __name__ == '__main__':
                         help='A logical; Shall the ID and the AC lines be masked for EntryUpload submissions?',
                         default='False',
                         required=False)
-                        
+
     parser.add_argument('--topol',
-                        help='`circular` or `linear`.', 
+                        help='`circular` or `linear`.',
                         default='linear',
                         required=False)
-                        
+
     parser.add_argument('--taxdiv',
-                        help='Any of the three letter codes specified in section 3.2 of the EMBL user manual.', 
+                        help='Any of the three letter codes specified in section 3.2 of the EMBL user manual.',
                         default='PLN',
                         required=False)
 
@@ -137,7 +153,7 @@ if __name__ == '__main__':
                         default='1',
                         required=False)
 
-    parser.add_argument('--version', 
+    parser.add_argument('--version',
                         help='Print version information and exit',
                         action='version',
                         version='%(prog)s ' + __version__)
@@ -155,7 +171,10 @@ if __name__ == '__main__':
                                 args.email,
                                 args.authors,
                                 args.outfile,
-                                
+
+                                args.manifeststudy,
+                                args.manifestname,
+                                args.manifestdescription,
                                 args.taxcheck,
                                 args.linemask,
                                 args.topol,

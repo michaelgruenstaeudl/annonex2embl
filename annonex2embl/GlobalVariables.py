@@ -8,9 +8,9 @@ Setting global variables.
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2018 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2018.03.26.2000'
+__version__ = '2019.05.15.1500'
 
 #############
 # DEBUGGING #
@@ -111,15 +111,18 @@ nex2ena_valid_INSDC_featurekeys = [
     'protein_bind', 'regulatory', 'repeat_region', 'rep_origin',
     'rRNA', 'S_region', 'sig_peptide', 'source', 'stem_loop',
     'STS', 'telomere', 'tmRNA', 'transit_peptide', 'tRNA',
-    'unsure', 'V_region', 'V_segment', 'variation', "3'UTR", "5'UTR"]
+    'unsure', 'V_region', 'V_segment', 'variation', "3'UTR", "5'UTR",
+    "IGS"]
 
 # Valid organelle qualifiers as defined by the International
 # Nucleotide Sequence Database Collection (INSDC)
 # http://www.insdc.org/files/feature_table.html#7.3.1
 #global nex2ena_valid_INSDC_organelle
 nex2ena_valid_INSDC_organelle = [
-    'chromatophore', 'hydrogenosome', 'mitochondrion', 'nucleomorph', 
+    'chromatophore', 'hydrogenosome', 'mitochondrion', 'nucleomorph',
     'plastid', 'mitochondrion:kinetoplast', 'plastid:chloroplast',
     'plastid:apicoplast', 'plastid:chromoplast', 'plastid:cyanelle',
     'plastid:leucoplast', 'plastid:proplastid']
 
+nex2ena_valid_orientations = [
+    'forw','rev']

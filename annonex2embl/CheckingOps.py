@@ -12,7 +12,9 @@ import GenerationOps as GnOps
 import GlobalVariables as GlobVars
 
 from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
 from Bio.SeqFeature import FeatureLocation
+from Bio.SeqFeature import CompoundLocation
 from unidecode import unidecode
 from itertools import chain
 
@@ -21,9 +23,9 @@ from itertools import chain
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2018 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2018.03.26.2000'
+__version__ = '2019.05.15.1500'
 
 #############
 # DEBUGGING #
@@ -86,7 +88,6 @@ class AnnoCheck:
                          transl_without_internStop):
         ''' An internal static function to adjust the feature location if an
             internal stop codon were present. '''
-
         if len(transl_without_internStop) > len(transl_with_internStop):
             # 1. Unnest the nested lists
             contiguous_subsets = [range(e.start.position, e.end.position)
@@ -94,8 +95,8 @@ class AnnoCheck:
             compound_integer_range = sum(contiguous_subsets, [])
             # 2. Adjust location range
             len_with_internStop = len(transl_with_internStop) * 3
-            # IMPORTANT!: In TFL, the "+3" is for the stop codon, which is 
-            # counted in the location range, but is not part of the AA 
+            # IMPORTANT!: In TFL, the "+3" is for the stop codon, which is
+            # counted in the location range, but is not part of the AA
             # sequence of the translation.
             adjusted_range = compound_integer_range[:(len_with_internStop+3)]
             # 3. Establish location
@@ -120,7 +121,6 @@ class AnnoCheck:
             _transl(to_stop=True) and must consequently be added again
             (see line 137).
         '''
-        
         try:
             # Note: TFL must contain "cds=True"; don't delete it
             transl_out = AnnoCheck._transl(self.extract,
@@ -147,11 +147,11 @@ class AnnoCheck:
                 'single amino acid.' %
                 (self.feature.id, self.record_id))
 
-        # IMPORTANT!!!: In an ENA record, the translation does not display the 
+        # IMPORTANT!!!: In an ENA record, the translation does not display the
         # stop codon (i.e., the '*'), while the feature location range (i.e., 738..2291)
         # very much includes its position, which is biologically logical, as
         # a stop codon is not an amino acid in a translation.
-        
+
         # Thus, TFL would be incorrect, because it would add back an asterisk into the translation.
         #transl_out = transl_out + "*"
         return (transl_out, feat_loc)
@@ -176,6 +176,44 @@ class TranslCheck:
     def __init__(self):
         pass
 
+    # This function extract the sequence from pattern sequence
+    # for a forward and reverse strand
+    def extract(self, feature, seq_record):
+        if feature._get_strand() == 1:
+            return feature.extract(seq_record)
+        else:
+            reverse = SeqRecord("")
+            for i in feature.location.parts[::-1]:
+                reverse.seq = reverse.seq + i.extract(seq_record).seq
+            return reverse
+
+    # by checking the translation of a CDS or an gene it may happen that
+    # the location from the CDS or gene had to be adjusted. If after such
+    # a feature a IGS or intron follows it have to be adjust aswell.
+    # This is done by this function
+    def adjustLocation(self, oldLocation, newLocation):
+        start = []
+        end = []
+        start.append(newLocation.end)
+
+        t = oldLocation.start
+        for i in oldLocation:
+            if not i == t:
+                end.append(t)
+                start.append(i)
+                t = i
+            t = t + 1
+        end.append(oldLocation.end)
+
+        locations = []
+        for i in range(len(start)):
+            locations.append(FeatureLocation(start[i],end[i]))
+
+        try:
+            return CompoundLocation(locations)
+        except:
+            return locations[0]
+
     def transl_and_quality_of_transl(self, seq_record, feature, transl_table):
         ''' This function conducts a translation of a coding region and checks
             the quality of said translation.
@@ -188,12 +226,18 @@ class TranslCheck:
         Raises:
             feature
         '''
-        extract = feature.extract(seq_record)
+
+        extract = self.extract(feature, seq_record)
         try:
             transl, loc = AnnoCheck(extract.seq, feature, seq_record.id,
                                     transl_table).check()
             if feature.type == 'CDS':
                 feature.qualifiers["translation"] = transl
+            if feature.type == 'exon' or feature.type == 'gene':
+                # With gene and exon features that are less than 15 nt long,
+                # the annotation should be dropped from the output.
+                if len([base for base in loc]) < 15:
+                    raise ME.MyException()
             feature.location = loc
         except ME.MyException as e:
             raise e

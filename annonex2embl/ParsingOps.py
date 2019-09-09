@@ -20,9 +20,9 @@ from collections import Counter
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2018 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2018.03.26.2000'
+__version__ = '2019.05.15.1500'
 
 #############
 # DEBUGGING #
@@ -299,56 +299,50 @@ class ParseCharsetName:
         self.email_addr = email_addr
 
     @staticmethod
-    def _extract_charset_type(charset_name):
-        ''' An internal static function to extract the charset type from a
-        string. '''
-        fk_present = [fk for fk in GlobVars.nex2ena_valid_INSDC_featurekeys
-                      if fk in charset_name]
-        if not fk_present:
-            raise ME.MyException(
-                '%s annonex2embl ERROR: No feature '
-                'key encountered in the name of charset `%s`.' %
-                ('\n', charset_name))
-        if len(fk_present) > 1:
-            raise ME.MyException(
-                '%s annonex2embl ERROR: More than '
-                'one feature key encountered in the name of charset '
-                '`%s`.' %
-                ('\n', charset_name))
-        charset_type = fk_present[0]
-        return charset_type
+    def _extract_charstet_information(charset_name):
+        charset_orient = False
+        charset_type = False
+        charset_sym = False
 
-    @staticmethod
-    def _extract_charset_sym(charset_name, charset_type):
-        ''' An internal static function to extract the charset symbol from a
-        string. '''
-        try:
-            charset_sym = charset_name.replace('_'+charset_type, "")
-        except BaseException:
-            raise ME.MyException(
-                '%s annonex2embl ERROR: No charset '
-                'symbol encountered in the name of charset `%s`.' %
-                ('\n', charset_name))
-        #charset_sym = charset_sym.strip('_')
-        #charset_sym = charset_sym.rstrip('_')  # Remove trailing underscores
-        return charset_sym
+        orient_present = [ori for ori in GlobVars.nex2ena_valid_orientations if ori in charset_name]
+        if(len(orient_present) == 0):
+             charset_orient = 'forw'
+        elif(len(orient_present) == 1):
+            charset_orient = orient_present[0]
+            if charset_orient == "forw":
+                charset_name = charset_name.replace("forward","")
+                charset_name = charset_name.replace("forw","")
+            elif charset_orient == "rev":
+                charset_name = charset_name.replace("reverse","")
+                charset_name = charset_name.replace("rev","")
+        else:
+            raise ME.MyException('Zuviele Informationen bezueglich der Orientierung')
+
+        type_present = [typ for typ in GlobVars.nex2ena_valid_INSDC_featurekeys if typ in charset_name]
+        if(len(type_present) == 0):
+            raise ME.MyException("Keine gueltigen feature keys")
+        elif(len(type_present) == 1):
+            charset_type = type_present[0]
+            charset_name = ''.join(charset_name.split(type_present[0]))
+        else:
+            raise ME.MyException('Zuviele Informationen bezueglich der Features')
+
+        charset_sym = charset_name.strip('_').split('_')
+        if len(charset_sym) == 1:
+            return (charset_sym[0], charset_type, charset_orient)
+        else:
+            raise ME.MyException('Da ist etwas schief gelaufen')
+
+
+
 
     def parse(self):
         ''' This function parses the charset_name.
         Returns:
             tupl.   The return consists of three strings in the order
-                    "charset_sym, charset_type, charset_product"
+                    "charset_sym, charset_type, charset_orient, charset_product"
         '''
-        try:
-            charset_type = ParseCharsetName._extract_charset_type(
-                self.charset_name)
-        except ME.MyException as e:
-            raise e
-        try:
-            charset_sym = ParseCharsetName._extract_charset_sym(
-                self.charset_name, charset_type)
-        except ME.MyException as e:
-            raise e
+        charset_sym, charset_type, charset_orient = ParseCharsetName._extract_charstet_information(self.charset_name)
         entrez_handle = GetEntrezInfo(self.email_addr)
         if charset_type == 'CDS' or charset_type == 'gene':
             try:
@@ -358,5 +352,4 @@ class ParseCharsetName:
                 raise e
         else:
             charset_product = None
-        return (charset_sym, charset_type, charset_product)
-
+        return (charset_sym, charset_type, charset_orient, charset_product)

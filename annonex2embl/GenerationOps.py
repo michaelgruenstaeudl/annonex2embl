@@ -21,9 +21,9 @@ from Bio.SeqFeature import ExactPosition, FeatureLocation, CompoundLocation
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2018 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2018.05.22.1800'
+__version__ = '2019.05.15.1500'
 
 #############
 # DEBUGGING #
@@ -92,10 +92,15 @@ class GenerateFeatLoc:
         else:
             return contiguous_ranges[0]
 
+    def make_location_complement(self, location_object):
+        location_object._set_strand(-1)
+        return location_object
+
     def make_start_fuzzy(self, location_object):
         ''' This function makes the start position of location
             objects fuzzy.
         '''
+        orient = location_object._get_strand()
         if hasattr(location_object, 'parts'):
             if len(location_object.parts) == 1:
                 new_start_pos = SeqFeature.BeforePosition(
@@ -107,6 +112,7 @@ class GenerateFeatLoc:
                     location_object.parts[0].start)
                 location_object.parts[0] = SeqFeature.FeatureLocation(
                     new_start_pos, location_object.parts[0].end)
+        location_object._set_strand(orient)
         return location_object
 
     def make_end_fuzzy(self, location_object):
@@ -139,7 +145,7 @@ class GenerateFeatLoc:
 # Out: CompoundLocation([FeatureLocation(ExactPosition(1),
 # ExactPosition(4)), FeatureLocation(ExactPosition(7), AfterPosition(9))],
 # 'join')
-
+        orient = location_object._get_strand()
         if hasattr(location_object, 'parts'):
             if len(location_object.parts) == 1:
                 new_end_pos = SeqFeature.AfterPosition(location_object.end)
@@ -150,6 +156,7 @@ class GenerateFeatLoc:
                     location_object.parts[-1].end)
                 location_object.parts[-1] = SeqFeature.FeatureLocation(
                     location_object.parts[-1].start, new_end_pos)
+        location_object._set_strand(orient)
         return location_object
 
 
@@ -189,18 +196,20 @@ class GenerateSeqFeature:
             qualifiers=quals)
         return source_feature
 
-    def regular_feat(self, feature_name, feature_type, feature_loc,
-                     transl_table, feature_product=None):
+    def regular_feat(self, feature_name, feature_type, feature_orient, feature_loc,
+                     transl_table, feature_seq, feature_product=None):
         ''' This function generates a regular SeqFeature for a SeqRecord.
         Args:
             feature_name (str):  usually a gene symbol; example: 'matK'
             feature_type (str):  an identifier as to the type of feature;
                                  example: 'intron'
+            feature_orient (str): a string defining
             feature_loc (object): a SeqFeature object specifying a simple
                                   or compund location on a DNA string
             transl_table (int): an integer; example: 11 (for bacterial code)
             feature_product (str): the product of the feature in question;
                                    example: 'maturase K'
+            feature_seq (str): nucleotide sequence sequence
         Returns:
             SeqFeature (obj):   A SeqFeature object
         Raises:
@@ -220,15 +229,28 @@ class GenerateSeqFeature:
                 quals['product'] = feature_product
         if feature_type == 'CDS':
             quals['transl_table'] = transl_table
+            # Add a function to add "/codon_start=1" in CDS feature,
+            # if start and stop position of feature is uncertain
+            # (i.e., <100..>200).
+            if (not feature_seq.startswith(GlobVars.nex2ena_start_codon)) or (all([not feature_seq.endswith(c) for c in GlobVars.nex2ena_stop_codons])):
+                quals['codon_start'] = 1
         if feature_type == 'gap':
             quals['estimated_length'] = str(feature_loc.end.position-feature_loc.start.position)
             #quals['estimated_length'] = str(feature_loc.end.real-feature_loc.start.real+1)
+        # 4. Add a function to read in if a charset is forward or reverse and to adjust the info in the feature table.
+        if feature_orient == "forw":
+            feature_orient = 1
+        else:
+            feature_orient = -1
         seq_feature = SeqFeature.SeqFeature(
             feature_loc,
             id=feature_name,
             type=feature_type,
+            strand=feature_orient,
             qualifiers=quals)
         return seq_feature
+
+
 
 
 class GenerateSeqRecord:
