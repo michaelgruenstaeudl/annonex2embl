@@ -22,7 +22,7 @@ from collections import Counter
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.05.15.1500'
+__version__ = '2019.09.10.1200'
 
 #############
 # DEBUGGING #
@@ -262,10 +262,10 @@ class ConfirmAdjustTaxonName:
                      'whitespace between genus name and specific epithet '
                      'in taxon name of sequence `%s`.' % ('\n', seq_record.id))
         if not GetEntrezInfo(email_addr).does_taxon_exist(seq_record.name):
-            print('%s annonex2embl WARNING: Taxon name of sequence `%s` '
+            print(('%s annonex2embl WARNING: Taxon name of sequence `%s` '
                   'not found in NCBI Taxonomy: `%s`. Please consider sending '
                   'a taxon request to ENA.'
-                  % ('\n', seq_record.id, seq_record.name))
+                  % ('\n', seq_record.id, seq_record.name)))
             if not GetEntrezInfo(email_addr).does_taxon_exist(genus_name):
                 sys.exit('%s annonex2embl ERROR: Neither genus name, '
                          'nor species name of sequence `%s` were found in '
@@ -277,9 +277,9 @@ class ConfirmAdjustTaxonName:
                 seq_record.features[0].qualifiers['organism'] = species_name_new
                 seq_record.description = seq_record.description.\
                     replace(species_name_original, species_name_new)
-                print('%s annonex2embl WARNING: Taxon name of sequence '
+                print(('%s annonex2embl WARNING: Taxon name of sequence '
                       '`%s` converted to the informal name: `%s`'
-                      % ('\n', seq_record.id, species_name_new))
+                      % ('\n', seq_record.id, species_name_new)))
         return seq_record
 
 
@@ -289,14 +289,16 @@ class ParseCharsetName:
         charset_name (str): a string that represents a charset name; example:
                             "psbI_CDS"
         email_addr (dict):  your email address; example:
-                            "m.gruenstaeudl@fu-berlin.de"
+                            "your_email_here@amailserver.com"
+        product_lookup (bool): decision if product name shall be looked up
     Raises:
         currently nothing
     '''
 
-    def __init__(self, charset_name, email_addr):
+    def __init__(self, charset_name, email_addr, product_lookup):
         self.charset_name = charset_name
         self.email_addr = email_addr
+        self.product_lookup = product_lookup
 
     @staticmethod
     def _extract_charstet_information(charset_name):
@@ -344,7 +346,7 @@ class ParseCharsetName:
         '''
         charset_sym, charset_type, charset_orient = ParseCharsetName._extract_charstet_information(self.charset_name)
         entrez_handle = GetEntrezInfo(self.email_addr)
-        if charset_type == 'CDS' or charset_type == 'gene':
+        if (charset_type == 'CDS' or charset_type == 'gene') and self.product_lookup:
             try:
                 charset_product = entrez_handle.obtain_gene_product(
                     charset_sym)

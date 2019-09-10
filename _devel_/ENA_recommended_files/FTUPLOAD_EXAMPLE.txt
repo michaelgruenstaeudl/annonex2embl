@@ -1,0 +1,102 @@
+This is an example of a set of ENA entries formatted for import.
+
+The file will be read and validated as a complete entry.
+After validation, only the feature table, topology (from ID line), comments (CC lines), description (DE line) and sequence are used.
+You can submit full entries but additional information will be discarded.
+
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX.
+XX
+AC   XXX;
+XX
+DE   Description of the entry goes here
+XX
+CC   General comments on the entry go here
+CC   Comments can be on multiple lines.
+XX
+FH   Key             Location/Qualifiers
+FH
+FT   source          1..581
+FT                   /organism="Larus michahellis michahedllis"
+FT                   /organelle="mitochondrion"
+FT                   /sub_species="michahellis"
+FT                   /mol_type="genomic DNA"
+FT                   /country="Italy:Capraia, Liguric Sea"
+FT                   /haplotype="mic 034"
+FT                   /db_xref="taxon:119961"
+FT   D-loop          1..581
+XX
+SQ   Sequence 581 BP; 137 A; 175 C; 91 G; 178 T; 0 other;
+     cccccccccc ttaccccccc acatcatcat gtggaagttt acattaatct atattcccca        60
+     ttacacatac caattaatgt tcaatagtca ttaatatcca aacgggtatt ctccctctcc       120
+     gacccatccc ctcttccaga gggtatctcg cccaatggat accgaaatcc attacaatat       180
+     cagtactaga accattctat tgttaggtta tacatagcaa tctccctgca tacggcagtg       240
+     cttgtctgcc cctttgaatg aaatgctgag acatggccat ccaaaatctc tcgatgtaca       300
+     caaagcttcg taccaggtgg atttattaat cgagctcctc acgtgaaatc agcaacccgg       360
+     tgttggaaag atcctgcgtt actagcttca agaccatact ttccccctac acccctagcc       420
+     catcttgctc ttttgcgcct ctggttccta tgtcagggcc atgtgctgga ttaatcctct       480
+     caacttgtac ttcaccgata catctggtcg gctatttatc accatctcgc ccgtgatcgc       540
+     gacatccgac ctttttggca cttttggttc cttttttttt t                           581
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX.
+XX
+AC   XXX;
+XX
+DE   Description of the entry goes here
+XX
+FH   Key             Location/Qualifiers
+FH
+FT   source          1..581
+FT                   /organism="Larus michahellis michahedllis"
+FT                   /organelle="mitochondrion"
+FT                   /sub_species="michahellis"
+FT                   /mol_type="genomic DNA"
+FT                   /country="Italy:Capraia, Liguric Sea"
+FT                   /haplotype="mic 034"
+FT                   /db_xref="taxon:119961"
+FT   D-loop          1..581
+XX
+SQ   Sequence 581 BP; 137 A; 175 C; 91 G; 178 T; 0 other;
+     cccccccccc ttaccccccc acatcatcat gtggaagttt acattaatct atattcccca        60
+     ttacacatac caattaatgt tcaatagtca ttaatatcca aacgggtatt ctccctctcc       120
+     gacccatccc ctcttccaga gggtatctcg cccaatggat accgaaatcc attacaatat       180
+     cagtactaga accattctat tgttaggtta tacatagcaa tctccctgca tacggcagtg       240
+     cttgtctgcc cctttgaatg aaatgctgag acatggccat ccaaaatctc tcgatgtaca       300
+     caaagcttcg taccaggtgg atttattaat cgagctcctc acgtgaaatc agcaacccgg       360
+     tgttggaaag atcctgcgtt actagcttca agaccatact ttccccctac acccctagcc       420
+     catcttgctc ttttgcgcct ctggttccta tgtcagggcc atgtgctgga ttaatcctct       480
+     caacttgtac ttcaccgata catctggtcg gctatttatc accatctcgc ccgtgatcgc       540
+     gacatccgac ctttttggca cttttggttc cttttttttt t                           581
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX.
+XX
+AC   XXX;
+XX
+DE   Description of the entry goes here
+XX
+FH   Key             Location/Qualifiers
+FH
+FT   source          1..581
+FT                   /organism="Larus michahellis michahedllis"
+FT                   /organelle="mitochondrion"
+FT                   /sub_species="michahellis"
+FT                   /mol_type="genomic DNA"
+FT                   /country="Italy:Capraia, Liguric Sea"
+FT                   /haplotype="mic 034"
+FT                   /db_xref="taxon:119961"
+FT   D-loop          1..581
+XX
+SQ   Sequence 581 BP; 137 A; 175 C; 91 G; 178 T; 0 other;
+     cccccccccc ttaccccccc acatcatcat gtggaagttt acattaatct atattcccca        60
+     ttacacatac caattaatgt tcaatagtca ttaatatcca aacgggtatt ctccctctcc       120
+     gacccatccc ctcttccaga gggtatctcg cccaatggat accgaaatcc attacaatat       180
+     cagtactaga accattctat tgttaggtta tacatagcaa tctccctgca tacggcagtg       240
+     cttgtctgcc cctttgaatg aaatgctgag acatggccat ccaaaatctc tcgatgtaca       300
+     caaagcttcg taccaggtgg atttattaat cgagctcctc acgtgaaatc agcaacccgg       360
+     tgttggaaag atcctgcgtt actagcttca agaccatact ttccccctac acccctagcc       420
+     catcttgctc ttttgcgcct ctggttccta tgtcagggcc atgtgctgga ttaatcctct       480
+     caacttgtac ttcaccgata catctggtcg gctatttatc accatctcgc ccgtgatcgc       540
+     gacatccgac ctttttggca cttttggttc cttttttttt t                           581
+//
+
+
+

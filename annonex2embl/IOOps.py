@@ -12,7 +12,7 @@ import MyExceptions as ME
 
 from csv import DictReader
 from Bio.Nexus import Nexus
-from StringIO import StringIO
+from io import StringIO
 from Bio import SeqIO
 
 ###############
@@ -22,7 +22,7 @@ from Bio import SeqIO
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.05.15.1500'
+__version__ = '2019.09.10.1200'
 
 #############
 # DEBUGGING #
@@ -63,7 +63,7 @@ class Inp:
     def parse_csv_file(self, path_to_csv):
         ''' This function parses a csv file. '''
         try:
-            reader = DictReader(open(path_to_csv, 'rb'), delimiter=',',
+            reader = DictReader(open(path_to_csv, 'r'), delimiter=',',
                                 quotechar='"', skipinitialspace=True)
             a_matrix = list(reader)
         except:

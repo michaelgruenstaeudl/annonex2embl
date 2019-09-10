@@ -1,0 +1,34 @@
+ID   reverse; SV 1; linear; genomic DNA; ; PLN; 57 BP.
+XX
+AC   reverse;
+XX
+DE   reverse Test, isolate reverse
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FH
+FT   source          1..57
+FT                   /isolate="reverse"
+FT                   /organism="reverse"
+FT                   /note="Tax.Authority: Author_1"
+FT                   /country="Country_1: Area_1"
+FT                   /specimen_voucher="Herbarium_1: Collection#"
+FT                   /mol_type="genomic DNA"
+FT   CDS             complement(join(16..>57,<1..9))
+FT                   /note="trnKTTT"
+FT                   /product="tRNA"
+FT                   /transl_table=11
+FT                   /codon_start=1
+FT                   /translation="MPGPGPGPGPGPGPGF"
+FT   CDS             join(<1..9,16..>57)
+FT                   /note="foo"
+FT                   /product="forkhead box i1"
+FT                   /transl_table=11
+FT                   /codon_start=1
+FT                   /translation="LKPGPGPGPGPGPGPGH"
+XX
+SQ   Sequence 57 BP; 5 A; 25 C; 24 G; 3 T; 0 other;
+     ttaaaacccg ggcccgggcc cgggcccggg cccgggcccg ggcccgggcc cgggcat           57
+//

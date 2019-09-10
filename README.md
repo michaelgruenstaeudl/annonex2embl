@@ -48,7 +48,7 @@ SCRPT=$PWD/scripts/annonex2embl_CMD.py
 INPUT=examples/DNA_Alignment.nex
 METAD=examples/Metadata.csv
 DESCR="description of alignment"
-EMAIL=your_email_here@gmail.com
+EMAIL=your_email_here@amailserver.com
 AUTHR="Your_name_here"
 
 python2 $SCRPT -n $INPUT -c $METAD -o ${INP%.nex*}.embl -d $DESCR -e $EMAIL -a $AUTHR
@@ -60,7 +60,7 @@ SET SCRPT=$PWD/scripts/annonex2embl_CMD.py
 SET INPUT=examples/DNA_Alignment.nex
 SET METAD=examples/Metadata.csv
 SET DESCR="description of alignment"
-SET EMAIL=your_email_here@gmail.com
+SET EMAIL=your_email_here@amailserver.com
 SET AUTHR="Your_name_here"
 
 python %SCRPT% -n %INPUT% -c %METAD% -o output.embl -d %DESCR% -e %EMAIL% -a %AUTHR%
@@ -68,16 +68,15 @@ python %SCRPT% -n %INPUT% -c %METAD% -o output.embl -d %DESCR% -e %EMAIL% -a %AU
 
 
 
-<!---
-NOT NECCESARY AT THIS POINT
-#### 0. Implement improvements of argparser (scripts/annonex2embl_CMD.py)
-* Currently, the "required" and "optional" parameters are not displayed currently when calling scripts/annonex2embl_CMD.py. It incorrectly says "optional parameters" for all.
+## TO DO
+* Section "POST-PROCESSING OF FILES": Please write equivalent code for post-processing the output file in the Windows cmd shell as already exists for post-processing the output file in the Bash shell.
 * Currently, --taxcheck requires "True" of "False" as parameters; how can I use it such that only the presence of --taxcheck indicates "True", whereas its abscence indicates "False"?
-#### 0. Write GUI with similar to GUI of EMBL2checklists
---->
+
 
 <!---
-* NO LONGER NECESSARY: 0. Add a function that (a) reads and parses a bibtex file, extracts the citation info as well as the submitter references as from that file, and write the correctly formatted string-lines into the EMBL output file during post-processing.
+NOT NECESSARY AT THIS POINT
+* Implement improvements of argparser (scripts/annonex2embl_CMD.py): Currently, the "required" and "optional" parameters are not displayed when calling scripts/annonex2embl_CMD.py. It incorrectly says "optional parameters" for all.
+* Add a function that (a) reads and parses a bibtex file, extracts the citation info as well as the submitter references as from that file, and write the correctly formatted string-lines into the EMBL output file during post-processing.
 --->
 
 
@@ -85,7 +84,7 @@ NOT NECCESARY AT THIS POINT
 #### Testing for development
 To run the unittests outside of 'python setup.py test':
 ```
-python -m unittest discover -s annonex2embl/tests -p "*_test.py"
+python -m unittest discover -s tests -p "*_test.py"
 ```
 
 ## CHANGELOG

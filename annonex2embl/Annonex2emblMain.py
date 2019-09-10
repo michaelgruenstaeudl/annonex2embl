@@ -39,7 +39,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.05.15.1500'
+__version__ = '2019.09.10.1200'
 
 #############
 # DEBUGGING #
@@ -64,7 +64,8 @@ def annonex2embl(path_to_nex,
 
                  manifest_study='',
                  manifest_name='',
-                 manifest_description='',
+                 manifest_descr='',
+                 product_lookup='False',
                  tax_check='False',
                  linemask='False',
                  topology='linear',
@@ -77,6 +78,7 @@ def annonex2embl(path_to_nex,
 ########################################################################
 
 # 0. MAKE SPECIFIC VARIABLES BOOLEAN
+    productlookup_bool = strtobool(product_lookup)
     taxcheck_bool = strtobool(tax_check)
     linemask_bool = strtobool(linemask)
 
@@ -135,12 +137,13 @@ def annonex2embl(path_to_nex,
                  colored(','.join(not_shared), 'red')))
 
 ########################################################################
+
 # 5. PARSE OUT FEATURE KEY, OBTAIN OFFICIAL GENE NAME AND GENE PRODUCT
     charset_dict = {}
-    for charset_name in charsets_global.keys():
+    for charset_name in list(charsets_global.keys()):
         try:
             charset_sym, charset_type, charset_orient, charset_product = PrOps.\
-                ParseCharsetName(charset_name, email_addr).parse()
+                ParseCharsetName(charset_name, email_addr, productlookup_bool).parse()
         except ME.MyException as e:
             sys.exit('%s annonex2embl ERROR: %s' % ('\n',
                     colored(e, 'red')))
@@ -149,6 +152,7 @@ def annonex2embl(path_to_nex,
                                       charset_product)
 
 ########################################################################
+
 # 6. GENERATING SEQ_RECORDS BY LOOPING THROUGH EACH SEQUENCE OF THE ALIGNMENT
 #    Work off the sequences alphabetically.
     for counter, seq_name in enumerate(sorted_seqnames):
@@ -231,7 +235,7 @@ def annonex2embl(path_to_nex,
 #      NCBI TAXONOMY
 
 # 6.4.1. Generate SeqFeature 'source' and append to features list
-        charset_names = charsets_final.keys()
+        charset_names = list(charsets_final.keys())
         source_feature = GnOps.GenerateSeqFeature().\
             source_feat(len(seq_record), current_quals, charset_names)
         seq_record.features.append(source_feature)
@@ -250,7 +254,7 @@ def annonex2embl(path_to_nex,
 # 6.6. POPULATE THE FEATURE KEYS WITH THE CHARSET INFORMATION
 #      Note: Each charset represents a dictionary that must be added in
 #      full to the list "SeqRecord.features"
-        for charset_name, charset_range in charsets_final.items():
+        for charset_name, charset_range in list(charsets_final.items()):
 
 # 6.6.1. Proceed in loop only if charset_range is not empty
 #        An empty charset_range could be the case if the charset only
@@ -289,6 +293,7 @@ def annonex2embl(path_to_nex,
         sorted_features = sorted(seq_record.features[1:],
                                  key=lambda x: x.location.start.position)
         seq_record.features = [seq_record.features[0]] + sorted_features
+        
 ####################################
 
 # 6.8. TRANSLATE AND CHECK QUALITY OF TRANSLATION
@@ -307,12 +312,12 @@ def annonex2embl(path_to_nex,
                                                      feature, transl_table)
                     last_seen[2] = feature.location
                 except ME.MyException as e:
-                    print('%s annonex2embl WARNING: %s Feature `%s` '
+                    print(('%s annonex2embl WARNING: %s Feature `%s` '
                           '(type: `%s`) of sequence `%s` is not saved to '
                           'output.' % ('\n', colored(e, 'red'),
                                        colored(feature.id, 'red'),
                                        colored(feature.type, 'red'),
-                                       colored(seq_record.id, 'red')))
+                                       colored(seq_record.id, 'red'))))
                     removal_list.append(indx)
             elif feature.type == 'IGS' or feature.type == 'intron':
                 if  last_seen[0] == 'CDS' or last_seen[0] == 'gene':
@@ -329,6 +334,7 @@ def annonex2embl(path_to_nex,
             seq_record.features.pop(indx)
 
 ####################################
+
 # 6.9. INTRODUCE FUZZY ENDS
         for feature in seq_record.features:
             # Check if feature is a coding region
@@ -340,8 +346,8 @@ def annonex2embl(path_to_nex,
                 #       (i.e., the '*'), while the feature location
                 #       range (i.e., 738..2291) very much includes
                 #       its position (which is biologically logical).
-                charset_range_updated = range(feature.location.start.position,
-                    feature.location.end.position)
+                charset_range_updated = list(range(feature.location.start.position,
+                    feature.location.end.position))
                 coding_seq = ''.join([seq_record.seq[i] for i in charset_range_updated])
                 if not coding_seq.startswith(GlobVars.nex2ena_start_codon):
                     feature.location = GnOps.GenerateFeatLoc().\
@@ -367,21 +373,35 @@ def annonex2embl(path_to_nex,
 
 ########################################################################
 
-# 8. POST-PROCESSING OF EntryUpload FILES
-# 8.1. Addition of author name
-    date_today = datetime.date.today().strftime("%d-%b-%Y").upper()
-    os.system("sed -i $'s/FH   Key             Location\/Qualifiers/" +
-              "RN   \[1\]" +
-              "\\\nRA   " + author_names +
-              "\\\nRT   \;" +
-              "\\\nRL   Submitted \(" + date_today + "\) to the INSDC." +
-              "\\\nXX" +
-              "\\\nFH   Key             Location\/Qualifiers/g' " + path_to_outfile)
-# 8.2. Corrections
-    os.system("sed -i 's/\; DNA\;/\; genomic DNA\;/g' "+path_to_outfile)
+# 8. POST-PROCESSING OF FILES
+
+    if sys.platform.startswith('linux') or sys.platform.startswith('darwin'):
+        # Addition of author name
+        date_today = datetime.date.today().strftime("%d-%b-%Y").upper()
+        os.system("sed -i $'s/FH   Key             Location\/Qualifiers/" +
+                  "RN   \[1\]" +
+                  "\\\nRA   " + author_names +
+                  "\\\nRT   \;" +
+                  "\\\nRL   Submitted \(" + date_today + "\) to the INSDC." +
+                  "\\\nXX" +
+                  "\\\nFH   Key             Location\/Qualifiers/g' " + path_to_outfile)
+        # Corrections
+        os.system("sed -i 's/\; DNA\;/\; genomic DNA\;/g' "+path_to_outfile)
+
+    if sys.platform.startswith('win'):
+        # Addition of author name
+            # no code here
+        # Corrections
+            # no code here
+        pass
+
+########################################################################
 
 # 9. Create Manifest file
     if(manifest_study!='' and manifest_name!=''):
-        IOOps.Outp().create_manifest_file(path_to_outfile, manifest_study, manifest_name, manifest_description)
+        IOOps.Outp().create_manifest_file(path_to_outfile, manifest_study, 
+                                          manifest_name, manifest_descr)
     elif(manifest_study!='' or manifest_name!=''):
-        raise ME.MyException('Error by creating manifest file. Please give both information -ms study name and -mn your name.')
+        raise ME.MyException('Error when creating manifest file. Please provide both, information on study name (CMD parameter -ms) and your name (CMD parameter -mn).')
+
+########################################################################

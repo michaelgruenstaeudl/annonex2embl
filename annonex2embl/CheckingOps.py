@@ -25,7 +25,7 @@ from itertools import chain
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.05.15.1500'
+__version__ = '2019.09.10.1200'
 
 #############
 # DEBUGGING #
@@ -90,7 +90,7 @@ class AnnoCheck:
             internal stop codon were present. '''
         if len(transl_without_internStop) > len(transl_with_internStop):
             # 1. Unnest the nested lists
-            contiguous_subsets = [range(e.start.position, e.end.position)
+            contiguous_subsets = [list(range(e.start.position, e.end.position))
                 for e in location_object.parts]
             compound_integer_range = sum(contiguous_subsets, [])
             # 2. Adjust location range
@@ -267,7 +267,7 @@ class QualifierCheck:
         ''' This function converts any non-ASCII characters among
             qualifier values to ASCII characters. '''
         filtered_lst_of_dcts = [
-            {k: unidecode(v.decode('utf-8')) for k, v in dct.items()}
+            {k: unidecode(v) for k, v in list(dct.items())}
             for dct in lst_of_dcts]
         return filtered_lst_of_dcts
 
@@ -276,7 +276,7 @@ class QualifierCheck:
         ''' This function checks if each (!) list of dictionary keys
             of a list of dictionaries encompass the element <label> at
             least once. '''
-        if not all(label in dct.keys() for dct in lst_of_dcts):
+        if not all(label in list(dct.keys()) for dct in lst_of_dcts):
             raise ME.MyException('csv-file does not contain a column '
                                  'labelled `%s`' % (label))
         return True
@@ -289,7 +289,7 @@ class QualifierCheck:
             key-value-pair from a dictionary which contains an empty
             value.
         '''
-        nonempty_lst_of_dcts = [{k: v for k, v in dct.items() if v != ''}
+        nonempty_lst_of_dcts = [{k: v for k, v in list(dct.items()) if v != ''}
                                 for dct in lst_of_dcts]
         return nonempty_lst_of_dcts
 
@@ -298,7 +298,7 @@ class QualifierCheck:
         ''' This function checks if every (!) dictionary key in a list of
             dictionaries is a valid INSDC qualifier.
         '''
-        keys_present = list(chain.from_iterable([dct.keys() for dct in
+        keys_present = list(chain.from_iterable([list(dct.keys()) for dct in
                                                  lst_of_dcts]))
         not_valid = [k for k in keys_present if k not in
                      GlobVars.nex2ena_valid_INSDC_quals]

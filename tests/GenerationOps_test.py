@@ -49,7 +49,7 @@ class GenerateFeatLocTestCases(unittest.TestCase):
     def test_GenerateFeatLoc__make_location__1(self):
         ''' Test to evaluate function `make_location` of class `GenerateFeatLoc`.
             This test evaluates the case of a continuous range. '''
-        charset_range = range(1,8)
+        charset_range = list(range(1,8))
         out = GnOps.GenerateFeatLoc().make_location(charset_range)
         self.assertIsInstance(out, Bio.SeqFeature.FeatureLocation)
 

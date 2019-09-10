@@ -26,7 +26,7 @@ import Annonex2emblMain as AN2EMBLMain
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.05.15.1500'
+__version__ = '2019.09.10.1200'
 
 #############
 # DEBUGGING #
@@ -99,13 +99,19 @@ if __name__ == '__main__':
     parser.add_argument('-mn',
                         '--manifestname',
                         help='Name which appears in the manifest file',
+                        default='',
                         required=False)
 
     parser.add_argument('-md',
-                        '--manifestdescription',
+                        '--manifestdescr',
                         help='Description for the manifest file',
                         default='',
                         required=False)
+
+    parser.add_argument('--productlookup',
+                         help='A logical; Shall product names be inferred from gene abbreviations?',
+                         default='False',
+                         required=False)
 
     parser.add_argument('--taxcheck',
                         help='A logical; Shall taxon names be checked against NCBI Taxonomy?',
@@ -174,7 +180,8 @@ if __name__ == '__main__':
 
                                 args.manifeststudy,
                                 args.manifestname,
-                                args.manifestdescription,
+                                args.manifestdescr,
+                                args.productlookup,
                                 args.taxcheck,
                                 args.linemask,
                                 args.topol,

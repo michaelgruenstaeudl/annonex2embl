@@ -91,7 +91,7 @@ class OutputTestCases(unittest.TestCase):
         try:
             subprocess.check_output(' '.join(cmd_list), shell=True)
         except subprocess.CalledProcessError as e:
-            print e.output
+            print(e.output)
         expected_str = open(expected_outp_abs_path).read()
         ## Check if actual output exists
         if os.path.isfile(actual_outp_abs_path):
@@ -103,7 +103,7 @@ class OutputTestCases(unittest.TestCase):
             # (Although keeping output can be helpful when generating 
             # new test files.)
         else:
-            print 'annonex2embl TESTING ERROR: actual_str not found.'
+            print('annonex2embl TESTING ERROR: actual_str not found.')
         self.assertTrue(isinstance(expected_str, str),
                 'Not a string: ' + expected_outp_abs_path)
         self.assertTrue(isinstance(actual_str, str),
@@ -144,14 +144,14 @@ class OutputTestCases(unittest.TestCase):
         try:
             subprocess.check_output(' '.join(cmd_list), shell=True)
         except subprocess.CalledProcessError as e:
-            print e.output
+            print(e.output)
         expected_str = open(expected_outp_abs_path).read()
         ## Check if actual output exists
         if os.path.isfile(actual_outp_abs_path):
             actual_str = open(actual_outp_abs_path).read()
             os.remove(actual_outp_abs_path)
         else:
-            print 'annonex2embl TESTING ERROR: actual_str not found.'
+            print('annonex2embl TESTING ERROR: actual_str not found.')
         self.assertTrue(isinstance(expected_str, str),
                 'Not a string: ' + expected_outp_abs_path)
         self.assertTrue(isinstance(actual_str, str),
@@ -191,13 +191,13 @@ class OutputTestCases(unittest.TestCase):
         try:
             subprocess.check_output(' '.join(cmd_list), shell=True)
         except subprocess.CalledProcessError as e:
-            print e.output
+            print(e.output)
         expected_str = open(expected_outp_abs_path).read()
         if os.path.isfile(actual_outp_abs_path):
             actual_str = open(actual_outp_abs_path).read()
             os.remove(actual_outp_abs_path)
         else:
-            print 'annonex2embl TESTING ERROR: actual_str not found.'
+            print('annonex2embl TESTING ERROR: actual_str not found.')
         self.assertTrue(isinstance(expected_str, str),
                 'Not a string: ' + expected_outp_abs_path)
         self.assertTrue(isinstance(actual_str, str),
@@ -238,13 +238,13 @@ class OutputTestCases(unittest.TestCase):
         try:
             subprocess.check_output(' '.join(cmd_list), shell=True)
         except subprocess.CalledProcessError as e:
-            print e.output
+            print(e.output)
         expected_str = open(expected_outp_abs_path).read()
         if os.path.isfile(actual_outp_abs_path):
             actual_str = open(actual_outp_abs_path).read()
             os.remove(actual_outp_abs_path)
         else:
-            print 'annonex2embl TESTING ERROR: actual_str not found.'
+            print('annonex2embl TESTING ERROR: actual_str not found.')
         self.assertTrue(isinstance(expected_str, str),
                 'Not a string: ' + expected_outp_abs_path)
         self.assertTrue(isinstance(actual_str, str),
@@ -287,13 +287,13 @@ class OutputTestCases(unittest.TestCase):
         try:
             subprocess.check_output(' '.join(cmd_list), shell=True)
         except subprocess.CalledProcessError as e:
-            print e.output
+            print(e.output)
         expected_str = open(expected_outp_abs_path).read()
         if os.path.isfile(actual_outp_abs_path):
             actual_str = open(actual_outp_abs_path).read()
             os.remove(actual_outp_abs_path)
         else:
-            print 'annonex2embl TESTING ERROR: actual_str not found.'
+            print('annonex2embl TESTING ERROR: actual_str not found.')
         self.assertTrue(isinstance(expected_str, str),
                 'Not a string: ' + expected_outp_abs_path)
         self.assertTrue(isinstance(actual_str, str),

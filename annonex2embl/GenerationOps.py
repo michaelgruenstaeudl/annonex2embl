@@ -23,7 +23,7 @@ from Bio.SeqFeature import ExactPosition, FeatureLocation, CompoundLocation
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.05.15.1500'
+__version__ = '2019.09.10.1200'
 
 #############
 # DEBUGGING #
@@ -68,7 +68,7 @@ class GenerateFeatLoc:
         outlist = []
         for k, g in groupby(enumerate(compound_integer_range),
                             lambda i_x: i_x[0] - i_x[1]):
-            outlist.append(map(itemgetter(1), g))
+            outlist.append(list(map(itemgetter(1), g)))
         return outlist
 
     def make_location(self, charset_range):
@@ -186,7 +186,7 @@ class GenerateSeqFeature:
         Raises:
             [currently nothing]
         '''
-        full_index = range(0, full_len)
+        full_index = list(range(0, full_len))
         feature_loc = GenerateFeatLoc().make_location(full_index)
         quals['mol_type'] = "genomic DNA"
         source_feature = SeqFeature.SeqFeature(

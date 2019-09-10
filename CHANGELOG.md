@@ -1,13 +1,16 @@
 CHANGELOG
 ---------
+#### Version 0.5.0 (2019.09.10)
+* Make code compatible with Python 3
+* Make the application of the product lookup optional
 #### Version 0.4.6 (2019.09.09)
-* Added function that add "/codon_start=1" in CDS feature, if start and stop position of feature is uncertain
-* gene and exon features than are less than 15 nt long, the annotation would be dropped form the output
-* Added a function that automatically removes all sequences that consists only of Ns (ot ?s)
-* Added a function that compensate the contraction of an annotation due to the identification of an internal stop codon
-* Added a function that read in if a charset is forward or reverse
+* Added function that adds "/codon_start=1" in CDS feature, if start and stop position of feature is uncertain
+* Automatically remove gene and exon annotation features than are less than 15 nt long (as they are not permissible on ENA)
+* Added a function that automatically removes all sequences that consists only of Ns (or "?"s)
+* Added a function that compensate for the contraction of an annotation due to the identification of an internal stop codon
+* Added a function that reads in if a charset is forward or reverse
 * Added a function that automatically generates a [manifest file](https://ena-docs.readthedocs.io/en/latest/cli_01.html#manifest-file-types)
-* Added a function that removes the accession number from the AC line and from the ID line if the user wants to
+* Added a function that removes the accession number from the AC line and from the ID line upon selection by user
 #### Version 0.4.5 (2018.05.22)
 * Added function that converts missing sections of a sequence that are longer than 2 nucleotides into a "gap"-feature
 #### Version 0.4.4 (2018.03.29)

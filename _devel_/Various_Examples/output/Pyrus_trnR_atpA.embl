@@ -1,0 +1,2106 @@
+
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus takhtadzhianii trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Armenia"
+FT                   /isolate="PYR006"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Fed."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus takhtadzhianii"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan, Akopian, Parolly,
+FT                   Weber P2-1"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 216 A; 27 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttca       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus medvedevii trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Armenia"
+FT                   /isolate="PYR008"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Rubtzov"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus medvedevii"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan, Akopian, Parolly,
+FT                   Weber P2-3"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 216 A; 27 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttca       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus fedorovii trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Armenia"
+FT                   /isolate="PYR011"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Kuth."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus fedorovii"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan, Akopian, Parolly,
+FT                   Weber P3-1"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 216 A; 27 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttca       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus zangezura trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Armenia"
+FT                   /isolate="PYR032"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Maleev"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus zangezura"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan, Akopian, Parolly,
+FT                   Weber M11-30"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 217 A; 26 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttaa       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus caucasica trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..537
+FT                   /country="Armenia"
+FT                   /isolate="PYR050"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Fed."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus caucasica"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan M11-59"
+FT   misc_feature    1..537
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 537 BP; 228 A; 26 C; 46 G; 237 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat ttatataaag       180
+     atattttagt ttatataaag atattataaa ttaataagtt attatattat taattaataa       240
+     gttatttaat aaattcaaaa atttaattta aaatttttaa aaatggaatt cttttataat       300
+     aaaatttttt gaattccatt aaatttgaat ataaactata atattcaagt gatattacta       360
+     taatatcaag tcaagttatg atataaaata tattataaag attataatat attataaaga       420
+     ttatataatc tttataatgt ataataataa tgattataca atattttaaa ttgtaaaggt       480
+     ttatagaatt aatagaatta aattaagatt gatgaagatt caaagtaatt actttgt          537
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus tamamaschjanae trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..522
+FT                   /country="Armenia"
+FT                   /isolate="PYR053"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Fed."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus tamamaschjanae"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan M11-62"
+FT   misc_feature    1..522
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 522 BP; 220 A; 27 C; 45 G; 230 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata tagttattat attattaatt aataagttat ttaataaatt       240
+     caaaaatttc attttaaatt tttaaaaatg gaattctttt ataataaaat tttttgaatt       300
+     ccattaaatt tgaatataaa ctataatatt caagtgatat tactataata tcaagtcaag       360
+     ttatgatata aaatatatta taaagattat aatatattat aaagattata taatctttat       420
+     aatgtataat aataatgatt atacaatatt ttaaattgta aaggtttata gaattaatag       480
+     aattaaatta agattgatga agattcaaag taattacttt gt                          522
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus oxyprion trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Armenia"
+FT                   /isolate="PYR056"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Woronow"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus oxyprion"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan M11-65"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 216 A; 27 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttca       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus georgica trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Armenia"
+FT                   /isolate="PYR057"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Kuth."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus georgica"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan M11-66"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 216 A; 27 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttca       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus sosnovskyi trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..492
+FT                   /country="Armenia"
+FT                   /isolate="PYR058"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Fed."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus sosnovskyi"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan M11-67"
+FT   misc_feature    1..492
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 492 BP; 210 A; 25 C; 43 G; 214 T; 0 other;
+     catatttttt ttagatttct atggtcaaga aagatatttt gaatgacttg aataagagac        60
+     gctcttatta catattacgt aaattacata ttaattattt attattatat tctaaagatt       120
+     ttagtttata taaagatatt ttagtttata taaagatatt ataaattaat aagttattat       180
+     attattaatt aataagttat ttaataaatt caaaaatttc attttaaatt tttaaaaatg       240
+     gaattctttt ataataaaat tttttgaatt ccattaaatt tgaatataaa ctataatatt       300
+     caagtgatat tactataata tcaagtcaag ttatgatata aaatatatta taaagattat       360
+     aatatattat aaagattata taatctttat aatgtataat aataatgatt atacaatatt       420
+     ttaaattgta aaggtttata gaattaatag aattaaatta agattgatga agattcaaag       480
+     taattacttt gt                                                           492
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus grossheimii trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..537
+FT                   /country="Armenia"
+FT                   /isolate="PYR060"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Fed."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus grossheimii"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan & Oganesian M11-74"
+FT   misc_feature    1..537
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 537 BP; 228 A; 26 C; 46 G; 237 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat ttatataaag       180
+     atattttagt ttatataaag atattataaa ttaataagtt attatattat taattaataa       240
+     gttatttaat aaattcaaaa atttaattta aaatttttaa aaatggaatt cttttataat       300
+     aaaatttttt gaattccatt aaatttgaat ataaactata atattcaagt gatattacta       360
+     taatatcaag tcaagttatg atataaaata tattataaag attataatat attataaaga       420
+     ttatataatc tttataatgt ataataataa tgattataca atattttaaa ttgtaaaggt       480
+     ttatagaatt aatagaatta aattaagatt gatgaagatt caaagtaatt actttgt          537
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus turcomanica trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..537
+FT                   /country="Armenia"
+FT                   /isolate="PYR061"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Maleev"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus turcomanica"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan & Oganesian M11-75"
+FT   misc_feature    1..537
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 537 BP; 228 A; 26 C; 46 G; 237 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat ttatataaag       180
+     atattttagt ttatataaag atattataaa ttaataagtt attatattat taattaataa       240
+     gttatttaat aaattcaaaa atttaattta aaatttttaa aaatggaatt cttttataat       300
+     aaaatttttt gaattccatt aaatttgaat ataaactata atattcaagt gatattacta       360
+     taatatcaag tcaagttatg atataaaata tattataaag attataatat attataaaga       420
+     ttatataatc tttataatgt ataataataa tgattataca atattttaaa ttgtaaaggt       480
+     ttatagaatt aatagaatta aattaagatt gatgaagatt caaagtaatt actttgt          537
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus nutans trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..522
+FT                   /country="Armenia"
+FT                   /isolate="PYR065"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Rubtzov"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus nutans"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan & Oganesian M11-86"
+FT   misc_feature    1..522
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 522 BP; 220 A; 27 C; 45 G; 230 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata tagttattat attattaatt aataagttat ttaataaatt       240
+     caaaaatttc attttaaatt tttaaaaatg gaattctttt ataataaaat tttttgaatt       300
+     ccattaaatt tgaatataaa ctataatatt caagtgatat tactataata tcaagtcaag       360
+     ttatgatata aaatatatta taaagattat aatatattat aaagattata taatctttat       420
+     aatgtataat aataatgatt atacaatatt ttaaattgta aaggtttata gaattaatag       480
+     aattaaatta agattgatga agattcaaag taattacttt gt                          522
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus elata trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..491
+FT                   /country="Armenia"
+FT                   /isolate="PYR078"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Rubtzov"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus elata"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan & Oganesian M11-100"
+FT   misc_feature    1..491
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 491 BP; 208 A; 27 C; 42 G; 214 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatatta taaattaata agttattata       180
+     ttattaatta ataagttatt taataaattc aaaaatttca ttttaaattt ttaaaaatgg       240
+     aattctttta taataaaatt ttttgaattc cattaaattt gaatataaac tataatattc       300
+     aagtgatatt actataatat caagtcaagt tatgatataa aatatattat aaagattata       360
+     atatattata aagattatat aatctttata atgtataata ataatgatta tacaatattt       420
+     taaattgtaa aggtttatag aattaataga attaaattaa gattgatgaa gattcaaagt       480
+     aattactttg t                                                            491
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus megrica trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Armenia"
+FT                   /isolate="PYR080"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Gladkova"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus megrica"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan & Oganesian M11-120"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 216 A; 27 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttca       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus takhtadzhianii trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..495
+FT                   /country="Armenia"
+FT                   /isolate="PYR082"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Fed."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus takhtadzhianii"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan & Oganesian M11-124"
+FT   misc_feature    1..495
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 495 BP; 210 A; 26 C; 43 G; 216 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttca       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattagat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattc                                                        495
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus salicifolia trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Georgia"
+FT                   /isolate="PYR086"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Pall."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus salicifolia"
+FT                   /specimen_voucher="B:Kürschner & Parolly Gg 11-25"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 216 A; 27 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttca       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus salicifolia trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..537
+FT                   /country="Armenia"
+FT                   /isolate="PYR111"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Pall."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus salicifolia"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan & Akopian M12-21"
+FT   misc_feature    1..537
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 537 BP; 228 A; 26 C; 46 G; 237 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat ttatataaag       180
+     atattttagt ttatataaag atattataaa ttaataagtt attatattat taattaataa       240
+     gttatttaat aaattcaaaa atttaattta aaatttttaa aaatggaatt cttttataat       300
+     aaaatttttt gaattccatt aaatttgaat ataaactata atattcaagt gatattacta       360
+     taatatcaag tcaagttatg atataaaata tattataaag attataatat attataaaga       420
+     ttatataatc tttataatgt ataataataa tgattataca atattttaaa ttgtaaaggt       480
+     ttatagaatt aatagaatta aattaagatt gatgaagatt caaagtaatt actttgt          537
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus argyrophylla trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Armenia"
+FT                   /isolate="PYR114"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Diap."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus argyrophylla"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan & Akopian M12-24"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 216 A; 27 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttca       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus daralaghezii trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..537
+FT                   /country="Armenia"
+FT                   /isolate="PYR125"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Mulk."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus daralaghezii"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan & Akopian M12-35"
+FT   misc_feature    1..537
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 537 BP; 228 A; 26 C; 46 G; 237 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat ttatataaag       180
+     atattttagt ttatataaag atattataaa ttaataagtt attatattat taattaataa       240
+     gttatttaat aaattcaaaa atttaattta aaatttttaa aaatggaatt cttttataat       300
+     aaaatttttt gaattccatt aaatttgaat ataaactata atattcaagt gatattacta       360
+     taatatcaag tcaagttatg atataaaata tattataaag attataatat attataaaga       420
+     ttatataatc tttataatgt ataataataa tgattataca atattttaaa ttgtaaaggt       480
+     ttatagaatt aatagaatta aattaagatt gatgaagatt caaagtaatt actttgt          537
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus daralaghezii trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Armenia"
+FT                   /isolate="PYR126"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Mulk."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus daralaghezii"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan & Akopian M12-36"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 216 A; 27 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttca       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus caucasica trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Armenia"
+FT                   /isolate="PYR131"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Fed."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus caucasica"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan & Akopian M12-41"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 217 A; 26 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttaa       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus salicifolia trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..537
+FT                   /country="Armenia"
+FT                   /isolate="PYR235"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Pall."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus salicifolia"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan, Sargsyan, Korotkova
+FT                   M12-148"
+FT   misc_feature    1..537
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 537 BP; 228 A; 26 C; 46 G; 237 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat ttatataaag       180
+     atattttagt ttatataaag atattataaa ttaataagtt attatattat taattaataa       240
+     gttatttaat aaattcaaaa atttaattta aaatttttaa aaatggaatt cttttataat       300
+     aaaatttttt gaattccatt aaatttgaat ataaactata atattcaagt gatattacta       360
+     taatatcaag tcaagttatg atataaaata tattataaag attataatat attataaaga       420
+     ttatataatc tttataatgt ataataataa tgattataca atattttaaa ttgtaaaggt       480
+     ttatagaatt aatagaatta aattaagatt gatgaagatt caaagtaatt actttgt          537
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus caucasica trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..537
+FT                   /country="Armenia"
+FT                   /isolate="PYR251"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Fed."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus caucasica"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan, Sargsyan, Korotkova
+FT                   M12-165"
+FT   misc_feature    1..537
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 537 BP; 228 A; 26 C; 46 G; 237 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat ttatataaag       180
+     atattttagt ttatataaag atattataaa ttaataagtt attatattat taattaataa       240
+     gttatttaat aaattcaaaa atttaattta aaatttttaa aaatggaatt cttttataat       300
+     aaaatttttt gaattccatt aaatttgaat ataaactata atattcaagt gatattacta       360
+     taatatcaag tcaagttatg atataaaata tattataaag attataatat attataaaga       420
+     ttatataatc tttataatgt ataataataa tgattataca atattttaaa ttgtaaaggt       480
+     ttatagaatt aatagaatta aattaagatt gatgaagatt caaagtaatt actttgt          537
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus cf. hyrcana trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Armenia"
+FT                   /isolate="PYR255"
+FT                   /mol_type="genomic DNA"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus cf. hyrcana"
+FT                   /specimen_voucher="B,ERE:Ter-Voskanyan & Gasparyan M12-169"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 217 A; 26 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttaa       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus phaeocarpa trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..497
+FT                   /isolate="PYR277"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 185-47-74-80;Tax. Authority:
+FT                   Rehder"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus phaeocarpa"
+FT                   /specimen_voucher="B:Gartenherbar 49137"
+FT   misc_feature    1..497
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 497 BP; 213 A; 27 C; 42 G; 215 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tgtcaagaaa gatattttga        60
+     atgacttgaa taagagacgc tcttattaca tattacatat tacgtaaatt acatattaat       120
+     tatttattat tatattctaa agattttagt ttatataaag atattataaa ttaaaaagtt       180
+     attatattat taattaataa gttatttaat aaattcaaaa atttaatttt aaatttttaa       240
+     aaatggaatt cttttataag aaaatttttt gaattccatt aaattttaat agaaactata       300
+     atattcaagt gatattacta taatatcaag tcaagttatg atataaaata tattataaag       360
+     attataatat attataaaga ttatataatc tttataatgt ataataataa tgattataca       420
+     atattttaaa ttgtaaaggt ttatagaatt aatagaatta aattaagatt gatgaagatt       480
+     caaagtaatt actttgt                                                      497
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus communis trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..530
+FT                   /country="Czech Republic"
+FT                   /isolate="PYR278"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 180-04-03-10;Tax. Authority: L."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus communis"
+FT                   /specimen_voucher="Rybka s.n."
+FT   misc_feature    1..530
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 530 BP; 224 A; 27 C; 46 G; 233 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtatattc taaagatttt agtttatata aagatatttt       180
+     agtttatata aagatattat aaattaataa gttattatat tattaattaa taagttattt       240
+     aataaattca aaaatttcat tttaaatttt taaaaatgga attcttttat aataaaattt       300
+     tttgaattcc attaaatttg aatataaact ataatattca agtgatatta ctataatatc       360
+     aagtcaagtt atgatataaa atatattata aagattataa tatattataa agattatata       420
+     atctttataa tgtataataa taatgattat aaaatatttt aaattgtaaa ggtttataga       480
+     attaatagaa ttaaattaag attgatgaag attcaaagta attactttgt                  530
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus ussuriensis trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..510
+FT                   /country="South Korea"
+FT                   /isolate="PYR279"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 095-37-79-10;Tax. Authority:
+FT                   Maxim."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus ussuriensis"
+FT   misc_feature    1..510
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 510 BP; 219 A; 26 C; 44 G; 221 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tgtcaagaaa gatattttga        60
+     atgacttgaa taagagacgc tcttattaca tattacgtaa attacatatt aattatttat       120
+     tattatattc taaagatttt agtttatata aagatatttt agtttatata aagatattat       180
+     aaattaaaaa gttattatat tattaattaa taagttattt aataaattca aaaatttaat       240
+     tttaaatttt taaaaatgga attcttttat aagaaaattt tttgaattcc attaaatttt       300
+     aatagaaact ataatattca agtgatatta ctataatatc aagtcaagtt atgatataaa       360
+     atatattata aagattataa tatattataa agattatata atctttataa tgtataataa       420
+     taatgattat acaatattta aaattgtaaa ggtttataga attaatagaa ttaaattaag       480
+     attgatgaag attcaaagta attactttgt                                        510
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus bretschneideri trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..510
+FT                   /isolate="PYR280"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 185-30-74-80;Tax. Authority:
+FT                   Rehder"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus bretschneideri"
+FT   misc_feature    1..510
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 510 BP; 219 A; 26 C; 44 G; 221 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tgtcaagaaa gatattttga        60
+     atgacttgaa taagagacgc tcttattaca tattacgtaa attacatatt aattatttat       120
+     tattatattc taaagatttt agtttatata aagatatttt agtttatata aagatattat       180
+     aaattaaaaa gttattatat tattaattaa taagttattt aataaattca aaaatttaat       240
+     tttaaatttt taaaaatgga attcttttat aagaaaattt tttgaattcc attaaatttt       300
+     aatagaaact ataatattca agtgatatta ctataatatc aagtcaagtt atgatataaa       360
+     atatattata aagattataa tatattataa agattatata atctttataa tgtataataa       420
+     taatgattat acaatattta aaattgtaaa ggtttataga attaatagaa ttaaattaag       480
+     attgatgaag attcaaagta attactttgt                                        510
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus spinosa trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..530
+FT                   /country="Italy"
+FT                   /isolate="PYR281"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 132-13-02-10;Tax. Authority:
+FT                   Forssk."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus spinosa"
+FT                   /specimen_voucher="Romi & Casini s.n."
+FT   misc_feature    1..530
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 530 BP; 223 A; 28 C; 46 G; 233 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtatattc taaagatttt agtttatata aagatatttt       180
+     agtttatata aagatattat aaattaataa gttattatat tattaattaa taagttattt       240
+     aataaattca aaaatttcat tttaaatttt taaaaatgga attcttttat aataaaattt       300
+     tttgaattcc attaaatttg aatataaact ataatattca agtgatatta ctataatatc       360
+     aagtcaagtt atgatataaa atatattata aagattataa tatattataa agattatata       420
+     atctttataa tgtataataa taatgattat acaatatttt aaattgtaaa ggtttataga       480
+     attaatagaa ttaaattaag attgatgaag attcaaagta attactttgt                  530
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus phaeocarpa trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..471
+FT                   /isolate="PYR282"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 185-46-74-80;Tax. Authority:
+FT                   Rehder"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus phaeocarpa"
+FT                   /specimen_voucher="B:Gartenherbar 49127"
+FT   misc_feature    1..471
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 471 BP; 205 A; 24 C; 41 G; 201 T; 0 other;
+     tttttagatt tctatgtcaa gaaagatatt ttgaatgact tgaataagag acgctcttat        60
+     tacatattac atattacgta aattacatat taattattta ttattatatt ctaaagattt       120
+     tagtttatat aaagatatta taaattaaaa agttattata ttattaatta ataagttatt       180
+     taataaattc aaaaatttaa ttttaaattt ttaaaaatgg aattctttta taagaaaatt       240
+     ttttgaattc cattaaattt taatagaaac tataatattc aagtgatatt actataatat       300
+     caagtcaagt tatgatataa aatatattat aaagattata atatattata aagattatat       360
+     aatctttata atgtataata ataatgatta tacaatattt taaattgtaa aggtttatag       420
+     aattaataga attaaattaa gattgatgaa gattcaaagt aattactttg t                471
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus boisseriana trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /isolate="PYR283"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 185-29-74-80;Tax. Authority:
+FT                   Buhse"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus boisseriana"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 216 A; 27 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttca       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus cordata trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..491
+FT                   /isolate="PYR284"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 142-05-89-50;Tax. Authority:
+FT                   Desv."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus cordata"
+FT                   /specimen_voucher="B:Gartenherbar 49130"
+FT   misc_feature    1..491
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 491 BP; 208 A; 27 C; 42 G; 214 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatatta taaattaata agttattata       180
+     ttattaatta ataagttatt taataaattc aaaaatttca ttttaaattt ttaaaaatgg       240
+     aattctttta taataaaatt ttttgaattc cattaaattt gaatataaac tataatattc       300
+     aagtgatatt actataatat caagtcaagt tatgatataa aatatattat aaagattata       360
+     atatattata aagattatat aatctttata atgtataata ataatgatta tacaatattt       420
+     taaattgtaa aggtttatag aattaataga attaaattaa gattgatgaa gattcaaagt       480
+     aattactttg t                                                            491
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus betulifolia trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..530
+FT                   /country="China"
+FT                   /isolate="PYR285"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 095-13-81-70;Tax. Authority:
+FT                   Bunge"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus betulifolia"
+FT                   /specimen_voucher="B:Gartenherbar 49128"
+FT   misc_feature    1..530
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 530 BP; 227 A; 26 C; 46 G; 231 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tgtcaagaaa gatattttga        60
+     atgacttgaa taagagacgc tcttattaca tattacgtaa attacatatt aattatttat       120
+     tattatattc taaagatttt agtttatata aagatatttt agtttatata aagatatttt       180
+     agtttatata aagatattat aaattaaaaa gttattatat tattaattaa taagttattt       240
+     aataaattca aaaatttaat tttaaatttt taaaaatgga attcttttat aagaaaattt       300
+     tttgaattcc attaaatttt aatagaaact ataatattca agtgatatta ctataatatc       360
+     aagtcaagtt atgatataaa atatattata aagattataa tatattataa agattatata       420
+     atctttataa tgtataataa taatgattat acaatattta aaattgtaaa ggtttataga       480
+     attaatagaa ttaaattaag attgatgaag attcaaagta attactttgt                  530
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus spinosa trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Turkey"
+FT                   /isolate="PYR286"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 248-45-81-10;Tax. Authority:
+FT                   Forssk."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus spinosa"
+FT                   /specimen_voucher="Ern & Krone 7145"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 217 A; 26 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttaa       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus communis trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..530
+FT                   /country="Italy"
+FT                   /isolate="PYR287"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 114-47-87-10;Tax. Authority: L."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus communis"
+FT   misc_feature    1..530
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 530 BP; 223 A; 28 C; 46 G; 233 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtatattc taaagatttt agtttatata aagatatttt       180
+     agtttatata aagatattat aaattaataa gttattatat tattaattaa taagttattt       240
+     aataaattca aaaatttcat tttaaatttt taaaaatgga attcttttat aataaaattt       300
+     tttgaattcc attaaatttg aatataaact ataatattca agtgatatta ctataatatc       360
+     aagtcaagtt atgatataaa atatattata aagattataa tatattataa agattatata       420
+     atctttataa tgtataataa taatgattat acaatatttt aaattgtaaa ggtttataga       480
+     attaatagaa ttaaattaag attgatgaag attcaaagta attactttgt                  530
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus nivalis trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..507
+FT                   /isolate="PYR288"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 185-44-74-80;Tax. Authority:
+FT                   Jacq."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus nivalis"
+FT                   /specimen_voucher="B:Gartenherbar 49129"
+FT   misc_feature    1..507
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 507 BP; 218 A; 26 C; 44 G; 219 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tgtcaagaaa gatattttga        60
+     atgacttgaa taagagacgc tcttattaca tattacgtaa attacatatt aattatttat       120
+     tatattctaa agattttagt ttatataaag atattttagt ttatataaag atattataaa       180
+     ttaaaaagtt attatattat taattaataa gttatttaat aaattcaaaa atttaatttt       240
+     aaatttttaa aaatggaatt cttttataag aaaatttttt gaattccatt aaattttaat       300
+     agaaactata atattcaagt gatattacta taatatcaag tcaagttatg atataaaata       360
+     tattataaag attataatat attataaaga ttatataatc tttataatgt ataataataa       420
+     tgattataca atatttaaaa ttgtaaaggt ttatagaatt aatagaatta aattaagatt       480
+     gatgaagatt caaagtaatt actttgt                                           507
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus pyrifolia trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..510
+FT                   /country="South Korea"
+FT                   /isolate="PYR289"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 004-01-08-70;Tax. Authority:
+FT                   (Burm.f.) Nakai."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus pyrifolia"
+FT                   /specimen_voucher="Schüle s.n."
+FT   misc_feature    1..510
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 510 BP; 219 A; 26 C; 44 G; 221 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tgtcaagaaa gatattttga        60
+     atgacttgaa taagagacgc tcttattaca tattacgtaa attacatatt aattatttat       120
+     tattatattc taaagatttt agtttatata aagatatttt agtttatata aagatattat       180
+     aaattaaaaa gttattatat tattaattaa taagttattt aataaattca aaaatttaat       240
+     tttaaatttt taaaaatgga attcttttat aagaaaattt tttgaattcc attaaatttt       300
+     aatagaaact ataatattca agtgatatta ctataatatc aagtcaagtt atgatataaa       360
+     atatattata aagattataa tatattataa agattatata atctttataa tgtataataa       420
+     taatgattat acaatattta aaattgtaaa ggtttataga attaatagaa ttaaattaag       480
+     attgatgaag attcaaagta attactttgt                                        510
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus communis trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..507
+FT                   /country="Italy"
+FT                   /isolate="PYR291"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 193-05-98-10;Tax. Authority: L."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus communis"
+FT                   /specimen_voucher="Romi & Casini s.n."
+FT   misc_feature    1..507
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 507 BP; 214 A; 29 C; 43 G; 221 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat tacgtaaatt       120
+     acatattaat tatttattat tatattctaa agattttagt ttatataaag atattataaa       180
+     ttaataagtt attatattat taattaataa gttatttaat aaattcaaaa atttcatttt       240
+     taatttttaa aaatggaatt cttttataat aaaatttttt gaattccatt aaatttgaat       300
+     ataaactata atattcaagt gatattacta taatatcaag tcaagttatg atataaaata       360
+     tattataaag attataatat attataaaga ttatataatc tttataatgt ataataataa       420
+     tgattataca atattttaaa ttgtaaaggt ttatagaatt aatagaatta aattaagatt       480
+     gatgaagatt caaagtaatt actttgt                                           507
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus spinosa trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Italy"
+FT                   /isolate="PYR292"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 057-05-79-10;Tax. Authority:
+FT                   Forssk."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus spinosa"
+FT                   /specimen_voucher="B:Gartenherbar 49136, Schimmenti 11977"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 216 A; 27 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttca       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus eleagrifolia trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Turkey"
+FT                   /isolate="PYR293"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 247-83-81-10;Tax. Authority:
+FT                   Pall."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus eleagrifolia"
+FT                   /specimen_voucher="Ern & Krone 7083"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 217 A; 26 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttaa       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus lindleyi trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..461
+FT                   /isolate="PYR294"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 185-43-74-80;Tax. Authority:
+FT                   Rehder"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus lindleyi"
+FT                   /specimen_voucher="B:Gartenherbar 49135"
+FT   misc_feature    1..461
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 461 BP; 199 A; 25 C; 36 G; 201 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tgtcaagaaa gatattttga        60
+     atgacttgaa taagagacgc tcttattaca tattacatat tacgtaaatt acatattaat       120
+     tatttattat tatattctaa agattttagt ttatataaag atattataaa ttaaaaagtt       180
+     attatattat taattaataa gttatttaat aaattcaaaa atttaatttt aaatttttaa       240
+     aaatggaatt cttttataag aaaatttttt gaattccatt aaattttaat agaaactata       300
+     atattcaagt gatattacta taatatcaag tcaagttatg atataaaata tattataaag       360
+     attataatat attataaaga ttatataatc tttataatgt ataataataa tgattataca       420
+     atattttaaa ttgtaaaggt ttatagaatt aatagaatta a                           461
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus communis trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..530
+FT                   /country="Hungary"
+FT                   /isolate="PYR295"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 176-04-98-10;Tax. Authority: L."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus communis"
+FT   misc_feature    1..530
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 530 BP; 223 A; 28 C; 46 G; 233 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtatattc taaagatttt agtttatata aagatatttt       180
+     agtttatata aagatattat aaattaataa gttattatat tattaattaa taagttattt       240
+     aataaattca aaaatttcat tttaaatttt taaaaatgga attcttttat aataaaattt       300
+     tttgaattcc attaaatttg aatataaact ataatattca agtgatatta ctataatatc       360
+     aagtcaagtt atgatataaa atatattata aagattataa tatattataa agattatata       420
+     atctttataa tgtataataa taatgattat acaatatttt aaattgtaaa ggtttataga       480
+     attaatagaa ttaaattaag attgatgaag attcaaagta attactttgt                  530
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus serrulata trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..507
+FT                   /isolate="PYR296"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 102-23-74-80;Tax. Authority:
+FT                   Rehder"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus serrulata"
+FT                   /specimen_voucher="B:Gartenherbar 49138"
+FT   misc_feature    1..507
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 507 BP; 218 A; 26 C; 44 G; 219 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tgtcaagaaa gatattttga        60
+     atgacttgaa taagagacgc tcttattaca tattacgtaa attacatatt aattatttat       120
+     tatattctaa agattttagt ttatataaag atattttagt ttatataaag atattataaa       180
+     ttaaaaagtt attatattat taattaataa gttatttaat aaattcaaaa atttaatttt       240
+     aaatttttaa aaatggaatt cttttataag aaaatttttt gaattccatt aaattttaat       300
+     agaaactata atattcaagt gatattacta taatatcaag tcaagttatg atataaaata       360
+     tattataaag attataatat attataaaga ttatataatc tttataatgt ataataataa       420
+     tgattataca atatttaaaa ttgtaaaggt ttatagaatt aatagaatta aattaagatt       480
+     gatgaagatt caaagtaatt actttgt                                           507
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus lindleyi trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..510
+FT                   /isolate="PYR299"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 185-42-74-80;Tax. Authority:
+FT                   Rehder"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus lindleyi"
+FT   misc_feature    1..510
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 510 BP; 219 A; 26 C; 44 G; 221 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tgtcaagaaa gatattttga        60
+     atgacttgaa taagagacgc tcttattaca tattacgtaa attacatatt aattatttat       120
+     tattatattc taaagatttt agtttatata aagatatttt agtttatata aagatattat       180
+     aaattaaaaa gttattatat tattaattaa taagttattt aataaattca aaaatttaat       240
+     tttaaatttt taaaaatgga attcttttat aagaaaattt tttgaattcc attaaatttt       300
+     aatagaaact ataatattca agtgatatta ctataatatc aagtcaagtt atgatataaa       360
+     atatattata aagattataa tatattataa agattatata atctttataa tgtataataa       420
+     taatgattat acaatattta aaattgtaaa ggtttataga attaatagaa ttaaattaag       480
+     attgatgaag attcaaagta attactttgt                                        510
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus calleryana trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..507
+FT                   /isolate="PYR300"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 185-35-74-80;Tax. Authority:
+FT                   Decne."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus calleryana"
+FT                   /specimen_voucher="B:Gartenherbar 49131"
+FT   misc_feature    1..507
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 507 BP; 218 A; 26 C; 44 G; 219 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tgtcaagaaa gatattttga        60
+     atgacttgaa taagagacgc tcttattaca tattacgtaa attacatatt aattatttat       120
+     tatattctaa agattttagt ttatataaag atattttagt ttatataaag atattataaa       180
+     ttaaaaagtt attatattat taattaataa gttatttaat aaattcaaaa atttaatttt       240
+     aaatttttaa aaatggaatt cttttataag aaaatttttt gaattccatt aaattttaat       300
+     agaaactata atattcaagt gatattacta taatatcaag tcaagttatg atataaaata       360
+     tattataaag attataatat attataaaga ttatataatc tttataatgt ataataataa       420
+     tgattataca atatttaaaa ttgtaaaggt ttatagaatt aatagaatta aattaagatt       480
+     gatgaagatt caaagtaatt actttgt                                           507
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Sorbus tamamschjanae trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..501
+FT                   /isolate="PYR330"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 144-07-91-10;Tax. Authority:
+FT                   Gabrieljan"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Sorbus tamamschjanae"
+FT   misc_feature    1..501
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 501 BP; 216 A; 27 C; 40 G; 218 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tgtcaagaaa gatattttga        60
+     atgacttgaa taagagacgc tcttattaca tattacgtaa attacatatt aattatttat       120
+     tattatattc taaagatttt agtttatata aagatattat aaattaataa gttatttaat       180
+     tattaattaa taagttattt aataaattca aaaatttaat tttaaatttt taaaaatgga       240
+     attcttttct aataaaaatt tttgaattcc attaaatttt aatataaact ataatattca       300
+     agtgatatta ctataatatc aagtcaagtt atgatataaa atatattata tataaaatat       360
+     attataaaga ttatattata aagattatat aatctttata atgtataata ataatgatta       420
+     tacaatattt aaaattgtaa aggtttatag aattaataga attaaattaa gattgatgaa       480
+     gattcaaagt aattactttg t                                                 501
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Cotoneaster dielsianus trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..471
+FT                   /isolate="PYR331"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Barcode:BG Berlin 182-77-74-80;Tax. Authority:
+FT                   E.Pritz. ex Diels"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Cotoneaster dielsianus"
+FT                   /specimen_voucher="B:Gartenherbar 22261a"
+FT   misc_feature    1..471
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 471 BP; 196 A; 29 C; 40 G; 206 T; 0 other;
+     atttatttcc atatgtatac atattttttt tttttcgatt tctatgtcaa gaaagatatt        60
+     ttgaatgact tgaataagag acgctcttat tacatatttc gtaaattaca tattaattat       120
+     ttattattat attctaaaga ttttagttta tataaagata ttctaaatta ataagttatt       180
+     taataaattc aaaaattgaa ttttcaattt ttaaaaatgg aattctttta taataaaaat       240
+     ttttgaattc cattatattt taatagaaac tataatattc aagtgatatt actataatat       300
+     caagtcaagt tatgatataa aatatattat aaagattata atatattata aagattatat       360
+     aatctttata atgtataata ataatgatta tacaatattt taaattgtaa aggtttatag       420
+     aattaataga attaaattaa gattgatgaa aattcaaagt aattactttg t                471
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus spinosa trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Greece"
+FT                   /isolate="PYR333"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Forssk."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus spinosa"
+FT                   /specimen_voucher="B:Willing 177.989-178.018"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 216 A; 27 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttca       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus spinosa trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..400
+FT                   /country="Turkey"
+FT                   /isolate="PYR334"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Forssk."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus spinosa"
+FT                   /specimen_voucher="B:Döring & Parolly 6439"
+FT   misc_feature    1..400
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 400 BP; 166 A; 22 C; 31 G; 181 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata tagttattat attattaatt aataagttat ttaataaatt       240
+     caaaaatttc attttaaatt tttaaaaatg gaattctttt ataataaaat tttttgaatt       300
+     ccattaaatt tgaatataaa atataatatt caagtgatat tactataata tcaagtcaag       360
+     ttatgatata aaatatatta taaagattat aatatattat                             400
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus spinosa trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..491
+FT                   /country="Greece"
+FT                   /isolate="PYR344"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Forssk."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus spinosa"
+FT                   /specimen_voucher="B:Shay 1481"
+FT   misc_feature    1..491
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 491 BP; 208 A; 27 C; 43 G; 213 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttctat aaagatatta taaattaata agttattata       180
+     ttattaatta ataagttatt taataaattc aaaaattgaa ttttaaattt ttaaaaatgg       240
+     aattctttta taataaaatt ttttgaattc cattaaattt gaatataaac tataatattc       300
+     aagtgatatt actataatat caagtcaagt tatgatataa aatatattat aaagattata       360
+     atatattata aagattatat aatctttata atgtataata ataatgatta tacaatattt       420
+     taaattgtaa aggtttatag aattaataga attaaattaa gattgatgaa gattcaaagt       480
+     aattactttg t                                                            491
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus spinosa trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Greece:Pitsidia, Agricultural Guard"
+FT                   /isolate="PYR345"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Forssk."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus spinosa"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 217 A; 26 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttaa       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus syriaca trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..511
+FT                   /country="Cyprus"
+FT                   /isolate="PYR346"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Boiss"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus syriaca"
+FT                   /specimen_voucher="B:Buttler & Diguet 32402"
+FT   misc_feature    1..511
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 511 BP; 217 A; 26 C; 44 G; 224 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtttatat aaagatattt tagtttatat aaagatatta       180
+     taaattaata agttattata ttattaatta ataagttatt taataaattc aaaaatttaa       240
+     ttttaaattt ttaaaaatgg aattctttta taataaaatt ttttgaattc cattaaattt       300
+     gaatataaac tataatattc aagtgatatt actataatat caagtcaagt tatgatataa       360
+     aatatattat aaagattata atatattata aagattatat aatctttata atgtataata       420
+     ataatgatta tacaatattt taaattgtaa aggtttatag aattaataga attaaattaa       480
+     gattgatgaa gattcaaagt aattactttg t                                      511
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus magyarica trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..530
+FT                   /country="Hungary"
+FT                   /isolate="PYR351"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Terpó"
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus magyarica"
+FT                   /specimen_voucher="Kinga Bata s.n."
+FT   misc_feature    1..530
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 530 BP; 223 A; 28 C; 46 G; 233 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtatattc taaagatttt agtttatata aagatatttt       180
+     agtttatata aagatattat aaattaataa gttattatat tattaattaa taagttattt       240
+     aataaattca aaaatttcat tttaaatttt taaaaatgga attcttttat aataaaattt       300
+     tttgaattcc attaaatttg aatataaact ataatattca agtgatatta ctataatatc       360
+     aagtcaagtt atgatataaa atatattata aagattataa tatattataa agattatata       420
+     atctttataa tgtataataa taatgattat acaatatttt aaattgtaaa ggtttataga       480
+     attaatagaa ttaaattaag attgatgaag attcaaagta attactttgt                  530
+//
+ID   XXX; XXX; linear; XXX; XXX; XXX; XXX
+XX
+AC   XXX;
+XX
+DE   Pyrus nivalis trnR atpA misc feature DNA.
+XX
+OS   .
+OC   .
+XX
+FH   Key             Location/Qualifiers
+FT   source          1..530
+FT                   /country="Hungary"
+FT                   /isolate="PYR352"
+FT                   /mol_type="genomic DNA"
+FT                   /note="Tax. Authority: Jacq."
+FT                   /organelle="plastid:chloroplast"
+FT                   /organism="Pyrus nivalis"
+FT                   /specimen_voucher="Kinga Bata s.n."
+FT   misc_feature    1..530
+FT                   /note="trnR-atpA intergenic spacer"
+XX
+RN   [1]
+RA   Gruenstaeudl M.;
+RT   ;
+RL   Submitted (20-JAN-2017) to the INSDC.
+RL   M. Gruenstaeudl, Institut fuer Biologie-Botanik, Freie Universitaet 
+RL   Berlin, Altensteinstr 6, 14195 Berlin, Germany
+XX
+SQ   Sequence 530 BP; 223 A; 28 C; 46 G; 233 T; 0 other;
+     atttatttcc atatgtatac atattttttt tagatttcta tggtcaagaa agatattttg        60
+     aatgacttga ataagagacg ctcttattac atattacgta aattacatat taattattta       120
+     ttattatatt ctaaagattt tagtatattc taaagatttt agtttatata aagatatttt       180
+     agtttatata aagatattat aaattaataa gttattatat tattaattaa taagttattt       240
+     aataaattca aaaatttcat tttaaatttt taaaaatgga attcttttat aataaaattt       300
+     tttgaattcc attaaatttg aatataaact ataatattca agtgatatta ctataatatc       360
+     aagtcaagtt atgatataaa atatattata aagattataa tatattataa agattatata       420
+     atctttataa tgtataataa taatgattat acaatatttt aaattgtaaa ggtttataga       480
+     attaatagaa ttaaattaag attgatgaag attcaaagta attactttgt                  530
+//

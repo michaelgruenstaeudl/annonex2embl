@@ -17,7 +17,7 @@ from itertools import count, groupby
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.05.15.1500'
+__version__ = '2019.09.10.1200'
 
 #############
 # DEBUGGING #
@@ -69,7 +69,7 @@ class AddGapFeature:
                 try:
                     annotations["gap"+str(countr)] = rnge
                 except:
-                    print "Warning: Cannot process Ns in positions `%s`." %(','.join(rnge))
+                    print("Warning: Cannot process Ns in positions `%s`." %(','.join(rnge)))
         return seq, annotations
 
 class DegapButMaintainAnno:
@@ -111,7 +111,7 @@ class DegapButMaintainAnno:
         annotations = copy(charsets)
         index = seq.find(rmchar)
         while index > -1:  # if any occurrence is found
-            for gene_name, indices in annotations.items():
+            for gene_name, indices in list(annotations.items()):
                 if index in indices:
                     indices.remove(index)
                 annotations[gene_name] = [e-1 if e > index else e
@@ -148,7 +148,7 @@ class RmAmbigsButMaintainAnno:
         '''
         if seq[0] == rmchar:
             lead_stripoff = len(seq)-len(seq.lstrip(rmchar))
-            for gene_name, indices in charsets.items():
+            for gene_name, indices in list(charsets.items()):
                 indices_shifted = [i-lead_stripoff for i in indices]
                 charsets[gene_name] = [i for i in indices_shifted if i >= 0]
             seq = seq[lead_stripoff:]
@@ -162,8 +162,8 @@ class RmAmbigsButMaintainAnno:
         '''
         if seq[-1] == rmchar:
             trail_stripoff = len(seq.rstrip(rmchar))
-            range_stripoff = range(trail_stripoff, len(seq))
-            for gene_name, indices in charsets.items():
+            range_stripoff = list(range(trail_stripoff, len(seq)))
+            for gene_name, indices in list(charsets.items()):
                 indices_new = copy(indices)
                 for index in range_stripoff:
                     if index in indices_new:

@@ -1,0 +1,7 @@
+python2 /home/michael_science/git/michaelgruenstaeudl_annonex2embl/scripts/annonex2embl.py -n tests/data/input/TestData_1.nex -c tests/data/input/TestData_1.csv -o tests/data/temp/TestData_1.embl -d "chloroplast trnR-atpA intergenic spacer" -e mi.gruenstaeudl@gmail.com --topol linear --taxdiv PLN
+
+python2 /home/michael_science/git/michaelgruenstaeudl_annonex2embl/scripts/annonex2embl.py -n tests/data/input/TestData_2.nex -c tests/data/input/TestData_2.csv -o tests/data/temp/TestData_2.embl -d "chloroplast trnR-atpA intergenic spacer" -e mi.gruenstaeudl@gmail.com --topol linear --taxdiv PLN
+
+python2 /home/michael_science/git/michaelgruenstaeudl_annonex2embl/scripts/annonex2embl.py -n tests/data/input/Amaranths_ITS_subset_ALIGN.nex -c tests/data/input/Amaranths_ITS_subset_META.csv -o tests/data/temp/Amaranths_ITS_subset_ALIGN.embl -d "nuclear ribosomal internal transcribed spacer" -e mi.gruenstaeudl@gmail.com --topol linear --taxdiv PLN
+
+python2 /home/michael_science/git/michaelgruenstaeudl_annonex2embl/scripts/annonex2embl.py -n tests/data/input/Pyrus_trnK_matK.nex -c tests/data/input/Pyrus_trnK_matK.csv -o tests/data/temp/Pyrus_trnK_matK.embl -e mi.gruenstaeudl@gmail.com -d "chloroplast matK-trnK intergenic spacer" --topol linear --taxdiv PLN --taxcheck True --clmode True --cltype trnK_matK

@@ -1,0 +1,7 @@
+isolate,organism,country,specimen_voucher,note,organelle,mol_type
+PYR330,Sorbus tamamschjanae,,,Barcode:BG Berlin 144-07-91-10;Tax. Authority: Gabrieljan,plastid:chloroplast,genomic DNA
+PYR331,Cotoneaster dielsianus,,B:Gartenherbar 22261a,Barcode:BG Berlin 182-77-74-80;Tax. Authority: E.Pritz. ex Diels,plastid:chloroplast,genomic DNA
+PYR344,Pyrus spinosa,Greece,B:Shay 1481,Tax. Authority: Forssk.,plastid:chloroplast,genomic DNA
+PYR334,Pyrus spinosa,Turkey,B:Döring & Parolly 6439,Tax. Authority: Forssk.,plastid:chloroplast,genomic DNA
+PYR008,Pyrus medvedevii,Armenia,"B,ERE:Ter-Voskanyan, Akopian, Parolly, Weber P2-3",Tax. Authority: Rubtzov,plastid:chloroplast,genomic DNA
+PYR278,Pyrus communis,Czech Republic,Rybka s.n.,Barcode:BG Berlin 180-04-03-10;Tax. Authority: L.,plastid:chloroplast,genomic DNA

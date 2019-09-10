@@ -1,0 +1,14 @@
+<ANALYSIS_SET>
+   <ANALYSIS alias="African_Achyranthoids_matK_part1">
+      <TITLE>tRNA-Lys (trnK) gene, partial cds; tRNA-Lys (trnK) intron, complete sequence; maturase K (matK) gene, complete cds; photosystem II protein D1 (psbA) gene, partial cds</TITLE>
+      <DESCRIPTION>tRNA-Lys (trnK) gene, partial cds; tRNA-Lys (trnK) intron, complete sequence; maturase K (matK) gene, complete cds; photosystem II protein D1 (psbA) gene, partial cds</DESCRIPTION>
+      <STUDY_REF accession="PRJEB25751">
+      </STUDY_REF>
+      <ANALYSIS_TYPE>
+         <SEQUENCE_FLATFILE/>
+      </ANALYSIS_TYPE>
+      <FILES>
+         <FILE checksum="3e1ea34f64bdf75628dbea9fdc4bf190" checksum_method="MD5" filename="AC_matK_2018.03.28.2000_red.embl.gz" filetype="flatfile"/>
+      </FILES>
+   </ANALYSIS>
+</ANALYSIS_SET>
