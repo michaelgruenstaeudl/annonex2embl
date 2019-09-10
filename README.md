@@ -26,8 +26,23 @@ CHARSET psbA_CDS_forward = 3153-3200;   # Accompanying the charset psbA_gene
 END;
 ```
 
+#### Examples of DESCR variable
+```
+# ITS of nuclear ribosomal DNA
+DESCR="18S rRNA gene (partial), ITS1, 5.8S rRNA gene, ITS2 and 28S rRNA gene (partial)"
+
+# trnL-trnF intergenic spacer of plastid genome
+DESCR="tRNA-Leu (trnL) gene, partial sequence; trnL-trnF intergenix spacer, complete sequence; and tRNA-Phe (trnF) gene"
+
+# trnK-matK region of plastid genome
+DESCR="tRNA-Lys (trnK) gene and intron, partial sequence; maturase K (matK) gene, complete cds; psbA gene, partial sequence"
+
+# rpl16 intron of plastid genome
+DESCR="rpl16 intron, partial sequence"
+```
+
 ## USAGE
-#### Example with supplied test data
+#### On Linux / MacOS
 ```
 SCRPT=$PWD/scripts/annonex2embl_CMD.py
 INPUT=examples/DNA_Alignment.nex
@@ -36,12 +51,22 @@ DESCR="description of alignment"
 EMAIL=your_email_here@gmail.com
 AUTHR="Your_name_here"
 
-# UNIX / MacOS
 python2 $SCRPT -n $INPUT -c $METAD -o ${INP%.nex*}.embl -d $DESCR -e $EMAIL -a $AUTHR
+```
 
-# Windows
+#### On Windows
+```
+SET SCRPT=$PWD/scripts/annonex2embl_CMD.py
+SET INPUT=examples/DNA_Alignment.nex
+SET METAD=examples/Metadata.csv
+SET DESCR="description of alignment"
+SET EMAIL=your_email_here@gmail.com
+SET AUTHR="Your_name_here"
+
 python %SCRPT% -n %INPUT% -c %METAD% -o output.embl -d %DESCR% -e %EMAIL% -a %AUTHR%
 ```
+
+
 
 <!---
 NOT NECCESARY AT THIS POINT
