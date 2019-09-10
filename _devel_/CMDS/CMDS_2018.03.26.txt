@@ -1,8 +1,0 @@
-DUBAN:
-python2 /home/michael_science/git/michaelgruenstaeudl_annonex2embl/scripts/annonex2embl_CMD.py -n /home/michael_science/Desktop/TESTFELD/Duban/02_process/matK_1paper_157species_annotated.nex -c /home/michael_science/Desktop/TESTFELD/Duban/02_process/metadata_1paper_157species.csv -d "tRNA-Lys (trnK) gene, partial cds; tRNA-Lys (trnK) intron, complete cds; maturase K (matK) gene, complete cds; chloroplast" -e mi.gruenstaeudl@gmail.com -o /home/michael_science/Desktop/TESTFELD/Duban/02_process/matK_1paper_157species_annotated.embl
-
-python2 /home/michael_science/git/michaelgruenstaeudl_annonex2embl/scripts/annonex2embl_CMD.py -n /home/michael_science/Desktop/TESTFELD/Duban/02_process/matK_1paper_157species_annotated.nex -c /home/michael_science/Desktop/TESTFELD/Duban/02_process/metadata_1paper_157species.csv -d "tRNA-Lys (trnK) gene, partial cds; tRNA-Lys (trnK) intron, complete cds; maturase K (matK) gene, complete cds; chloroplast" -e mi.gruenstaeudl@gmail.com -o /home/michael_science/Desktop/TESTFELD/Duban/02_process/matK_1paper_157species_annotated_CHECKLIST.tsv --clmode TRUE --cltype trnK_matK
-
-
-VANESSA:
-python2 /home/michael_science/git/michaelgruenstaeudl_annonex2embl/scripts/annonex2embl_CMD.py -n ./AC_matK_alignment_annotated_2018.03.26.1300.nex -c ./Metadata_Achyranthoids.csv -d "tRNA-Lys (trnK) gene, partial cds; tRNA-Lys (trnK) intron, complete cds; maturase K (matK) gene, complete cds; photosystem II protein D1 (psbA) gene, partial cds; chloroplast" -e mi.gruenstaeudl@gmail.com -o ./AC_matK.embl
