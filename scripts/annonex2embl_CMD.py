@@ -45,6 +45,8 @@ import pdb
 
 if __name__ == '__main__':
     import argparse
+
+
     parser = argparse.ArgumentParser(description="  --  ".join([__author__, __copyright__, __info__, __version__]))
 
     ### REQUIRED ###
@@ -81,18 +83,16 @@ if __name__ == '__main__':
     parser.add_argument('-o',
                         '--outfile',
                         help='absolute path to outfile; outfile in EMBL format; Example: /path_to_output/test.embl',
-                        default='/home/username/Desktop/test.embl',
+                        default='examples/output/test.embl',
                         required=True)
 
     ### OPTIONAL ###
-    parser.add_argument('-ms',
-                        '--manifeststudy',
+    parser.add_argument('--manifeststudy',
                         help='Name of the study which appears in the manifest file',
                         default='PRJEB00000',
                         required=False)
 
-    parser.add_argument('-mn',
-                        '--manifestname',
+    parser.add_argument('--manifestname',
                         help='Name which appears in the manifest file',
                         default='a_unique_description_here',
                         required=False)
@@ -155,7 +155,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-
+    
 ########
 # MAIN #
 ########

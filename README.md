@@ -45,40 +45,42 @@ DESCR="rpl16 intron, partial sequence"
 #### On Linux / MacOS
 ```
 SCRPT=$PWD/scripts/annonex2embl_CMD.py
-INPUT=examples/input/reverse.nex
-METAD=examples/input/reverse.csv
-DESCR="description of alignment"
+INPUT=examples/input/TestData1.nex
+METAD=examples/input/TestData1.csv
+OTPUT=examples/output/TestData1.embl
+DESCR='description of alignment'  # Do not use double-quotes
 EMAIL=your_email_here@yourmailserver.com
-AUTHR="your name here"
+AUTHR='your name here'  # Do not use double-quotes
 MNFTS=PRJEB00000
+MNFTN=${DESCR//[^[:alnum:]]/_}
 
-python2 $SCRPT -n $INPUT -c $METAD -o ${INPUT%.nex*}.embl -d $DESCR -e $EMAIL -a $AUTHR -ms $MNFTS -mn ${DESCR//[^[:alnum:]]/_}
+python3 $SCRPT -n $INPUT -c $METAD -d "$DESCR" -e $EMAIL -a "$AUTHR" -o $OTPUT --manifeststudy $MNFTS --manifestname $MNFTN  --productlookup True
 ```
 
 #### On Windows
 ```
-SET SCRPT=$PWD/scripts/annonex2embl_CMD.py
-SET INPUT=examples/input/reverse.nex
-SET METAD=examples/input/reverse.csv
-SET DESCR="description of alignment"
+SET SCRPT=$PWD\scripts\annonex2embl_CMD.py
+SET INPUT=examples\input\TestData1.nex
+SET METAD=examples\input\TestData1.csv
+SET OTPUT=examples\output\TestData1.embl
+SET DESCR='description of alignment'
 SET EMAIL=your_email_here@yourmailserver.com
-SET AUTHR="your name here"
+SET AUTHR='your name here'
 SET MNFTS=PRJEB00000
-
-SET OTPUT=output.embl
 SET MNFTN=a_unique_description_here
 
-python %SCRPT% -n %INPUT% -c %METAD% -o %OTPUT% -d %DESCR% -e %EMAIL% -a %AUTHR% -ms %MNFTS% -mn %MNFTN%
+python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% -o %OTPUT% --manifeststudy %MNFTS% --manifestname %MNFTN%  --productlookup True
 ```
 
 
 ## TO DO
-* Section "POST-PROCESSING OF FILES": Please write equivalent code for post-processing the output file in the Windows cmd shell as already exists for post-processing the output file in the Bash shell.
-* Currently, --taxcheck requires "True" of "False" as parameters; how can I use it such that only the presence of --taxcheck indicates "True", whereas its abscence indicates "False"?
+* Replace section "POST-PROCESSING OF FILES" with code that reads in the file written to outp_handle and that edits the text string within Python (as opposed to calling 'sed' as done currently). That way, the code becomes platform independent. For example, the code can be loaded into a stringIO and edited via regular Python-string-functions (see function "write_SeqRecord" in IOOps.py as an example).
+* Example files (./examples/input): Combine the alignments "fuzzy.nex" and "reverse.nex" into a single NEXUS file, while keeping the maximum sequence length of each sequence at 38 nucleotides (adjust the annotations to the new length accordingly)
 
 
 <!---
 NOT NECESSARY AT THIS POINT
+* Currently, --taxcheck requires "True" of "False" as parameters; how can I use it such that only the presence of --taxcheck indicates "True", whereas its abscence indicates "False"?
 * Implement improvements of argparser (scripts/annonex2embl_CMD.py): Currently, the "required" and "optional" parameters are not displayed when calling scripts/annonex2embl_CMD.py. It incorrectly says "optional parameters" for all.
 * Add a function that (a) reads and parses a bibtex file, extracts the citation info as well as the submitter references as from that file, and write the correctly formatted string-lines into the EMBL output file during post-processing.
 --->
@@ -88,7 +90,7 @@ NOT NECESSARY AT THIS POINT
 #### Testing for development
 To run the unittests outside of 'python setup.py test':
 ```
-python -m unittest discover -s tests -p "*_test.py"
+python3 -m unittest discover -s tests -p "*_test.py"
 ```
 
 ## CHANGELOG

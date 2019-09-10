@@ -7,7 +7,13 @@ XX
 OS   .
 OC   .
 XX
+RN   [1]
+RA   your name here
+RT   ;
+RL   Submitted (10-SEP-2019) to the INSDC.
+XX
 FH   Key             Location/Qualifiers
+FH
 FT   source          1..38
 FT                   /country="Country_1: Area_1"
 FT                   /isolate="Taxon_1"
@@ -36,7 +42,13 @@ XX
 OS   .
 OC   .
 XX
+RN   [1]
+RA   your name here
+RT   ;
+RL   Submitted (10-SEP-2019) to the INSDC.
+XX
 FH   Key             Location/Qualifiers
+FH
 FT   source          1..26
 FT                   /country="Country_2: Area_2"
 FT                   /isolate="Taxon_2"
@@ -65,7 +77,13 @@ XX
 OS   .
 OC   .
 XX
+RN   [1]
+RA   your name here
+RT   ;
+RL   Submitted (10-SEP-2019) to the INSDC.
+XX
 FH   Key             Location/Qualifiers
+FH
 FT   source          1..24
 FT                   /country="Iceland: Reykjavik"
 FT                   /isolate="Taxon_3"

@@ -12,8 +12,12 @@ import MyExceptions as ME
 
 from csv import DictReader
 from Bio.Nexus import Nexus
-from io import StringIO
 from Bio import SeqIO
+
+try:
+    from StringIO import StringIO ## for Python 2
+except ImportError:
+    from io import StringIO ## for Python 3
 
 ###############
 # AUTHOR INFO #
@@ -97,51 +101,54 @@ class Outp:
     def __init__(self):
         pass
 
-    def write_EntryUpload(self, seq_record, outp_handle, eusubm_bool):
-        ''' This function writes a seqRecord in ENA format for a submission
-            via Entry Upload. Upon request (eusubm_bool), it also masks the ID and AC
+    def write_SeqRecord(self, seq_name, seq_record, outp_handle, ENAstrict_bool):
+        ''' This function writes a seqRecord in EMBL format. 
+            Upon request (ENAstrict_bool), it masks the ID and AC
             lines as requested by ENA for submissions.
         Args:
+            seq_name (str)
             seq_record (obj)
             outp_handle (obj)
-            eusubm_bool(str)
+            ENAstrict_bool(bool)
         Returns:
             currently nothing
         Raises:
             -
         '''
-        temp_handle = StringIO()
+
+        SecRecord_handle = StringIO()
         try:
-            SeqIO.write(seq_record, temp_handle, 'embl')
-        except:
-            raise ME.MyException('%s annonex2embl ERROR: Problem with \
-            `%s`. Did not write to internal handle.' % ('\n', seq_name))
-        if eusubm_bool:
-            temp_handle_lines = temp_handle.getvalue().splitlines()
-            if temp_handle_lines[0].split()[0] == 'ID':
-                ID_line = temp_handle_lines[0]
+            SeqIO.write(seq_record, SecRecord_handle, 'embl')
+        except ME.MyException as e:
+            raise ME.MyException(('%s annonex2embl ERROR: Problem with '
+            '`%s`. Did not write to internal handle.' % ('\n', colored(e, 'red'), seq_name)))
+        if ENAstrict_bool:
+            SecRecord_handle_lines = SecRecord_handle.getvalue().splitlines()
+            if SecRecord_handle_lines[0].split()[0] == 'ID':
+                ID_line = SecRecord_handle_lines[0]
                 ID_line_parts = ID_line.split('; ')
                 if len(ID_line_parts) == 7:
                     ID_line_parts = ['XXX' if ID_line_parts.index(p) in
                                      [0, 1, 3, 4, 5, 6] else p for p in ID_line_parts]
-                temp_handle_lines[0] = 'ID   ' + '; '.join(ID_line_parts)
-            if temp_handle_lines[2].split()[0] == 'AC':
-                temp_handle_lines[2] = 'AC   XXX;'
-            temp_handle_new = '\n' + '\n'.join(temp_handle_lines)
-            temp_handle.truncate(0)
-            temp_handle.write(temp_handle_new)
+                SecRecord_handle_lines[0] = 'ID   ' + '; '.join(ID_line_parts)
+            if SecRecord_handle_lines[2].split()[0] == 'AC':
+                SecRecord_handle_lines[2] = 'AC   XXX;'
+            SecRecord_handle_new = '\n' + '\n'.join(SecRecord_handle_lines)
+            SecRecord_handle.truncate(0)
+            SecRecord_handle.write(SecRecord_handle_new)
         else:
             pass
 
-        outp_handle.write(temp_handle.getvalue())
-        temp_handle.close()
+        outp_handle.write(SecRecord_handle.getvalue())
+        SecRecord_handle.close()
 
-        # return something?
 
     def create_manifest(self, path_to_outfile, manifest_study, manifest_name, manifest_flatfile):
+        ''' This function writes a manifest file. '''
+        
         manifest_fn = ''.join(path_to_outfile.split('.')[:-1]) + '.manifest'
         manifest = open(manifest_fn, "w")
-        manifest.write("STUDY\t%s\n") % (manifest_study)
-        manifest.write("NAME\t%s\n") % (manifest_name)
-        manifest.write("FLATFILE\\t%s\n") % (manifest_flatfile)
+        manifest.write(("STUDY\t %s\n") % (manifest_study))
+        manifest.write(("NAME\t %s\n") % (manifest_name))
+        manifest.write(("FLATFILE\t %s\n") % (manifest_flatfile))
         manifest.close()

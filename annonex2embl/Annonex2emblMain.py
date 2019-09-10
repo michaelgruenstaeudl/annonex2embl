@@ -27,8 +27,8 @@ from distutils.util import strtobool
 from termcolor import colored
 
 # Add specific directory to sys.path in order to import its modules
-# NOTE: THIS RELATIVE IMPORTING IS AMATEURISH.
-# NOTE: COULD THE FOLLOWING IMPORT BE REPLACED WITH 'import annonex2embl'?
+# Note: This relative importing is amateurish. Could the following 
+#       import be replaced with 'import annonex2embl'?
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
 
@@ -44,6 +44,9 @@ __version__ = '2019.09.10.1200'
 #############
 # DEBUGGING #
 #############
+
+#import ipdb
+# ipdb.set_trace()
 
 import pdb
 # pdb.set_trace()
@@ -228,6 +231,7 @@ def annonex2embl(path_to_nex,
             AddGapFeature(seq_nogaps, charsets_degapped).add()
         # TFL assigns the deambiged and degapped sequence back
         seq_record.seq = seq_final
+        
 ####################################
 
 # 6.4. GENERATE SEQFEATURE 'SOURCE' AND TEST TAXON NAME AGAINST
@@ -238,6 +242,7 @@ def annonex2embl(path_to_nex,
         source_feature = GnOps.GenerateSeqFeature().\
             source_feat(len(seq_record), current_quals, charset_names)
         seq_record.features.append(source_feature)
+        
 ####################################
 
 # 6.5. VALIDATE TAXON NAME
@@ -264,7 +269,7 @@ def annonex2embl(path_to_nex,
                 location_object = GnOps.GenerateFeatLoc().make_location(charset_range)
 
 # 6.6.3. Assign a gene product to a gene name, unless it's a gap feature
-                if charset_name[0:4] == "gap":
+                if charset_name[0:3] == "gap":
                     charset_sym = None
                     charset_type = "gap"
                     charset_orient = "forw"
@@ -362,8 +367,8 @@ def annonex2embl(path_to_nex,
 ####################################
 
 # 6.10. DECISION ON OUTPUT FORMAT
-        IOOps.Outp().write_EntryUpload(seq_record, outp_handle,
-                                       linemask_bool)
+        IOOps.Outp().write_SeqRecord(seq_name, seq_record,
+                                     outp_handle, linemask_bool)
 
 ########################################################################
 
@@ -397,16 +402,22 @@ def annonex2embl(path_to_nex,
 ########################################################################
 
 # 9. Create Manifest file
-    if(manifest_study!='' and manifest_name!=''):
+
+    if manifest_study and manifest_name:
         manifest_flatfile = os.path.basename(path_to_outfile)
         IOOps.Outp().create_manifest(path_to_outfile,
                                      manifest_study, 
                                      manifest_name,
                                      manifest_flatfile)
-    elif(manifest_study!='' or manifest_name!=''):
-        raise ME.MyException('%s annonex2embl WARNING: Manifest file incomplete '
-                             'due to missing study name (commandline parameter -ms) '
-                             'or submission name (commandline parameter -mn).'
-                              % ('\n'))
+
+    elif manifest_study and not manifest_name:
+        raise ME.MyException('%s annonex2embl WARNING: Manifest file not written '
+                             'due to missing manifest name.' % ('\n'))
+
+    elif not manifest_study and manifest_name:
+        raise ME.MyException('%s annonex2embl WARNING: Manifest file not written '
+                             'due to missing manifest study.' % ('\n'))
+    else:
+        pass
 
 ########################################################################

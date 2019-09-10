@@ -2,10 +2,15 @@ ID   reverse; SV 1; linear; genomic DNA; ; PLN; 57 BP.
 XX
 AC   reverse;
 XX
-DE   reverse Test, isolate reverse
+DE   reverse description of alignment, isolate reverse
 XX
 OS   .
 OC   .
+XX
+RN   [1]
+RA   your name here
+RT   ;
+RL   Submitted (10-SEP-2019) to the INSDC.
 XX
 FH   Key             Location/Qualifiers
 FH
@@ -18,13 +23,11 @@ FT                   /specimen_voucher="Herbarium_1: Collection#"
 FT                   /mol_type="genomic DNA"
 FT   CDS             complement(join(16..>57,<1..9))
 FT                   /note="trnKTTT"
-FT                   /product="tRNA"
 FT                   /transl_table=11
 FT                   /codon_start=1
 FT                   /translation="MPGPGPGPGPGPGPGF"
 FT   CDS             join(<1..9,16..>57)
 FT                   /note="foo"
-FT                   /product="forkhead box i1"
 FT                   /transl_table=11
 FT                   /codon_start=1
 FT                   /translation="LKPGPGPGPGPGPGPGH"
