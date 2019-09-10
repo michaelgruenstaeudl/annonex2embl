@@ -289,7 +289,7 @@ class ParseCharsetName:
         charset_name (str): a string that represents a charset name; example:
                             "psbI_CDS"
         email_addr (dict):  your email address; example:
-                            "your_email_here@amailserver.com"
+                            "your_email_here@yourmailserver.com"
         product_lookup (bool): decision if product name shall be looked up
     Raises:
         currently nothing

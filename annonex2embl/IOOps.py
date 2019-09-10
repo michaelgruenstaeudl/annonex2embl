@@ -138,11 +138,10 @@ class Outp:
 
         # return something?
 
-    def create_manifest_file(self, path_to_outfile, study, name, description = ""):
-        test = ''.join(path_to_outfile.split('.')[:-1]) + '.manifest'
-        manifest = open(test, "w")
-        manifest.write("STUDY\t" + study + "\n")
-        manifest.write("NAME\t" + name + "\n")
-        if(description != ""):
-            manifest.write("Description\t" + description + "\n")
+    def create_manifest(self, path_to_outfile, manifest_study, manifest_name, manifest_flatfile):
+        manifest_fn = ''.join(path_to_outfile.split('.')[:-1]) + '.manifest'
+        manifest = open(manifest_fn, "w")
+        manifest.write("STUDY\t%s\n") % (manifest_study)
+        manifest.write("NAME\t%s\n") % (manifest_name)
+        manifest.write("FLATFILE\\t%s\n") % (manifest_flatfile)
         manifest.close()

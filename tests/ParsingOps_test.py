@@ -23,7 +23,7 @@ import ParsingOps as PrOps
 # AUTHOR INFO #
 ###############
 
-__author__ = 'Michael Gruenstaeudl <your_email_here@amailserver.com>'
+__author__ = 'Michael Gruenstaeudl <your_email_here@yourmailserver.com>'
 __copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
 __info__ = 'nex2embl'
 __version__ = '2017.02.01.1400'
@@ -49,7 +49,7 @@ class ParseCharsetNameTestCases(unittest.TestCase):
             This test evaluates the basic parsing ability of the
             class. '''
         charset_name = 'psbI_CDS'
-        email_addr = 'your_email_here@amailserver.com'
+        email_addr = 'your_email_here@yourmailserver.com'
         product_lookup = True
         handle = PrOps.ParseCharsetName(charset_name, email_addr, product_lookup).parse()
         self.assertIsInstance(handle, tuple)
@@ -63,7 +63,7 @@ class ParseCharsetNameTestCases(unittest.TestCase):
             This test evaluates the situation where a charset_name
             contains more than one charset_type. '''
         charset_name = 'psbI_rRNA_CDS' # Two feature keys present.
-        email_addr = 'your_email_here@amailserver.com'
+        email_addr = 'your_email_here@yourmailserver.com'
         product_lookup = True
         with self.assertRaises(ME.MyException):
             PrOps.ParseCharsetName(charset_name, email_addr, product_lookup).parse()
@@ -74,7 +74,7 @@ class ParseCharsetNameTestCases(unittest.TestCase):
             This test evaluates the situation where a charset_name contains
             more than one charset_sym. '''
         charset_name = 'psbI_matK_CDS' # Two gene symbols present.
-        email_addr = 'your_email_here@amailserver.com'
+        email_addr = 'your_email_here@yourmailserver.com'
         product_lookup = True
         with self.assertRaises(ME.MyException):
             PrOps.ParseCharsetName(charset_name, email_addr, product_lookup).parse()
@@ -85,7 +85,7 @@ class ParseCharsetNameTestCases(unittest.TestCase):
             This test evaluates the situation where a charset_name contains an
             unknown charset_sym. '''
         charset_name = 'xxxX_CDS'
-        email_addr = 'your_email_here@amailserver.com'
+        email_addr = 'your_email_here@yourmailserver.com'
         product_lookup = True
         with self.assertRaises(ME.MyException):
             PrOps.ParseCharsetName(charset_name, email_addr, product_lookup).parse()
@@ -96,7 +96,7 @@ class ParseCharsetNameTestCases(unittest.TestCase):
             This test evaluates the situation where a charset_name
             contains only the charset_sym, not the charset_type. '''
         charset_name = 'matK'
-        email_addr = 'your_email_here@amailserver.com'
+        email_addr = 'your_email_here@yourmailserver.com'
         product_lookup = True
         with self.assertRaises(ME.MyException):
             PrOps.ParseCharsetName(charset_name, email_addr, product_lookup).parse()
@@ -107,7 +107,7 @@ class ParseCharsetNameTestCases(unittest.TestCase):
             This test evaluates the situation where a charset_name
             contains only the charset_type, not the charset_sym. '''
         charset_name = 'CDS'
-        email_addr = 'your_email_here@amailserver.com'
+        email_addr = 'your_email_here@yourmailserver.com'
         product_lookup = True
         with self.assertRaises(ME.MyException):
             PrOps.ParseCharsetName(charset_name, email_addr, product_lookup).parse()
@@ -119,7 +119,7 @@ class ParseCharsetNameTestCases(unittest.TestCase):
             charset_sym and the charset_type have been inadvertedly
             switched. Such a switch should not matter. '''
         charset_name = 'CDS_psbI'
-        email_addr = 'your_email_here@amailserver.com'
+        email_addr = 'your_email_here@yourmailserver.com'
         product_lookup = True
         handle = PrOps.ParseCharsetName(charset_name, email_addr, product_lookup).parse()
         self.assertIsInstance(handle, tuple)
@@ -136,7 +136,7 @@ class GetEntrezInfoTestCases(unittest.TestCase):
             not exist on NCBI Taxonomy. '''
         #taxon_name = 'Pyrus tamamaschjanae'
         taxon_name = "qwertzuiop"
-        email_addr = 'your_email_here@amailserver.com'
+        email_addr = 'your_email_here@yourmailserver.com'
         handle = PrOps.GetEntrezInfo(email_addr).does_taxon_exist(taxon_name)
         self.assertFalse(handle)
 
@@ -145,7 +145,7 @@ class GetEntrezInfoTestCases(unittest.TestCase):
             This test evaluates the case where a taxon name is used that does
             exist on NCBI Taxonomy. '''
         taxon_name = 'Pyrus caucasica'
-        email_addr = 'your_email_here@amailserver.com'
+        email_addr = 'your_email_here@yourmailserver.com'
         handle = PrOps.GetEntrezInfo(email_addr).does_taxon_exist(taxon_name)
         self.assertTrue(handle)
 

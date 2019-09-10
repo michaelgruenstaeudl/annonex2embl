@@ -64,7 +64,6 @@ def annonex2embl(path_to_nex,
 
                  manifest_study='',
                  manifest_name='',
-                 manifest_descr='',
                  product_lookup='False',
                  tax_check='False',
                  linemask='False',
@@ -399,9 +398,15 @@ def annonex2embl(path_to_nex,
 
 # 9. Create Manifest file
     if(manifest_study!='' and manifest_name!=''):
-        IOOps.Outp().create_manifest_file(path_to_outfile, manifest_study, 
-                                          manifest_name, manifest_descr)
+        manifest_flatfile = os.path.basename(path_to_outfile)
+        IOOps.Outp().create_manifest(path_to_outfile,
+                                     manifest_study, 
+                                     manifest_name,
+                                     manifest_flatfile)
     elif(manifest_study!='' or manifest_name!=''):
-        raise ME.MyException('Error when creating manifest file. Please provide both, information on study name (CMD parameter -ms) and your name (CMD parameter -mn).')
+        raise ME.MyException('%s annonex2embl WARNING: Manifest file incomplete '
+                             'due to missing study name (commandline parameter -ms) '
+                             'or submission name (commandline parameter -mn).'
+                              % ('\n'))
 
 ########################################################################

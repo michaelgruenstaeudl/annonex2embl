@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.7
 '''
-annonex2embl wrapper
+annonex2embl commandline wrapper
 '''
 
 #####################
@@ -11,8 +11,8 @@ import sys
 import os
 
 # Add specific directory to sys.path in order to import its modules
-# NOTE: THIS RELATIVE IMPORTING IS AMATEURISH.
-# NOTE: COULD THE FOLLOWING IMPORT BE REPLACED WITH 'import annonex2embl'?
+# Note: This relative importing is amateurish. Could the following 
+#       import be replaced with 'import annonex2embl'?
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
 
@@ -39,15 +39,10 @@ import pdb
 # GLOBAL VARIABLES #
 ####################
 
-########
-# TODO #
-########
-
-''' Include selection on topol of submission (linear [default] or circular) '''
-
 ############
 # ARGPARSE #
 ############
+
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description="  --  ".join([__author__, __copyright__, __info__, __version__]))
@@ -56,31 +51,31 @@ if __name__ == '__main__':
     parser.add_argument('-n',
                         '--nexus',
                         help='absolute path to infile; infile in NEXUS format; Example: /path_to_input/test.nex',
-                        default='/home/username/Desktop/test.nex',
+                        default='examples/input/test.nex',
                         required=True)
 
     parser.add_argument('-c',
                         '--csv',
                         help='absolute path to infile; infile in CSV format; Example: /path_to_input/test.csv',
-                        default='/home/username/Desktop/test.csv',
+                        default='examples/input/test.csv',
                         required=True)
 
     parser.add_argument('-d',
                         '--descript',
                         help='text string characterizing the DNA alignment; Example: "chloroplast trnR-atpA intergenic spacer"',
-                        default='[PLACEHOLDER]',
+                        default='PLACEHOLDER',
                         required=True)
 
     parser.add_argument('-e',
                         '--email',
-                        help='Your email address; Example: "my.username@gmail.com"',
-                        default='my.username@gmail.com',
+                        help='Your email address; Example: "your_email_here@yourmailserver.com"',
+                        default='your_email_here@yourmailserver.com',
                         required=True)
 
     parser.add_argument('-a',
                         '--authors',
                         help='Author names; Example: "Gruenstaeudl M.; LastName I."',
-                        default='Gruenstaeudl M.; LastName I.',
+                        default='LastName Foo; LastName Baz',
                         required=True)
 
     parser.add_argument('-o',
@@ -93,19 +88,13 @@ if __name__ == '__main__':
     parser.add_argument('-ms',
                         '--manifeststudy',
                         help='Name of the study which appears in the manifest file',
-                        default='',
+                        default='PRJEB00000',
                         required=False)
 
     parser.add_argument('-mn',
                         '--manifestname',
                         help='Name which appears in the manifest file',
-                        default='',
-                        required=False)
-
-    parser.add_argument('-md',
-                        '--manifestdescr',
-                        help='Description for the manifest file',
-                        default='',
+                        default='a_unique_description_here',
                         required=False)
 
     parser.add_argument('--productlookup',
@@ -180,7 +169,6 @@ if __name__ == '__main__':
 
                                 args.manifeststudy,
                                 args.manifestname,
-                                args.manifestdescr,
                                 args.productlookup,
                                 args.taxcheck,
                                 args.linemask,
@@ -190,3 +178,4 @@ if __name__ == '__main__':
                                 args.ttable,
                                 args.organelle,
                                 args.seqvers )
+

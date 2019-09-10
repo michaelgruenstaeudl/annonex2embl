@@ -45,27 +45,31 @@ DESCR="rpl16 intron, partial sequence"
 #### On Linux / MacOS
 ```
 SCRPT=$PWD/scripts/annonex2embl_CMD.py
-INPUT=examples/DNA_Alignment.nex
-METAD=examples/Metadata.csv
+INPUT=examples/input/reverse.nex
+METAD=examples/input/reverse.csv
 DESCR="description of alignment"
-EMAIL=your_email_here@amailserver.com
-AUTHR="Your_name_here"
+EMAIL=your_email_here@yourmailserver.com
+AUTHR="your name here"
+MNFTS=PRJEB00000
 
-python2 $SCRPT -n $INPUT -c $METAD -o ${INP%.nex*}.embl -d $DESCR -e $EMAIL -a $AUTHR
+python2 $SCRPT -n $INPUT -c $METAD -o ${INPUT%.nex*}.embl -d $DESCR -e $EMAIL -a $AUTHR -ms $MNFTS -mn ${DESCR//[^[:alnum:]]/_}
 ```
 
 #### On Windows
 ```
 SET SCRPT=$PWD/scripts/annonex2embl_CMD.py
-SET INPUT=examples/DNA_Alignment.nex
-SET METAD=examples/Metadata.csv
+SET INPUT=examples/input/reverse.nex
+SET METAD=examples/input/reverse.csv
 SET DESCR="description of alignment"
-SET EMAIL=your_email_here@amailserver.com
-SET AUTHR="Your_name_here"
+SET EMAIL=your_email_here@yourmailserver.com
+SET AUTHR="your name here"
+SET MNFTS=PRJEB00000
 
-python %SCRPT% -n %INPUT% -c %METAD% -o output.embl -d %DESCR% -e %EMAIL% -a %AUTHR%
+SET OTPUT=output.embl
+SET MNFTN=a_unique_description_here
+
+python %SCRPT% -n %INPUT% -c %METAD% -o %OTPUT% -d %DESCR% -e %EMAIL% -a %AUTHR% -ms %MNFTS% -mn %MNFTN%
 ```
-
 
 
 ## TO DO
