@@ -6,7 +6,6 @@
 # IMPORT OPERATIONS #
 #####################
 
-import MyExceptions as ME
 import CheckingOps as CkOps
 import DegappingOps as DgOps
 import GenerationOps as GnOps
@@ -39,7 +38,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.09.10.1200'
+__version__ = '2019.09.11.1800'
 
 #############
 # DEBUGGING #
@@ -95,8 +94,9 @@ def annonex2embl(path_to_nex,
     try:
         charsets_global, alignm_global = IOOps.Inp().\
             parse_nexus_file(path_to_nex)
-    except ME.MyException as e:
-        sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
+    except Exception as e:
+        print('\n annonex2embl ERROR: %s' % (e))
+        raise e
 
 
 ########################################################################
@@ -104,8 +104,9 @@ def annonex2embl(path_to_nex,
 # 3. PARSE DATA FROM .CSV-FILE
     try:
         raw_qualifiers = IOOps.Inp().parse_csv_file(path_to_csv)
-    except ME.MyException as e:
-        sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
+    except Exception as e:
+        print('\n annonex2embl ERROR: %s' % (e))
+        raise e
 
 ########################################################################
 
@@ -114,8 +115,9 @@ def annonex2embl(path_to_nex,
     try:
         CkOps.QualifierCheck(raw_qualifiers, uniq_seqid_col).\
             quality_of_qualifiers()
-    except ME.MyException as e:
-        sys.exit('%s annonex2embl ERROR: %s' % ('\n', e))
+    except Exception as e:
+        print('\n annonex2embl ERROR: %s' % (e))
+        raise e
 # 4.1.2 Remove qualifiers without content (i.e. empty qualifiers)
     nonempty_qualifiers = CkOps.QualifierCheck.\
         _rm_empty_qual(raw_qualifiers)
@@ -131,12 +133,12 @@ def annonex2embl(path_to_nex,
 # 4.2.1. Exit if seq names in NEX-file not identical to seq ids in csv-file
     not_shared = list(set(sorted_seqnames) - set(sorted_seqids))
     if not_shared:
-        sys.exit('%s annonex2embl ERROR: Sequence names in `%s` '
-                 'are NOT IDENTICAL to sequence IDs in `%s`.'
-                 '%s The following sequence names don\'t have a match: `%s`'
-                 % ('\n', colored(path_to_nex, 'red'),
-                 colored(path_to_csv, 'red'), '\n',
-                 colored(','.join(not_shared), 'red')))
+        sys.exit('\n annonex2embl ERROR: Sequence names in %s '
+                 'are NOT IDENTICAL to sequence IDs in %s.'
+                 '%s The following sequence names don\'t have a match: %s'
+                 % (colored(path_to_nex, 'red'),
+                    colored(path_to_csv, 'red'), '\n',
+                    colored(','.join(not_shared), 'red')))
 
 ########################################################################
 
@@ -146,8 +148,8 @@ def annonex2embl(path_to_nex,
         try:
             charset_sym, charset_type, charset_orient, charset_product = PrOps.\
                 ParseCharsetName(charset_name, email_addr, productlookup_bool).parse()
-        except ME.MyException as e:
-            sys.exit('%s annonex2embl ERROR: %s' % ('\n',
+        except Exception as e:
+            sys.exit('\n annonex2embl ERROR: %s' % (
                     colored(e, 'red')))
 
         charset_dict[charset_name] = (charset_sym, charset_type, charset_orient,
@@ -315,10 +317,10 @@ def annonex2embl(path_to_nex,
                         transl_and_quality_of_transl(seq_record,
                                                      feature, transl_table)
                     last_seen[2] = feature.location
-                except ME.MyException as e:
-                    print(('%s annonex2embl WARNING: %s Feature `%s` '
-                          '(type: `%s`) of sequence `%s` is not saved to '
-                          'output.' % ('\n', colored(e, 'red'),
+                except Exception as e:
+                    print(('\n annonex2embl WARNING: %s Feature %s '
+                          '(type: %s) of sequence %s is not saved to '
+                          'output.' % (colored(e, 'red'),
                                        colored(feature.id, 'red'),
                                        colored(feature.type, 'red'),
                                        colored(seq_record.id, 'red'))))
@@ -411,12 +413,12 @@ def annonex2embl(path_to_nex,
                                      manifest_flatfile)
 
     elif manifest_study and not manifest_name:
-        raise ME.MyException('%s annonex2embl WARNING: Manifest file not written '
-                             'due to missing manifest name.' % ('\n'))
+        raise ME.MyException('\n annonex2embl WARNING: Manifest file not written '
+                             'due to missing manifest name.' % ())
 
     elif not manifest_study and manifest_name:
-        raise ME.MyException('%s annonex2embl WARNING: Manifest file not written '
-                             'due to missing manifest study.' % ('\n'))
+        raise ME.MyException('\n annonex2embl WARNING: Manifest file not written '
+                             'due to missing manifest study.' % ())
     else:
         pass
 

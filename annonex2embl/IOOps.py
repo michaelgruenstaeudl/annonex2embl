@@ -8,11 +8,11 @@ Custom operations input and output processes
 #####################
 
 import os
-import MyExceptions as ME
 
 from csv import DictReader
 from Bio.Nexus import Nexus
 from Bio import SeqIO
+from termcolor import colored
 
 try:
     from StringIO import StringIO ## for Python 2
@@ -26,7 +26,7 @@ except ImportError:
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.09.10.1200'
+__version__ = '2019.09.11.1800'
 
 #############
 # DEBUGGING #
@@ -70,8 +70,10 @@ class Inp:
             reader = DictReader(open(path_to_csv, 'r'), delimiter=',',
                                 quotechar='"', skipinitialspace=True)
             a_matrix = list(reader)
-        except:
-            raise ME.MyException('Parsing of .csv-file unsuccessful.')
+        except Exception as e:
+            print(('\n annonex2embl ERROR: %s:\n %s' % (colored('Parsing of '
+            '.csv-file unsuccessful', 'red'), e)))
+            raise e
         return a_matrix
 
     def parse_nexus_file(self, path_to_nex):
@@ -83,8 +85,10 @@ class Inp:
             matrix = aln.matrix
         except Nexus.NexusError as ne:
             raise ne
-        except:
-            raise ME.MyException('Parsing of .nex-file unsuccessful.')
+        except Exception as e:
+            print(('\n annonex2embl ERROR: %s:\n %s' % (colored('Parsing of '
+            '.nex-file unsuccessful', 'red'), e)))
+            raise e
         return (charsets, matrix)
 
 
@@ -119,9 +123,11 @@ class Outp:
         SecRecord_handle = StringIO()
         try:
             SeqIO.write(seq_record, SecRecord_handle, 'embl')
-        except ME.MyException as e:
-            raise ME.MyException(('%s annonex2embl ERROR: Problem with '
-            '`%s`. Did not write to internal handle.' % ('\n', colored(e, 'red'), seq_name)))
+        except Exception as e:
+            print(('\n annonex2embl ERROR: %s: %s. Did not write to '
+            'internal handle.\n %s' % (colored('Problem with sequence ', 'red'), seq_name, e)))
+            raise e
+
         if ENAstrict_bool:
             SecRecord_handle_lines = SecRecord_handle.getvalue().splitlines()
             if SecRecord_handle_lines[0].split()[0] == 'ID':

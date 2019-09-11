@@ -7,7 +7,6 @@ Custom operations to check annotations
 # IMPORT OPERATIONS #
 #####################
 
-import MyExceptions as ME
 import GenerationOps as GnOps
 import GlobalVariables as GlobVars
 
@@ -25,7 +24,7 @@ from itertools import chain
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.09.10.1200'
+__version__ = '2019.09.11.1800'
 
 #############
 # DEBUGGING #
@@ -137,13 +136,13 @@ class AnnoCheck:
                     self.feature.location, with_internalStop, without_internalStop)
             except BaseException:
                 raise ME.MyException(
-                    'Translation of feature `%s` of '
-                    'sequence `%s` is unsuccessful.' %
+                    'Translation of feature %s of '
+                    'sequence %s is unsuccessful.' %
                     (self.feature.id, self.record_id))
         if len(transl_out) < 2:
             raise ME.MyException(
-                'Translation of feature `%s` of '
-                'sequence `%s` indicates a protein length of only a '
+                'Translation of feature %s of '
+                'sequence %s indicates a protein length of only a '
                 'single amino acid.' %
                 (self.feature.id, self.record_id))
 
@@ -166,7 +165,7 @@ class AnnoCheck:
             return False
         # except ValueError: # Keep 'ValueError'; don't replace with 'ME.MyException'
         #    return False
-        except ME.MyException as e:
+        except Exception as e:
             raise e
 
 
@@ -239,7 +238,7 @@ class TranslCheck:
                 if len([base for base in loc]) < 15:
                     raise ME.MyException()
             feature.location = loc
-        except ME.MyException as e:
+        except Exception as e:
             raise e
         return feature
 
@@ -289,7 +288,7 @@ class QualifierCheck:
             least once. '''
         if not all(label in list(dct.keys()) for dct in lst_of_dcts):
             raise ME.MyException('csv-file does not contain a column '
-                                 'labelled `%s`' % (label))
+                                 'labelled %s' % (label))
         return True
 
     @staticmethod
@@ -315,7 +314,7 @@ class QualifierCheck:
                      GlobVars.nex2ena_valid_INSDC_quals]
         if not_valid:
             raise ME.MyException('The following are invalid INSDC '
-                                 'qualifiers: `%s`' % (', '.join(not_valid)))
+                                 'qualifiers: %s' % (', '.join(not_valid)))
         return True
 
     def quality_of_qualifiers(self):
@@ -337,10 +336,10 @@ class QualifierCheck:
         '''
         try:
             QualifierCheck._label_present(self.lst_of_dcts, self.label)
-        except ME.MyException as e:
+        except Exception as e:
             raise e
         try:
             QualifierCheck._valid_INSDC_quals(self.lst_of_dcts)
-        except ME.MyException as e:
+        except Exception as e:
             raise e
         return True

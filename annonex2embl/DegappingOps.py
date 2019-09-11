@@ -17,7 +17,7 @@ from itertools import count, groupby
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.09.10.1200'
+__version__ = '2019.09.11.1800'
 
 #############
 # DEBUGGING #
@@ -69,7 +69,7 @@ class AddGapFeature:
                 try:
                     annotations["gap"+str(countr)] = rnge
                 except:
-                    print("Warning: Cannot process Ns in positions `%s`." %(','.join(rnge)))
+                    print("Warning: Cannot process Ns in positions %s." %(','.join(rnge)))
         return seq, annotations
 
 class DegapButMaintainAnno:

@@ -8,12 +8,12 @@ Classes to parse charset names
 #####################
 
 import GlobalVariables as GlobVars
-import MyExceptions as ME
 import sys
 import pdb
 
 from Bio import Entrez
 from collections import Counter
+from termcolor import colored
 
 ###############
 # AUTHOR INFO #
@@ -22,7 +22,7 @@ from collections import Counter
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.09.10.1200'
+__version__ = '2019.09.11.1800'
 
 #############
 # DEBUGGING #
@@ -65,7 +65,7 @@ class GetEntrezInfo:
             raise ME.MyException('No gene symbol detected.')
         if '_' in gene_sym:
             raise ME.MyException(
-                'Gene symbol `%s` contains an '
+                'Gene symbol %s contains an '
                 'underscore, which is not allowed.' %
                 (gene_sym))
         query_term = gene_sym + ' [sym]'
@@ -171,7 +171,7 @@ class GetEntrezInfo:
         if not taxon_name:
             raise ME.MyException('No taxon name detected.')
         if '_' in taxon_name:
-            raise ME.MyException('Taxon name `%s` contains an underscore, '
+            raise ME.MyException('Taxon name %s contains an underscore, '
                                  'which is not allowed.' % (taxon_name))
         query_term = taxon_name
         try:
@@ -180,7 +180,7 @@ class GetEntrezInfo:
         except BaseException:
             raise ME.MyException(
                 'An error occurred while retrieving data from '
-                '%s.' %
+                '%s.' % 
                 ('ESearch'))
         parsed_records = Entrez.read(esearch_records)
         entrez_hitcount = parsed_records['Count']
@@ -199,16 +199,16 @@ class GetEntrezInfo:
         Entrez.email = self.email_addr
         try:
             entrez_id_list = GetEntrezInfo._id_lookup(gene_sym)
-        except ME.MyException as e:
+        except Exception as e:
             raise e
         try:
             entrez_rec_list = GetEntrezInfo._gene_product_lookup(
                 entrez_id_list)
-        except ME.MyException as e:
+        except Exception as e:
             raise e
         try:
             gene_product = GetEntrezInfo._parse_gene_products(entrez_rec_list)
-        except ME.MyException as e:
+        except Exception as e:
             raise e
         return gene_product
 
@@ -226,7 +226,7 @@ class GetEntrezInfo:
         Entrez.email = self.email_addr
         try:
             entrez_hitcount = GetEntrezInfo._taxname_lookup(taxon_name)
-        except ME.MyException as e:
+        except Exception as e:
             raise e
         if entrez_hitcount == '0':
             return False
@@ -257,19 +257,20 @@ class ConfirmAdjustTaxonName:
         '''
         try:
             genus_name, specific_epithet = seq_record.name.split(' ', 1)
-        except ME.MyException as e:
-            sys.exit('%s annonex2embl ERROR: Could not locate a '
-                     'whitespace between genus name and specific epithet '
-                     'in taxon name of sequence `%s`.' % ('\n', seq_record.id))
+        except Exception as e:
+            print(('\n annonex2embl ERROR: %s: %s:\n.' % (colored('Could not locate a '
+            'whitespace between genus name and specific epithet in taxon name of sequence',
+            'red'), seq_record.id)))
+            raise e
         if not GetEntrezInfo(email_addr).does_taxon_exist(seq_record.name):
-            print(('%s annonex2embl WARNING: Taxon name of sequence `%s` '
-                  'not found in NCBI Taxonomy: `%s`. Please consider sending '
+            print(('\n annonex2embl WARNING: Taxon name of sequence %s '
+                  'not found in NCBI Taxonomy: %s. Please consider sending '
                   'a taxon request to ENA.'
-                  % ('\n', seq_record.id, seq_record.name)))
+                  % (seq_record.id, seq_record.name)))
             if not GetEntrezInfo(email_addr).does_taxon_exist(genus_name):
-                sys.exit('%s annonex2embl ERROR: Neither genus name, '
-                         'nor species name of sequence `%s` were found in '
-                         'NCBI Taxonomy.' % ('\n', seq_record.id))
+                sys.exit('\n annonex2embl ERROR: Neither genus name, '
+                         'nor species name of sequence %s were found in '
+                         'NCBI Taxonomy.' % (seq_record.id))
             else:
                 species_name_original = seq_record.name
                 species_name_new = genus_name + ' sp. ' + specific_epithet
@@ -277,9 +278,9 @@ class ConfirmAdjustTaxonName:
                 seq_record.features[0].qualifiers['organism'] = species_name_new
                 seq_record.description = seq_record.description.\
                     replace(species_name_original, species_name_new)
-                print(('%s annonex2embl WARNING: Taxon name of sequence '
-                      '`%s` converted to the informal name: `%s`'
-                      % ('\n', seq_record.id, species_name_new)))
+                print(('\n annonex2embl WARNING: Taxon name of sequence '
+                      '%s converted to the informal name: %s'
+                      % (seq_record.id, species_name_new)))
         return seq_record
 
 
@@ -301,41 +302,55 @@ class ParseCharsetName:
         self.product_lookup = product_lookup
 
     @staticmethod
-    def _extract_charstet_information(charset_name):
+    def _extract_charset_info(charset_name):
         charset_orient = False
         charset_type = False
         charset_sym = False
 
         orient_present = [ori for ori in GlobVars.nex2ena_valid_orientations if ori in charset_name]
-        if(len(orient_present) == 0):
-             charset_orient = 'forw'
-        elif(len(orient_present) == 1):
-            charset_orient = orient_present[0]
-            if charset_orient == "forw":
-                charset_name = charset_name.replace("forward","")
-                charset_name = charset_name.replace("forw","")
-            elif charset_orient == "rev":
-                charset_name = charset_name.replace("reverse","")
-                charset_name = charset_name.replace("rev","")
-        else:
-            raise ME.MyException('Zuviele Informationen bezueglich der Orientierung')
+        try:
+            if(len(orient_present) == 0):
+                 charset_orient = 'forw'
+            elif(len(orient_present) == 1):
+                charset_orient = orient_present[0]
+                if charset_orient == "forw":
+                    charset_name = charset_name.replace("forward","")
+                    charset_name = charset_name.replace("forw","")
+                elif charset_orient == "rev":
+                    charset_name = charset_name.replace("reverse","")
+                    charset_name = charset_name.replace("rev","")
+        except Exception as e:
+            print(('\n annonex2embl ERROR: %s:\n %s' % (colored('Unclear parsing of '
+            'feature orientation', 'red'), e)))
+            raise e
 
         type_present = [typ for typ in GlobVars.nex2ena_valid_INSDC_featurekeys if typ in charset_name]
-        if(len(type_present) == 0):
-            raise ME.MyException("Keine gueltigen feature keys")
-        elif(len(type_present) == 1):
-            charset_type = type_present[0]
-            charset_name = ''.join(charset_name.split(type_present[0]))
-        else:
-            raise ME.MyException('Zuviele Informationen bezueglich der Features')
+        try:
+            if(len(type_present) == 0):
+                print(('\n annonex2embl ERROR: %s:\n %s' % (colored('No valid '
+                'feature keys', 'red'), e)))
+                raise e
+            elif(len(type_present) == 1):
+                charset_type = type_present[0]
+                charset_name = ''.join(charset_name.split(type_present[0]))
+            elif(len(type_present) > 1):
+                print(('\n annonex2embl WARNING: More than one charset_type '
+                'encountered in charset: %s.\n' % (charset_name)))
+                charset_type = type_present[0]
+                charset_name = ''.join(charset_name.split(type_present[0]))
+        except Exception as e:
+            print(('\n annonex2embl ERROR: %s:\n %s' % (colored('Unclear parsing '
+            'of features', 'red'), e)))
+            raise e
 
         charset_sym = charset_name.strip('_').split('_')
-        if len(charset_sym) == 1:
-            return (charset_sym[0], charset_type, charset_orient)
-        else:
-            raise ME.MyException('Da ist etwas schief gelaufen')
-
-
+        try:
+            if len(charset_sym) == 1:
+                return (charset_sym[0], charset_type, charset_orient)
+        except Exception as e:
+            print(('\n annonex2embl ERROR: %s:\n %s' % (colored('Unspecified error '
+            'during feature parsing', 'red'), e)))
+            raise e
 
 
     def parse(self):
@@ -344,13 +359,20 @@ class ParseCharsetName:
             tupl.   The return consists of three strings in the order
                     "charset_sym, charset_type, charset_orient, charset_product"
         '''
-        charset_sym, charset_type, charset_orient = ParseCharsetName._extract_charstet_information(self.charset_name)
+        try:
+            charset_sym, charset_type, charset_orient = ParseCharsetName._extract_charset_info(self.charset_name)
+        except Exception as e:
+            print(('\n annonex2embl ERROR: %s:\n %s' % (colored('Error while '
+            'parsing the charset_name', 'red'), e)))
+            raise e
         entrez_handle = GetEntrezInfo(self.email_addr)
         if (charset_type == 'CDS' or charset_type == 'gene') and self.product_lookup:
             try:
                 charset_product = entrez_handle.obtain_gene_product(
                     charset_sym)
-            except ME.MyException as e:
+            except Exception as e:
+                print(('\n annonex2embl ERROR: %s:\n %s' % (colored('Error while '
+                'obtaining gene product', 'red'), e)))
                 raise e
         else:
             charset_product = None

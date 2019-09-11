@@ -8,7 +8,6 @@ Custom operations for EMBL submission preparation tool
 #####################
 
 import GlobalVariables as GlobVars
-import MyExceptions as ME
 
 from operator import itemgetter
 from itertools import groupby
@@ -23,7 +22,7 @@ from Bio.SeqFeature import ExactPosition, FeatureLocation, CompoundLocation
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.09.10.1200'
+__version__ = '2019.09.11.1800'
 
 #############
 # DEBUGGING #
@@ -167,8 +166,8 @@ class GenerateSeqFeature:
         pass
 
     def source_feat(self, full_len, quals, charset_names):
-        ''' This function generates the SeqFeature `source` for a
-            SeqRecord. The SeqFeature `source` is critical for
+        ''' This function generates the SeqFeature source for a
+            SeqRecord. The SeqFeature source is critical for
             submissions to EMBL or GenBank, as it contains all the
             relevant info on collection locality, herbarium voucher,
             etc. It also provides info on which translation table is
