@@ -52,7 +52,7 @@ class AnnoCheck:
                 and the updated feature location (a location object);
                 example: (transl_out, feat_loc)
     Raises:
-        ME.MyException
+        Exception
     '''
 
     def __init__(self, extract, feature, record_id, transl_table=11):
@@ -135,12 +135,12 @@ class AnnoCheck:
                 feat_loc = AnnoCheck._adjust_feat_loc(
                     self.feature.location, with_internalStop, without_internalStop)
             except BaseException:
-                raise ME.MyException(
+                raise Exception(
                     'Translation of feature %s of '
                     'sequence %s is unsuccessful.' %
                     (self.feature.id, self.record_id))
         if len(transl_out) < 2:
-            raise ME.MyException(
+            raise Exception(
                 'Translation of feature %s of '
                 'sequence %s indicates a protein length of only a '
                 'single amino acid.' %
@@ -163,7 +163,7 @@ class AnnoCheck:
                                                           FeatureLocation):
                 return True
             return False
-        # except ValueError: # Keep 'ValueError'; don't replace with 'ME.MyException'
+        # except ValueError: # Keep 'ValueError'; don't replace with 'Exception'
         #    return False
         except Exception as e:
             raise e
@@ -236,7 +236,7 @@ class TranslCheck:
                 # With gene and exon features that are less than 15 nt long,
                 # the annotation should be dropped from the output.
                 if len([base for base in loc]) < 15:
-                    raise ME.MyException()
+                    raise Exception()
             feature.location = loc
         except Exception as e:
             raise e
@@ -254,7 +254,7 @@ class QualifierCheck:
     Returns:
         none
     Raises:
-        ME.MyException
+        Exception
     '''
 
     def __init__(self, lst_of_dcts, label):
@@ -287,7 +287,7 @@ class QualifierCheck:
             of a list of dictionaries encompass the element <label> at
             least once. '''
         if not all(label in list(dct.keys()) for dct in lst_of_dcts):
-            raise ME.MyException('csv-file does not contain a column '
+            raise Exception('csv-file does not contain a column '
                                  'labelled %s' % (label))
         return True
 
@@ -313,7 +313,7 @@ class QualifierCheck:
         not_valid = [k for k in keys_present if k not in
                      GlobVars.nex2ena_valid_INSDC_quals]
         if not_valid:
-            raise ME.MyException('The following are invalid INSDC '
+            raise Exception('The following are invalid INSDC '
                                  'qualifiers: %s' % (', '.join(not_valid)))
         return True
 

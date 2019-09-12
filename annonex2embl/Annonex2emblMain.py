@@ -413,11 +413,11 @@ def annonex2embl(path_to_nex,
                                      manifest_flatfile)
 
     elif manifest_study and not manifest_name:
-        raise ME.MyException('\n annonex2embl WARNING: Manifest file not written '
+        raise Exception('\n annonex2embl WARNING: Manifest file not written '
                              'due to missing manifest name.' % ())
 
     elif not manifest_study and manifest_name:
-        raise ME.MyException('\n annonex2embl WARNING: Manifest file not written '
+        raise Exception('\n annonex2embl WARNING: Manifest file not written '
                              'due to missing manifest study.' % ())
     else:
         pass

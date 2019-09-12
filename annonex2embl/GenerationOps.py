@@ -216,7 +216,7 @@ class GenerateSeqFeature:
         '''
         # 1. Define the annotation type
         if feature_type not in GlobVars.nex2ena_valid_INSDC_featurekeys:
-            raise ME.MyException('%s nex2embl ERROR: Internal error: '
+            raise Exception('%s nex2embl ERROR: Internal error: '
                                  'Name of feature key not passed correctly.')
         # 2. Generate qualifiers
         quals = {}

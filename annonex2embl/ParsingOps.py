@@ -62,9 +62,9 @@ class GetEntrezInfo:
 #                Out: ['26835430', '26833718', '26833393', ...]
 
         if not gene_sym:
-            raise ME.MyException('No gene symbol detected.')
+            raise Exception('No gene symbol detected.')
         if '_' in gene_sym:
-            raise ME.MyException(
+            raise Exception(
                 'Gene symbol %s contains an '
                 'underscore, which is not allowed.' %
                 (gene_sym))
@@ -73,7 +73,7 @@ class GetEntrezInfo:
             esearch_records = Entrez.esearch(db='gene', term=query_term,
                                              retmax=retmax, retmod='xml')
         except BaseException:
-            raise ME.MyException('An error occurred while retrieving '
+            raise Exception('An error occurred while retrieving '
                                  'data from %s.' % ('ESearch'))
         parsed_records = Entrez.read(esearch_records)
         entrez_id_list = parsed_records['IdList']
@@ -102,7 +102,7 @@ class GetEntrezInfo:
         try:
             epost_results = Entrez.read(epost_query)
         except BaseException:
-            raise ME.MyException(
+            raise Exception(
                 'An error occurred while retrieving data from '
                 '%s.' %
                 ('EPost'))
@@ -112,7 +112,7 @@ class GetEntrezInfo:
             esummary_records = Entrez.esummary(db='gene', webenv=webenv,
                                                query_key=query_key)
         except BaseException:
-            raise ME.MyException(
+            raise Exception(
                 'An error occurred while retrieving data from '
                 '%s.' %
                 ('ESummary'))
@@ -139,7 +139,7 @@ class GetEntrezInfo:
             documentSummarySet = entrez_rec_list['DocumentSummarySet']
             docs = documentSummarySet['DocumentSummary']
         except BaseException:
-            raise ME.MyException('An error occurred while parsing the '
+            raise Exception('An error occurred while parsing the '
                                  'data from %s.' % ('ESummary'))
         list_gene_product = [doc['Description'] for doc in docs]
         #list_gene_symbol = [doc['NomenclatureSymbol'] for doc in docs]
@@ -169,16 +169,16 @@ class GetEntrezInfo:
 #                Out: 0
 
         if not taxon_name:
-            raise ME.MyException('No taxon name detected.')
+            raise Exception('No taxon name detected.')
         if '_' in taxon_name:
-            raise ME.MyException('Taxon name %s contains an underscore, '
+            raise Exception('Taxon name %s contains an underscore, '
                                  'which is not allowed.' % (taxon_name))
         query_term = taxon_name
         try:
             esearch_records = Entrez.esearch(db='taxonomy', term=query_term,
                                              retmax=retmax, retmod='xml')
         except BaseException:
-            raise ME.MyException(
+            raise Exception(
                 'An error occurred while retrieving data from '
                 '%s.' % 
                 ('ESearch'))
