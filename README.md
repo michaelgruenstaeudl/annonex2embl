@@ -75,6 +75,15 @@ python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% -o %OTPUT%
 
 ## TO DO
 * Replace section "POST-PROCESSING OF FILES" with code that reads in the file written to outp_handle and that edits the text string within Python (as opposed to calling 'sed' as done currently). That way, the code becomes platform independent. For example, the code can be loaded into a stringIO and edited via regular Python-string-functions (see function "write_SeqRecord" in IOOps.py as an example).
+* After post-processing of the output file, write the as a gnu-zipped file. This is easy in Python:
+```
+import gzip
+final_output = gzip.open('seqRecords.embl.gz', 'wb')
+try:
+    output.write(SeqRecords) ## See function 'write_SeqRecord' in IOOps.py for details
+finally:
+    output.close()
+```
 * Example files (./examples/input): Combine the alignments "fuzzy.nex" and "reverse.nex" into a single NEXUS file, while keeping the maximum sequence length of each sequence at 38 nucleotides (adjust the annotations to the new length accordingly)
 
 
