@@ -85,6 +85,7 @@ finally:
     output.close()
 ```
 * Example files (./examples/input): Combine the alignments "fuzzy.nex" and "reverse.nex" into a single NEXUS file, while keeping the maximum sequence length of each sequence at 38 nucleotides (adjust the annotations to the new length accordingly)
+* The taxonomy check (optional argument: --taxcheck) shall not be conducted by checking taxon names against NCBI, but by checking taxon names against ENA. This is important because the NCBI Taxonomy database apparently does not contain some names that the ENA Taxonomy database does, and vice versa!
 
 
 <!---
