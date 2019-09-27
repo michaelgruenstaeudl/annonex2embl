@@ -85,8 +85,10 @@ finally:
     output.close()
 ```
 * Example files (./examples/input): Combine the alignments "fuzzy.nex" and "reverse.nex" into a single NEXUS file, while keeping the maximum sequence length of each sequence at 38 nucleotides (adjust the annotations to the new length accordingly)
-* The taxonomy check (optional argument: --taxcheck) shall not be conducted by checking taxon names against NCBI, but by checking taxon names against ENA. This is important because the NCBI Taxonomy database apparently does not contain some names that the ENA Taxonomy database does, and vice versa!
-
+* The taxonomy check (optional argument: --taxcheck) shall primarily be conducted against the ENA database, not the NCBI database. So far, the taxonomy check was conducted against the NCBI database (see the use of "Entrez.esearch" in the static function "_taxname_lookup" in ParsingOps.py). Instead, the taxonomy check shall be conducted as described in section "Fetch taxon by scientific name" on https://www.ebi.ac.uk/ena/browse/taxonomy-service. Hence, please comment out (don't replace!) the command "esearch_records=Entrez.esearch(db='taxonomy',term=query_term,retmax=retmax,retmod='xml')"
+and replace it with something like:
+"enaTaxonomy_records=urllib2.urlopen('http://www.ebi.ac.uk/ena/data/taxonomy/v1/taxon/scientific-name/' + query_term).read()"
+See this SO post for ideas: https://stackoverflow.com/questions/24124643/parse-xml-from-url-into-python-object  Probably you will also need to adjust the subsequent three or four commands of function "_taxname_lookup" to have the XML code parsed correctly.
 
 <!---
 NOT NECESSARY AT THIS POINT
