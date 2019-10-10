@@ -9,6 +9,7 @@ Custom operations to check annotations
 
 import GenerationOps as GnOps
 import GlobalVariables as GlobVars
+import warnings
 
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
@@ -24,14 +25,14 @@ from itertools import chain
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.09.11.1800'
+__version__ = '2019.10.10.1300'
 
 #############
 # DEBUGGING #
 #############
 
-import pdb
-# pdb.set_trace()
+#import ipdb
+#ipdb.set_trace()
 
 ###########
 # CLASSES #
@@ -125,7 +126,7 @@ class AnnoCheck:
             transl_out = AnnoCheck._transl(self.extract,
                                            self.transl_table, cds=True)
             feat_loc = self.feature.location
-        except BaseException:
+        except Exception:
             try:
                 without_internalStop = AnnoCheck._transl(self.extract,
                                                          self.transl_table)
@@ -134,23 +135,21 @@ class AnnoCheck:
                 transl_out = with_internalStop
                 feat_loc = AnnoCheck._adjust_feat_loc(
                     self.feature.location, with_internalStop, without_internalStop)
-            except BaseException:
-                raise Exception(
-                    'Translation of feature %s of '
-                    'sequence %s is unsuccessful.' %
-                    (self.feature.id, self.record_id))
+            except Exception:
+                msg = 'ERROR: Translation of feature `%s` of '\
+                      'sequence `%s` is unsuccessful.' % (self.feature.id, self.record_id)
+                warnings.warn(msg)
+                raise Exception
         if len(transl_out) < 2:
-            raise Exception(
-                'Translation of feature %s of '
-                'sequence %s indicates a protein length of only a '
-                'single amino acid.' %
-                (self.feature.id, self.record_id))
-
+            msg = 'ERROR: Translation of feature `%s` of '\
+                  'sequence `%s` indicates a protein length of only a '\
+                  'single amino acid.' % (self.feature.id, self.record_id)
+            warnings.warn(msg)
+            raise Exception
         # IMPORTANT!!!: In an ENA record, the translation does not display the
         # stop codon (i.e., the '*'), while the feature location range (i.e., 738..2291)
         # very much includes its position, which is biologically logical, as
         # a stop codon is not an amino acid in a translation.
-
         # Thus, TFL would be incorrect, because it would add back an asterisk into the translation.
         #transl_out = transl_out + "*"
         return (transl_out, feat_loc)
@@ -166,7 +165,8 @@ class AnnoCheck:
         # except ValueError: # Keep 'ValueError'; don't replace with 'Exception'
         #    return False
         except Exception as e:
-            raise e
+            print(e)
+            raise
 
 
 class TranslCheck:
@@ -186,7 +186,7 @@ class TranslCheck:
                 reverse.seq = reverse.seq + i.extract(seq_record).seq
             return reverse
 
-    # by checking the translation of a CDS or an gene it may happen that
+    # By checking the translation of a CDS or an gene it may happen that
     # the location from the CDS or gene had to be adjusted. If after such
     # a feature a IGS or intron follows it have to be adjust aswell.
     # This is done by this function
@@ -194,7 +194,6 @@ class TranslCheck:
         start = []
         end = []
         start.append(newLocation.end)
-
         t = oldLocation.start
         for i in oldLocation:
             if not i == t:
@@ -203,14 +202,12 @@ class TranslCheck:
                 t = i
             t = t + 1
         end.append(oldLocation.end)
-
         locations = []
         for i in range(len(start)):
             locations.append(FeatureLocation(start[i],end[i]))
-
         try:
             return CompoundLocation(locations)
-        except:
+        except Exception as e:
             return locations[0]
 
     def transl_and_quality_of_transl(self, seq_record, feature, transl_table):
@@ -225,7 +222,6 @@ class TranslCheck:
         Raises:
             feature
         '''
-
         extract = self.extract(feature, seq_record)
         try:
             transl, loc = AnnoCheck(extract.seq, feature, seq_record.id,
@@ -236,10 +232,11 @@ class TranslCheck:
                 # With gene and exon features that are less than 15 nt long,
                 # the annotation should be dropped from the output.
                 if len([base for base in loc]) < 15:
-                    raise Exception()
+                    raise
             feature.location = loc
         except Exception as e:
-            raise e
+            print(e)
+            raise
         return feature
 
 
@@ -265,20 +262,14 @@ class QualifierCheck:
     def _enforce_ASCII(lst_of_dcts):
         ''' This function converts any non-ASCII characters among
             qualifier values to ASCII characters. '''
-
-        import warnings
-        with warnings.catch_warnings():
-            warnings.filterwarnings('error')    # Converting warnings to errors in order to catch the RuntimeWarning
-                                                # generated by low compatibility of the unicode package for Python 2
-            try:
-                filtered_lst_of_dcts = [
-                    {k: unidecode(v) for k, v in list(dct.items())}
-                    for dct in lst_of_dcts]
-            except Warning as e:
-                filtered_lst_of_dcts = [
-                    {k: unidecode(v.decode('utf-8')) for k, v in dct.items()}
-                    for dct in lst_of_dcts]
-
+        try:
+            filtered_lst_of_dcts = [
+                {k: unidecode(v) for k, v in list(dct.items())}
+                for dct in lst_of_dcts]
+        except:
+            filtered_lst_of_dcts = [
+                {k: unidecode(v.decode('utf-8')) for k, v in dct.items()}
+                for dct in lst_of_dcts]
         return filtered_lst_of_dcts
 
     @staticmethod
@@ -287,8 +278,10 @@ class QualifierCheck:
             of a list of dictionaries encompass the element <label> at
             least once. '''
         if not all(label in list(dct.keys()) for dct in lst_of_dcts):
-            raise Exception('csv-file does not contain a column '
-                                 'labelled %s' % (label))
+            msg = 'ERROR: csv-file does not '\
+                  'contain a column labelled %s' % (label)
+            warnings.warn(msg)
+            raise Exception
         return True
 
     @staticmethod
@@ -297,8 +290,7 @@ class QualifierCheck:
             displays an empty value. Technically, this function
             loops through the qualifier dictionaries and removes any
             key-value-pair from a dictionary which contains an empty
-            value.
-        '''
+            value. '''
         nonempty_lst_of_dcts = [{k: v for k, v in list(dct.items()) if v != ''}
                                 for dct in lst_of_dcts]
         return nonempty_lst_of_dcts
@@ -306,15 +298,16 @@ class QualifierCheck:
     @staticmethod
     def _valid_INSDC_quals(lst_of_dcts):
         ''' This function checks if every (!) dictionary key in a list of
-            dictionaries is a valid INSDC qualifier.
-        '''
+            dictionaries is a valid INSDC qualifier. '''
         keys_present = list(chain.from_iterable([list(dct.keys()) for dct in
                                                  lst_of_dcts]))
         not_valid = [k for k in keys_present if k not in
                      GlobVars.nex2ena_valid_INSDC_quals]
         if not_valid:
-            raise Exception('The following are invalid INSDC '
-                                 'qualifiers: %s' % (', '.join(not_valid)))
+            msg = 'ERROR: The following are '\
+                  'invalid INSDC qualifiers: %s' % (', '.join(not_valid))
+            warnings.warn(msg)
+            raise Exception
         return True
 
     def quality_of_qualifiers(self):
@@ -337,9 +330,11 @@ class QualifierCheck:
         try:
             QualifierCheck._label_present(self.lst_of_dcts, self.label)
         except Exception as e:
-            raise e
+            warnings.warn(e)
+            raise Exception
         try:
             QualifierCheck._valid_INSDC_quals(self.lst_of_dcts)
         except Exception as e:
-            raise e
+            warnings.warn(e)
+            raise Exception
         return True

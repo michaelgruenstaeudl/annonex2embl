@@ -10,14 +10,14 @@ Setting global variables.
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.09.11.1800'
+__version__ = '2019.10.10.1300'
 
 #############
 # DEBUGGING #
 #############
 
-import pdb
-# pdb.set_trace()
+#import ipdb
+#ipdb.set_trace()
 
 #########
 # OTHER #

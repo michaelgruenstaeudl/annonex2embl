@@ -22,14 +22,14 @@ from Bio.SeqFeature import ExactPosition, FeatureLocation, CompoundLocation
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.09.11.1800'
+__version__ = '2019.10.10.1300'
 
 #############
 # DEBUGGING #
 #############
 
-import pdb
-# pdb.set_trace()
+#import ipdb
+#ipdb.set_trace()
 
 ###########
 # CLASSES #
@@ -216,8 +216,10 @@ class GenerateSeqFeature:
         '''
         # 1. Define the annotation type
         if feature_type not in GlobVars.nex2ena_valid_INSDC_featurekeys:
-            raise Exception('%s nex2embl ERROR: Internal error: '
-                                 'Name of feature key not passed correctly.')
+            msg = '%s nex2embl ERROR: Internal error: '\
+                  'Name of feature key not passed correctly.'
+            warnings.warn(msg)
+            raise Exception
         # 2. Generate qualifiers
         quals = {}
         if feature_name:
@@ -289,7 +291,7 @@ class GenerateSeqRecord:
         # ID-line when EMBL format is written
         try:
             org_name = current_qual['organism']
-        except BaseException:
+        except Exception:
             org_name = 'undetermined organism'
         # 3. Generating DE line
         descr_DEline = descr_DEline.replace('"', '')

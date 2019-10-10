@@ -7,6 +7,8 @@ Classes to degap sequences but maintain annotations
 # IMPORT OPERATIONS #
 #####################
 
+import warnings
+
 from copy import copy
 from itertools import count, groupby
 
@@ -17,14 +19,19 @@ from itertools import count, groupby
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.09.11.1800'
+__version__ = '2019.10.10.1300'
 
 #############
 # DEBUGGING #
 #############
 
-import pdb
-# pdb.set_trace()
+#import ipdb
+#ipdb.set_trace()
+
+# To format warnings in a pretty, readable way:
+def warning_on_one_line(message, category, filename, lineno, file=None, line=None):
+    return '\n annonex2embl %s\n' % (message)
+warnings.formatwarning = warning_on_one_line
 
 ###########
 # CLASSES #
@@ -53,23 +60,19 @@ class AddGapFeature:
         self.charsets = charsets
 
     def add(self):
-        ''' This function was developed while reviewing the
-            following answer on SO:
-            https://stackoverflow.com/questions/25211905/determine-length-of-polypurine-tract
-        '''
-
+        ''' This function was developed while reviewing the following answer on SO:
+            https://stackoverflow.com/questions/25211905/determine-length-of-polypurine-tract '''
         seq = self.seq
         charsets = self.charsets
         annotations = copy(charsets)
-
         gap_indices = [i for i, nucl in enumerate(seq) if nucl=="N"]  # Indexing all 'N' in seq
         gap_ranges = [list(g) for _,g in groupby(gap_indices, key=lambda n, c=count(): n-next(c))]
         if gap_ranges:
             for countr, rnge in enumerate(gap_ranges):
                 try:
                     annotations["gap"+str(countr)] = rnge
-                except:
-                    print("Warning: Cannot process Ns in positions %s." %(','.join(rnge)))
+                except Exception as e:
+                    warnings.warn("Cannot process Ns in positions %s." % (','.join(rnge)))
         return seq, annotations
 
 class DegapButMaintainAnno:
@@ -107,7 +110,6 @@ class DegapButMaintainAnno:
         seq = self.seq
         rmchar = self.rmchar
         charsets = self.charsets
-
         annotations = copy(charsets)
         index = seq.find(rmchar)
         while index > -1:  # if any occurrence is found
@@ -144,22 +146,19 @@ class RmAmbigsButMaintainAnno:
     @staticmethod
     def rm_leadambig(seq, rmchar, charsets):
         ''' This class removes leading ambiguous nucleotides from a DNA
-            sequence while maintaining the annotations.
-        '''
+            sequence while maintaining the annotations. '''
         if seq[0] == rmchar:
             lead_stripoff = len(seq)-len(seq.lstrip(rmchar))
             for gene_name, indices in list(charsets.items()):
                 indices_shifted = [i-lead_stripoff for i in indices]
                 charsets[gene_name] = [i for i in indices_shifted if i >= 0]
             seq = seq[lead_stripoff:]
-
         return seq, charsets
 
     @staticmethod
     def rm_trailambig(seq, rmchar, charsets):
         ''' This class removes trailing ambiguous nucleotides from a DNA
-            sequence while maintaining the annotations.
-        '''
+            sequence while maintaining the annotations. '''
         if seq[-1] == rmchar:
             trail_stripoff = len(seq.rstrip(rmchar))
             range_stripoff = list(range(trail_stripoff, len(seq)))
@@ -169,7 +168,7 @@ class RmAmbigsButMaintainAnno:
                     if index in indices_new:
                         indices_new.remove(index)
                 #    else:
-                #        print "Warning: Index %s out of range." %(index)
+                #        warnings.warn("Index %s out of range." %(index))
                 charsets[gene_name] = indices_new
             seq = seq[:trail_stripoff]
         return seq, charsets

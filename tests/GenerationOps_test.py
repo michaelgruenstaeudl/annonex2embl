@@ -9,12 +9,12 @@ Unit Tests for the classes of the module `GenerationOps`
 
 import Bio # Do not remove; important for assertIsInstance
 import unittest
+import warnings
+import sys, os
 
 # Add specific directory to sys.path in order to import its modules
-# NOTE: THIS RELATIVE IMPORTING IS AMATEURISH.
-# NOTE: COULD THE FOLLOWING IMPORT BE REPLACED WITH 'import annonex2embl'?
-import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
+# Note: This relative importing is amateurish; why can I not replace it with 'import annonex2embl'?
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'annonex2embl'))
 
 import GenerationOps as GnOps
 
@@ -28,16 +28,16 @@ from Bio import SeqFeature
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
-__info__ = 'nex2embl'
-__version__ = '2017.02.01.1100'
+__copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
+__info__ = 'annonex2embl'
+__version__ = '2019.10.09.1830'
 
 #############
 # DEBUGGING #
 #############
 
-#import pdb
-#pdb.set_trace()
+#import ipdb
+#ipdb.set_trace()
 
 ###########
 # CLASSES #
@@ -45,6 +45,9 @@ __version__ = '2017.02.01.1100'
 
 class GenerateFeatLocTestCases(unittest.TestCase):
     ''' Tests for class `GenerateFeatLoc` '''
+    def setUp(self):
+        warnings.simplefilter('ignore')
+
 
     def test_GenerateFeatLoc__make_location__1(self):
         ''' Test to evaluate function `make_location` of class `GenerateFeatLoc`.
@@ -53,6 +56,7 @@ class GenerateFeatLocTestCases(unittest.TestCase):
         out = GnOps.GenerateFeatLoc().make_location(charset_range)
         self.assertIsInstance(out, Bio.SeqFeature.FeatureLocation)
 
+
     def test_GenerateFeatLoc__make_location__2(self):
         ''' Test to evaluate function `make_location` of class `GenerateFeatLoc`.
             This test evaluates the case of a discontinuous range, resulting in
@@ -60,6 +64,7 @@ class GenerateFeatLocTestCases(unittest.TestCase):
         charset_range = [1,2,3,7,8]
         out = GnOps.GenerateFeatLoc().make_location(charset_range)
         self.assertIsInstance(out, Bio.SeqFeature.CompoundLocation)
+
 
     def test_GenerateFeatLoc__make_location__3(self):
         ''' Test to evaluate function `make_location` of class `GenerateFeatLoc`.
@@ -72,6 +77,7 @@ class GenerateFeatLocTestCases(unittest.TestCase):
         self.assertIsInstance(out, Bio.SeqFeature.CompoundLocation) # CompoundLocation
         self.assertEqual(len(out.parts), 2)
 
+
     def test_GenerateFeatLoc__make_start_fuzzy__1(self):
         ''' Test to evaluate function `make_start_fuzzy` of class `GenerateFeatLoc`.
             This test evaluates the case where FeatureLocations are made fuzzy. '''
@@ -82,6 +88,7 @@ class GenerateFeatLocTestCases(unittest.TestCase):
         out = GnOps.GenerateFeatLoc().make_start_fuzzy(location_object)
         self.assertIsInstance(out, Bio.SeqFeature.FeatureLocation) # FeatureLocation
         self.assertIsInstance(out.start, Bio.SeqFeature.BeforePosition) # Fuzzy Start
+
 
     def test_GenerateFeatLoc__make_start_fuzzy__2(self):
         ''' Test to evaluate function `make_start_fuzzy` of class `GenerateFeatLoc`.
@@ -94,6 +101,7 @@ class GenerateFeatLocTestCases(unittest.TestCase):
         self.assertIsInstance(out, Bio.SeqFeature.CompoundLocation) # CompoundLocation
         self.assertIsInstance(out.parts[0].start, Bio.SeqFeature.BeforePosition) # Fuzzy Start
 
+
     def test_GenerateFeatLoc__make_start_fuzzy__3(self):
         ''' Test to evaluate function `make_start_fuzzy` of class `GenerateFeatLoc`.
             This test evaluates if end FeatureLocations are made fuzzy.
@@ -105,6 +113,7 @@ class GenerateFeatLocTestCases(unittest.TestCase):
         out = GnOps.GenerateFeatLoc().make_end_fuzzy(location_object)
         self.assertIsInstance(out, Bio.SeqFeature.FeatureLocation) # FeatureLocation
         self.assertIsInstance(out.end, Bio.SeqFeature.AfterPosition) # Fuzzy End
+
 
     def test_GenerateFeatLoc__make_start_fuzzy__4(self):
         ''' Test to evaluate function `make_start_fuzzy` of class `GenerateFeatLoc`.
@@ -121,6 +130,9 @@ class GenerateFeatLocTestCases(unittest.TestCase):
 
 class GenerateSeqFeatureTestCases(unittest.TestCase):
     ''' Tests for class `GenerateSeqFeature` '''
+    def setUp(self):
+        warnings.simplefilter('ignore')
+
 
     def test_GenerateSeqFeature__source_feat__1(self):
         ''' Test to evaluate function `source_feat` of class `GenerateSeqFeature`.
@@ -132,6 +144,7 @@ class GenerateSeqFeatureTestCases(unittest.TestCase):
         out = GnOps.GenerateSeqFeature().source_feat(full_len,
             quals, charset_names)
         self.assertIsInstance(out, Bio.SeqFeature.SeqFeature)
+
 
     def test_GenerateSeqFeature__source_feat__2(self):
         ''' Test to evaluate function `source_feat` of class `GenerateSeqFeature`.
@@ -159,6 +172,7 @@ class GenerateSeqFeatureTestCases(unittest.TestCase):
         out = GnOps.GenerateSeqFeature().regular_feat(feature_name,
             feature_type, feature_orient, feature_loc, transl_table, feature_seq)
         self.assertIsInstance(out, Bio.SeqFeature.SeqFeature)
+
 
 #############
 # FUNCTIONS #

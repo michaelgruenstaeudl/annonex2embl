@@ -1,5 +1,10 @@
 CHANGELOG
 ---------
+#### Version 0.6.0 (2019.10.10)
+* Added a function that compresses the output flatfile upon user request
+* Added a function that conducts the taxonomy check primarily via the [ENA taxonomy service](https://www.ebi.ac.uk/ena/browse/taxonomy-service)
+* Added function to post-process the individual sequence records via internal functions instead of calling Bash's sed
+* Updated example files to reflect capability to handle forward and reverse annotations
 #### Version 0.5.0 (2019.09.10)
 * Make code compatible with Python 3
 * Make the application of the product lookup optional

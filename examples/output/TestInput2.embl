@@ -1,8 +1,8 @@
-ID   Taxon_4; SV 1; linear; genomic DNA; ; PLN; 38 BP.
+ID   Taxon_1; SV 1; linear; genomic DNA; ; PLN; 38 BP.
 XX
-AC   Taxon_4;
+AC   Taxon_1;
 XX
-DE   Taxon four description of alignment, isolate Taxon_4
+DE   Taxon four description of alignment, isolate Taxon_1
 XX
 OS   .
 OC   .
@@ -15,7 +15,7 @@ XX
 FH   Key             Location/Qualifiers
 FH
 FT   source          1..38
-FT                   /isolate="Taxon_4"
+FT                   /isolate="Taxon_1"
 FT                   /organism="Taxon four"
 FT                   /note="Tax.Authority: Author_1"
 FT                   /country="Country_1: Area_1"
@@ -34,11 +34,11 @@ XX
 SQ   Sequence 38 BP; 12 A; 7 C; 8 G; 11 T; 0 other;
      taactggata tatagagtca gcattccgga ctttaacg                                38
 //
-ID   Taxon_5; SV 1; linear; genomic DNA; ; PLN; 26 BP.
+ID   Taxon_2; SV 1; linear; genomic DNA; ; PLN; 26 BP.
 XX
-AC   Taxon_5;
+AC   Taxon_2;
 XX
-DE   Taxon five description of alignment, isolate Taxon_5
+DE   Taxon five description of alignment, isolate Taxon_2
 XX
 OS   .
 OC   .
@@ -51,7 +51,7 @@ XX
 FH   Key             Location/Qualifiers
 FH
 FT   source          1..26
-FT                   /isolate="Taxon_5"
+FT                   /isolate="Taxon_2"
 FT                   /organism="Taxon five"
 FT                   /note="Tax.Authority: (Author_1) Author_2"
 FT                   /country="Country_2: Area_2"
@@ -70,11 +70,11 @@ XX
 SQ   Sequence 26 BP; 8 A; 5 C; 4 G; 9 T; 0 other;
      taaatgatat agagtcccct tttacg                                             26
 //
-ID   Taxon_6; SV 1; linear; genomic DNA; ; PLN; 31 BP.
+ID   Taxon_3; SV 1; linear; genomic DNA; ; PLN; 31 BP.
 XX
-AC   Taxon_6;
+AC   Taxon_3;
 XX
-DE   Taxon six description of alignment, isolate Taxon_6
+DE   Taxon six description of alignment, isolate Taxon_3
 XX
 OS   .
 OC   .
@@ -87,7 +87,7 @@ XX
 FH   Key             Location/Qualifiers
 FH
 FT   source          1..31
-FT                   /isolate="Taxon_6"
+FT                   /isolate="Taxon_3"
 FT                   /organism="Taxon six"
 FT                   /note="Tax.Authority: Author_3"
 FT                   /country="Country_2: Area_3"

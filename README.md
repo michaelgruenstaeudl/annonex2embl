@@ -45,57 +45,36 @@ DESCR="rpl16 intron, partial sequence"
 #### On Linux / MacOS
 ```
 SCRPT=$PWD/scripts/annonex2embl_CMD.py
-INPUT=examples/input/TestData1.nex
-METAD=examples/input/TestData1.csv
-OTPUT=examples/output/TestData1.embl
+INPUT=examples/input/TestInput1.nex
+METAD=examples/input/TestInput1.csv
+OTPUT=examples/output/TestInput1.embl
 DESCR='description of alignment'  # Do not use double-quotes
 EMAIL=your_email_here@yourmailserver.com
 AUTHR='your name here'  # Do not use double-quotes
 MNFTS=PRJEB00000
-MNFTN=${DESCR//[^[:alnum:]]/_}
+MNFTD=${DESCR//[^[:alnum:]]/_}
 
-python3 $SCRPT -n $INPUT -c $METAD -d "$DESCR" -e $EMAIL -a "$AUTHR" -o $OTPUT --manifeststudy $MNFTS --manifestname $MNFTN  --productlookup True
+python3 $SCRPT -n $INPUT -c $METAD -d "$DESCR" -e $EMAIL -a "$AUTHR" -o $OTPUT --manifeststudy $MNFTS --manifestdescr $MNFTD  --productlookup True
 ```
 
 #### On Windows
 ```
 SET SCRPT=$PWD\scripts\annonex2embl_CMD.py
-SET INPUT=examples\input\TestData1.nex
-SET METAD=examples\input\TestData1.csv
-SET OTPUT=examples\output\TestData1.embl
+SET INPUT=examples\input\TestInput1.nex
+SET METAD=examples\input\TestInput1.csv
+SET OTPUT=examples\output\TestInput1.embl
 SET DESCR='description of alignment'
 SET EMAIL=your_email_here@yourmailserver.com
 SET AUTHR='your name here'
 SET MNFTS=PRJEB00000
-SET MNFTN=a_unique_description_here
+SET MNFTD=a_unique_description_here
 
-python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% -o %OTPUT% --manifeststudy %MNFTS% --manifestname %MNFTN%  --productlookup True
+python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% -o %OTPUT% --manifeststudy %MNFTS% --manifestdescr %MNFTD%  --productlookup True
 ```
-
 
 ## TO DO
-* Replace section "POST-PROCESSING OF FILES" with code that reads in the file written to outp_handle and that edits the text string within Python (as opposed to calling 'sed' as done currently). That way, the code becomes platform independent. For example, the code can be loaded into a stringIO and edited via regular Python-string-functions (see function "write_SeqRecord" in IOOps.py as an example).
-* After post-processing of the output file, write the as a gnu-zipped file. This is easy in Python:
-```
-import gzip
-final_output = gzip.open('seqRecords.embl.gz', 'wb')
-try:
-    output.write(SeqRecords) ## See function 'write_SeqRecord' in IOOps.py for details
-finally:
-    output.close()
-```
-* Example files (./examples/input): Combine the alignments "fuzzy.nex" and "reverse.nex" into a single NEXUS file, while keeping the maximum sequence length of each sequence at 38 nucleotides (adjust the annotations to the new length accordingly)
-* The taxonomy check (optional argument: --taxcheck) shall primarily be conducted against the ENA database, not the NCBI database. So far, the taxonomy check was conducted against the NCBI database (see the use of "Entrez.esearch" in the static function "_taxname_lookup" in ParsingOps.py). Instead, the taxonomy check shall be conducted as described in section "Fetch taxon by scientific name" on https://www.ebi.ac.uk/ena/browse/taxonomy-service. Hence, please comment out (don't replace!) the command "esearch_records=Entrez.esearch(db='taxonomy',term=query_term,retmax=retmax,retmod='xml')"
-and replace it with something like:
-"enaTaxonomy_records=urllib2.urlopen('http://www.ebi.ac.uk/ena/data/taxonomy/v1/taxon/scientific-name/' + query_term).read()"
-See this SO post for ideas: https://stackoverflow.com/questions/24124643/parse-xml-from-url-into-python-object  Probably you will also need to adjust the subsequent three or four commands of function "_taxname_lookup" to have the XML code parsed correctly.
-
-<!---
-NOT NECESSARY AT THIS POINT
 * Currently, --taxcheck requires "True" of "False" as parameters; how can I use it such that only the presence of --taxcheck indicates "True", whereas its abscence indicates "False"?
 * Implement improvements of argparser (scripts/annonex2embl_CMD.py): Currently, the "required" and "optional" parameters are not displayed when calling scripts/annonex2embl_CMD.py. It incorrectly says "optional parameters" for all.
-* Add a function that (a) reads and parses a bibtex file, extracts the citation info as well as the submitter references as from that file, and write the correctly formatted string-lines into the EMBL output file during post-processing.
---->
 
 
 ## DEVELOPMENT

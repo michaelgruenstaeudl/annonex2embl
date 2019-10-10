@@ -8,32 +8,30 @@ Unit Tests for the classes of the module `ParsingOps`
 #####################
 
 import unittest
-
-# Add specific directory to sys.path in order to import its modules
-# NOTE: THIS RELATIVE IMPORTING IS AMATEURISH.
-# NOTE: COULD THE FOLLOWING IMPORT BE REPLACED WITH 'import annonex2embl'?
+import warnings
 import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
+# Add specific directory to sys.path in order to import its modules
+# Note: This relative importing is amateurish; why can I not replace it with 'import annonex2embl'?
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'annonex2embl'))
 
 import GlobalVariables as GlobVars
-import MyExceptions as ME
 import ParsingOps as PrOps
 
 ###############
 # AUTHOR INFO #
 ###############
 
-__author__ = 'Michael Gruenstaeudl <your_email_here@yourmailserver.com>'
-__copyright__ = 'Copyright (C) 2016-2017 Michael Gruenstaeudl'
-__info__ = 'nex2embl'
-__version__ = '2017.02.01.1400'
+__author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
+__copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
+__info__ = 'annonex2embl'
+__version__ = '2019.10.10.1730'
 
 #############
 # DEBUGGING #
 #############
 
-#import pdb
-#pdb.set_trace()
+#import ipdb
+#ipdb.set_trace()
 
 ###########
 # CLASSES #
@@ -42,6 +40,9 @@ __version__ = '2017.02.01.1400'
 
 class ParseCharsetNameTestCases(unittest.TestCase):
     ''' Tests to evaluate class `ParseCharsetName` '''
+    def setUp(self):
+        warnings.simplefilter('ignore')
+
 
     def test_ParseCharsetName__parse__1(self):
         ''' This test evaluates the function `parse` of the class
@@ -57,6 +58,7 @@ class ParseCharsetNameTestCases(unittest.TestCase):
         self.assertIsInstance(handle[1], str)
         self.assertTrue(handle[1] in GlobVars.nex2ena_valid_INSDC_featurekeys)
 
+
     def test_ParseCharsetName__parse__2(self):
         ''' This test evaluates the function `parse` of the class
             `ParseCharsetName`.
@@ -65,8 +67,9 @@ class ParseCharsetNameTestCases(unittest.TestCase):
         charset_name = 'psbI_rRNA_CDS' # Two feature keys present.
         email_addr = 'your_email_here@yourmailserver.com'
         product_lookup = True
-        with self.assertRaises(ME.MyException):
+        with self.assertRaises(Exception) as e: # Note the "as e" is important, as you otherwise receive exception messages during unittests
             PrOps.ParseCharsetName(charset_name, email_addr, product_lookup).parse()
+
 
     def test_ParseCharsetName__parse__3(self):
         ''' This test evaluates the function `parse` of the class
@@ -76,8 +79,9 @@ class ParseCharsetNameTestCases(unittest.TestCase):
         charset_name = 'psbI_matK_CDS' # Two gene symbols present.
         email_addr = 'your_email_here@yourmailserver.com'
         product_lookup = True
-        with self.assertRaises(ME.MyException):
+        with self.assertRaises(Exception) as e:
             PrOps.ParseCharsetName(charset_name, email_addr, product_lookup).parse()
+
 
     def test_ParseCharsetName__parse__4(self):
         ''' This test evaluates the function `parse` of the class
@@ -87,8 +91,9 @@ class ParseCharsetNameTestCases(unittest.TestCase):
         charset_name = 'xxxX_CDS'
         email_addr = 'your_email_here@yourmailserver.com'
         product_lookup = True
-        with self.assertRaises(ME.MyException):
+        with self.assertRaises(Exception) as e:
             PrOps.ParseCharsetName(charset_name, email_addr, product_lookup).parse()
+
 
     def test_ParseCharsetName__parse__5(self):
         ''' This test evaluates the function `parse` of the class
@@ -98,8 +103,9 @@ class ParseCharsetNameTestCases(unittest.TestCase):
         charset_name = 'matK'
         email_addr = 'your_email_here@yourmailserver.com'
         product_lookup = True
-        with self.assertRaises(ME.MyException):
+        with self.assertRaises(Exception) as e:
             PrOps.ParseCharsetName(charset_name, email_addr, product_lookup).parse()
+
 
     def test_ParseCharsetName__parse__6(self):
         ''' This test evaluates the function `parse` of the class
@@ -109,8 +115,9 @@ class ParseCharsetNameTestCases(unittest.TestCase):
         charset_name = 'CDS'
         email_addr = 'your_email_here@yourmailserver.com'
         product_lookup = True
-        with self.assertRaises(ME.MyException):
+        with self.assertRaises(Exception) as e:
             PrOps.ParseCharsetName(charset_name, email_addr, product_lookup).parse()
+
 
     def test_ParseCharsetName__parse__7(self):
         ''' This test evaluates the function `parse` of the class
@@ -129,25 +136,38 @@ class ParseCharsetNameTestCases(unittest.TestCase):
 
 class GetEntrezInfoTestCases(unittest.TestCase):
     ''' Tests to evaluate class `GetEntrezInfo` '''
+    def setUp(self):
+        warnings.simplefilter('ignore')
+
+
+    def test_GetEntrezInfo__taxname_lookup_ena(self):
+        ''' This test evaluates function `_taxname_lookup_ena` of class `GetEntrezInfo`.
+            This test evaluates if the ENA taxonomy service responds correctly. '''
+        taxon_name = 'Arabidopsis thaliana'
+        email_addr = 'your_email_here@yourmailserver.com'
+        handle = PrOps.GetEntrezInfo(email_addr)._taxname_lookup_ena(taxon_name)
+        self.assertTrue(handle=="1")
+
 
     def test_GetEntrezInfo__does_taxon_exist__1(self):
         ''' This test evaluates function `does_taxon_exist` of class `GetEntrezInfo`.
-            This test evaluates the case where a taxon name is used that does
-            not exist on NCBI Taxonomy. '''
-        #taxon_name = 'Pyrus tamamaschjanae'
-        taxon_name = "qwertzuiop"
+            This test evaluates the case where a taxon name is used that has not been 
+            registered via the ENA taxonomy service. '''
+        taxon_name = "foo bar"
         email_addr = 'your_email_here@yourmailserver.com'
         handle = PrOps.GetEntrezInfo(email_addr).does_taxon_exist(taxon_name)
         self.assertFalse(handle)
 
+
     def test_GetEntrezInfo__does_taxon_exist__2(self):
         ''' This test evaluates function `does_taxon_exist` of class `GetEntrezInfo`.
-            This test evaluates the case where a taxon name is used that does
-            exist on NCBI Taxonomy. '''
-        taxon_name = 'Pyrus caucasica'
+            This test evaluates the case where a taxon name is used that has not been 
+            registered via the ENA taxonomy service. '''
+        taxon_name = 'Arabidopsis thaliana'
         email_addr = 'your_email_here@yourmailserver.com'
         handle = PrOps.GetEntrezInfo(email_addr).does_taxon_exist(taxon_name)
         self.assertTrue(handle)
+
 
 #############
 # FUNCTIONS #

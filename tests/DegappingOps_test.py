@@ -8,12 +8,11 @@ Unit Tests for the classes of the module `DegappingOps`
 #####################
 
 import unittest
-
-# Add specific directory to sys.path in order to import its modules
-# NOTE: THIS RELATIVE IMPORTING IS AMATEURISH.
-# NOTE: COULD THE FOLLOWING IMPORT BE REPLACED WITH 'import annonex2embl'?
+import warnings
 import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'annonex2embl'))
+# Add specific directory to sys.path in order to import its modules
+# Note: This relative importing is amateurish; why can I not replace it with 'import annonex2embl'?
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'annonex2embl'))
 
 import DegappingOps as DgOps
 
@@ -22,16 +21,23 @@ import DegappingOps as DgOps
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016 Michael Gruenstaeudl'
-__info__ = 'nex2embl'
-__version__ = '2017.01.21.2200'
+__copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
+__info__ = 'annonex2embl'
+__version__ = '2019.10.09.1830'
 
 #############
 # DEBUGGING #
 #############
 
-#import pdb
-#pdb.set_trace()
+#import ipdb
+#ipdb.set_trace()
+
+def ignore_warnings(test_func):
+    def do_test(self, *args, **kwargs):
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore', category=UserWarning)
+            test_func(self, *args, **kwargs)
+    return do_test
 
 ####################
 # GLOBAL VARIABLES #
@@ -43,6 +49,9 @@ __version__ = '2017.01.21.2200'
 
 class DegapButMaintainAnnoTestCases(unittest.TestCase):
     ''' Tests for class `DegapButMaintainAnno` '''
+    def setUp(self):
+        warnings.simplefilter('ignore')
+
 
     def test_1_DegapButMaintainAnno(self):
         ''' This test evaluates the case where a gene contains an internal gap.
@@ -55,6 +64,7 @@ class DegapButMaintainAnnoTestCases(unittest.TestCase):
         out_actual = DgOps.DegapButMaintainAnno(seq, rmchar, charsets).degap()
         self.assertTupleEqual(out_actual, out_ideal)
 
+
     def test_2_DegapButMaintainAnno(self):
         ''' This test evaluates the case where a gene contains gaps at the 
         start and at the end.
@@ -66,7 +76,8 @@ class DegapButMaintainAnnoTestCases(unittest.TestCase):
 
         out_actual = DgOps.DegapButMaintainAnno(seq, rmchar, charsets).degap()
         self.assertTupleEqual(out_actual, out_ideal)
-       
+
+
     def test_3_DegapButMaintainAnno(self):
         ''' This test evaluates the case where an entire gene is missing.
         '''
@@ -77,6 +88,7 @@ class DegapButMaintainAnnoTestCases(unittest.TestCase):
 
         out_actual = DgOps.DegapButMaintainAnno(seq, rmchar, charsets).degap()
         self.assertTupleEqual(out_actual, out_ideal)
+
 
     def test_4_DegapButMaintainAnno(self):
         ''' This test evaluates the case where genes with internal gaps are 
@@ -90,6 +102,7 @@ class DegapButMaintainAnnoTestCases(unittest.TestCase):
         out_actual = DgOps.DegapButMaintainAnno(seq, rmchar, charsets).degap()
         self.assertTupleEqual(out_actual, out_ideal)
 
+
     def test_5_DegapButMaintainAnno(self):
         ''' This test evaluates the case where genes with start and end gaps 
         are overlapping.
@@ -101,6 +114,7 @@ class DegapButMaintainAnnoTestCases(unittest.TestCase):
 
         out_actual = DgOps.DegapButMaintainAnno(seq, rmchar, charsets).degap()
         self.assertTupleEqual(out_actual, out_ideal)
+
 
     def test_6_DegapButMaintainAnno(self):
         ''' This test evaluates the case where two genes are entirely 
@@ -115,6 +129,7 @@ class DegapButMaintainAnnoTestCases(unittest.TestCase):
         out_actual = DgOps.DegapButMaintainAnno(seq, rmchar, charsets).degap()
         self.assertTupleEqual(out_actual, out_ideal)
 
+
     def test_7_DegapButMaintainAnno(self):
         ''' This test evaluates the case where a gene contains start and end 
         gaps and the charset order is incorrect.
@@ -126,6 +141,7 @@ class DegapButMaintainAnnoTestCases(unittest.TestCase):
 
         out_actual = DgOps.DegapButMaintainAnno(seq, rmchar, charsets).degap()
         self.assertTupleEqual(out_actual, out_ideal)
+
 
     def test_8_DegapButMaintainAnno(self):
         ''' This test evaluates the case where three genes with internal gaps
@@ -144,7 +160,10 @@ class DegapButMaintainAnnoTestCases(unittest.TestCase):
 
 class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
     ''' Tests for class `RmAmbigsButMaintainAnno` '''
-    
+    def setUp(self):
+        warnings.simplefilter('ignore')
+
+
     def test_1_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where only leading ambiguities 
         (n=2) exist and the annotations do NOT overlap. The annotations 
@@ -159,7 +178,8 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         self.assertTupleEqual(out_actual_1, out_ideal_step1)
         out_actual_2 = DgOps.RmAmbigsButMaintainAnno().rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
         self.assertTupleEqual(out_actual_2, out_ideal_step1)
-    
+
+
     def test_2_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where only leading ambiguities
         (n=2) exist and the annotations DO overlap. The annotations 
@@ -174,7 +194,8 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         self.assertTupleEqual(out_actual_1, out_ideal_step1)
         out_actual_2 = DgOps.RmAmbigsButMaintainAnno().rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
         self.assertTupleEqual(out_actual_2, out_ideal_step1)
-    
+
+
     def test_3_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where only leading ambiguities
         (n=2) exist and the annotations DO overlap. The annotations 
@@ -189,7 +210,8 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         self.assertTupleEqual(out_actual_1, out_ideal_step1)
         out_actual_2 = DgOps.RmAmbigsButMaintainAnno().rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
         self.assertTupleEqual(out_actual_2, out_ideal_step1)
-    
+
+
     def test_4_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where only trailing ambiguities
         (n=2) exist and the annotations do NOT overlap. The annotations 
@@ -205,7 +227,8 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         self.assertTupleEqual(out_actual_1, out_ideal_step1)
         out_actual_2 = DgOps.RmAmbigsButMaintainAnno().rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
         self.assertTupleEqual(out_actual_2, out_ideal_step2)
-    
+
+
     def test_5_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where only trailing ambiguities
         (n=2) exist and the annotations DO overlap. The annotations 
@@ -221,7 +244,8 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         self.assertTupleEqual(out_actual_1, out_ideal_step1)
         out_actual_2 = DgOps.RmAmbigsButMaintainAnno().rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
         self.assertTupleEqual(out_actual_2, out_ideal_step2)
-    
+
+
     def test_6_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where only trailing ambiguities
         (n=2) exist and the annotations DO overlap. The annotations 
@@ -237,7 +261,8 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         self.assertTupleEqual(out_actual_1, out_ideal_step1)
         out_actual_2 = DgOps.RmAmbigsButMaintainAnno().rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
         self.assertTupleEqual(out_actual_2, out_ideal_step2)
-    
+
+
     def test_7_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where leading (n=2) and 
         trailing (n=3) ambiguities exist and the annotations do NOT 
@@ -254,7 +279,8 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         self.assertTupleEqual(out_actual_1, out_ideal_step1)
         out_actual_2 = DgOps.RmAmbigsButMaintainAnno().rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
         self.assertTupleEqual(out_actual_2, out_ideal_step2)
-    
+
+
     def test_8_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where leading (n=1) and 
         trailing (n=3) ambiguities exist and the annotations DO overlap.
@@ -270,7 +296,8 @@ class RmAmbigsButMaintainAnnoTestCases(unittest.TestCase):
         self.assertTupleEqual(out_actual_1, out_ideal_step1)
         out_actual_2 = DgOps.RmAmbigsButMaintainAnno().rm_trailambig(out_actual_1[0], rmchar, out_actual_1[1])
         self.assertTupleEqual(out_actual_2, out_ideal_step2)
-    
+
+
     def test_9_RmAmbigsButMaintainAnno(self):
         ''' This test evaluates the case where leading (n=1) and 
         trailing (n=3) ambiguities exist and the annotations DO overlap.
