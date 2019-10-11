@@ -1,0 +1,25 @@
+#NEXUS
+
+[Foo Bar Baz Qux]
+
+BEGIN DATA;
+DIMENSIONS NTAX=4 NCHAR=38;
+FORMAT DATATYPE=DNA GAP=- MISSING=?;
+
+MATRIX
+Taxon_1     TAACTGGATANNNAGNNTCAGCATTCCGGACTTTAACG  [mutations; no start codon]
+Taxon2      TAAATG---ANNNAGNNTC------CC---CTTTTACG  [deletions and mutations; no stop codon]
+'taxon.3'   NNNATG-TAANNNAGNNTC------CCTGACTTTAANN  [deletions and mutations; internal stop codon at start]
+T4          NNNNNN---ANNNAGNNTCA-CATTCCGGACTTCATCG  [reverse gene]
+
+;
+END;
+
+BEGIN SETS;
+CHARSET foo_CDS_forward = 4-12 17-25 28-36;
+CHARSET bar_intron = 13-16;
+CHARSET baz_CDS_reverse = 20-36;
+END;
+
+
+[Foo Bar Baz Qux]

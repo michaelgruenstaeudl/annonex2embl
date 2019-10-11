@@ -16,13 +16,11 @@ The annotations of a NEXUS file are specified via [SETS-block](http://hydrodicty
 #### Example of a complete SETS-BLOCK
 ```
 BEGIN SETS;
-CHARSET trnK_intron_forward = 0-928 2531-2813 2849-3152;
 CHARSET matK_gene_forward = 929-2530;
 CHARSET matK_CDS_forward = 929-2530;    # Accompanying the charset matK_gene
+CHARSET trnK_intron_forward = 1-928 2531-2813 2849-3152;
 CHARSET trnK_exon_reverse = 2814-2848;
 CHARSET trnK_CDS_reverse = 2814-2848;   # Accompanying the charset trnK_exon
-CHARSET psbA_gene_forward = 3153-3200;
-CHARSET psbA_CDS_forward = 3153-3200;   # Accompanying the charset psbA_gene
 END;
 ```
 
@@ -46,7 +44,7 @@ DESCR="rpl16 intron, partial sequence"
 ```
 SCRPT=$PWD/scripts/annonex2embl_CMD.py
 INPUT=examples/input/TestInput1.nex
-METAD=examples/input/TestInput1.csv
+METAD=examples/input/Metadata.csv
 OTPUT=examples/output/TestInput1.embl
 DESCR='description of alignment'  # Do not use double-quotes
 EMAIL=your_email_here@yourmailserver.com
@@ -61,7 +59,7 @@ python3 $SCRPT -n $INPUT -c $METAD -d "$DESCR" -e $EMAIL -a "$AUTHR" -o $OTPUT -
 ```
 SET SCRPT=$PWD\scripts\annonex2embl_CMD.py
 SET INPUT=examples\input\TestInput1.nex
-SET METAD=examples\input\TestInput1.csv
+SET METAD=examples\input\Metadata.csv
 SET OTPUT=examples\output\TestInput1.embl
 SET DESCR='description of alignment'
 SET EMAIL=your_email_here@yourmailserver.com
@@ -73,9 +71,13 @@ python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% -o %OTPUT%
 ```
 
 ## TO DO
-* Currently, --taxcheck requires "True" of "False" as parameters; how can I use it such that only the presence of --taxcheck indicates "True", whereas its abscence indicates "False"?
-* Implement improvements of argparser (scripts/annonex2embl_CMD.py): Currently, the "required" and "optional" parameters are not displayed when calling scripts/annonex2embl_CMD.py. It incorrectly says "optional parameters" for all.
+* Add feature so that all sequence records smaller than 10 unambiguous nucleotides are dropped (i.e., not saved to the output); adding preferentially at line 201 of Annonex2emblMain.py
 
+<!--
+* Implement improved argparse code: Currently, --taxcheck requires "True" of "False" as parameters. Please modify so that only the presence of --taxcheck indicates "True", whereas its abscence indicates "False".
+
+* Implement improved argparse code: Currently, the software incorrectly says "optional parameters" for all parameters upon execution via `python scripts/annonex2embl_launcher_CLI.py -h`. Please modify so that it correctly differentiates between "required" and "optional" parameters.
+-->
 
 ## DEVELOPMENT
 #### Testing for development

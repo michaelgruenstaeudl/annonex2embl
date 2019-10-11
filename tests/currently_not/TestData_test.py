@@ -64,12 +64,12 @@ class OutputTestCases(unittest.TestCase):
 
 
     def test_1_actual_vs_expected_output(self):
-        infile_nex = 'TestInput1.nex'
-        expected_outp = 'TestInput1.embl'
+        infile_nex = 'TestData1.nex'
+        expected_outp = 'TestData1.embl'
         my_name = sys._getframe().f_code.co_name  # Get name of this function
         infile_nex = os.path.join(base_path, 'examples/input/', infile_nex)
         infile_csv = os.path.join(base_path, 'examples/input/', metad_fn)
-        actual_outp = os.path.join(base_path, 'examples/temp/', my_name)
+        actual_outp = os.path.join(base_path, 'examples/temp/', my_name+'.embl')
         expected_outp = os.path.join(base_path, 'examples/output/', expected_outp)
         cmd_list = ['python', script_path, '-n', infile_nex, '-c', infile_csv,
                     '-d', descr, '-e', e_mail, '-a', authors, '-o', actual_outp]
@@ -85,7 +85,7 @@ class OutputTestCases(unittest.TestCase):
             ## Important: Remove actual output so that lines from 
             ## subsequent tests are not appended, rendering actual and 
             ## expected different!
-            os.remove(actual_outp)
+#            os.remove(actual_outp)
             # (Although keeping output can be helpful when generating 
             # new test files.)
         else:
@@ -94,14 +94,14 @@ class OutputTestCases(unittest.TestCase):
         self.assertTrue(isinstance(actual_str, str), 'Not a string: ' + actual_outp)
         self.assertMultiLineEqual(expected_str, actual_str)
     
-
+    
     def test_2_actual_vs_expected_output(self):
-        infile_nex = 'TestInput2.nex'
-        expected_outp = 'TestInput2.embl'
+        infile_nex = 'TestData2.nex'
+        expected_outp = 'TestData2.embl'
         my_name = sys._getframe().f_code.co_name  # Get name of this function
         infile_nex = os.path.join(base_path, 'examples/input/', infile_nex)
         infile_csv = os.path.join(base_path, 'examples/input/', metad_fn)
-        actual_outp = os.path.join(base_path, 'examples/temp/', my_name)
+        actual_outp = os.path.join(base_path, 'examples/temp/', my_name+'.embl')
         expected_outp = os.path.join(base_path, 'examples/output/', expected_outp)
         cmd_list = ['python', script_path, '-n', infile_nex, '-c', infile_csv,
                     '-d', descr, '-e', e_mail, '-a', authors, '-o', actual_outp]
@@ -114,67 +114,13 @@ class OutputTestCases(unittest.TestCase):
         if os.path.isfile(actual_outp):
             with open(actual_outp, 'r') as actual_hndl:
                 actual_str = actual_hndl.read()
-            os.remove(actual_outp)
+#            os.remove(actual_outp)
         else:
             print('annonex2embl TESTING ERROR: actual_str not found.')
         self.assertTrue(isinstance(expected_str, str), 'Not a string: ' + expected_outp)
         self.assertTrue(isinstance(actual_str, str), 'Not a string: ' + actual_outp)
         self.assertMultiLineEqual(expected_str, actual_str)
     
-
-    def test_3_actual_vs_expected_output(self):
-        infile_nex = 'TestInput3.nex'
-        expected_outp = 'TestInput3.embl'
-        my_name = sys._getframe().f_code.co_name  # Get name of this function
-        infile_nex = os.path.join(base_path, 'examples/input/', infile_nex)
-        infile_csv = os.path.join(base_path, 'examples/input/', metad_fn)
-        actual_outp = os.path.join(base_path, 'examples/temp/', my_name)
-        expected_outp = os.path.join(base_path, 'examples/output/', expected_outp)
-        cmd_list = ['python', script_path, '-n', infile_nex, '-c', infile_csv,
-                    '-d', descr, '-e', e_mail, '-a', authors, '-o', actual_outp]
-        try:
-            subprocess.check_output(' '.join(cmd_list), shell=True)
-        except subprocess.CalledProcessError as e:
-            print(e.output)
-        with open(expected_outp, 'r') as expected_hndl:
-            expected_str = expected_hndl.read()
-        if os.path.isfile(actual_outp):
-            with open(actual_outp, 'r') as actual_hndl:
-                actual_str = actual_hndl.read()
-            os.remove(actual_outp)
-        else:
-            print('annonex2embl TESTING ERROR: actual_str not found.')
-        self.assertTrue(isinstance(expected_str, str), 'Not a string: ' + expected_outp)
-        self.assertTrue(isinstance(actual_str, str), 'Not a string: ' + actual_outp)
-        self.assertMultiLineEqual(expected_str, actual_str)
-    
-
-    def test_4_actual_vs_expected_output(self):
-        infile_nex = 'TestInput4.nex'
-        expected_outp = 'TestInput4.embl'
-        my_name = sys._getframe().f_code.co_name  # Get name of this function
-        infile_nex = os.path.join(base_path, 'examples/input/', infile_nex)
-        infile_csv = os.path.join(base_path, 'examples/input/', metad_fn)
-        actual_outp = os.path.join(base_path, 'examples/temp/', my_name)
-        expected_outp = os.path.join(base_path, 'examples/output/', expected_outp)
-        cmd_list = ['python', script_path, '-n', infile_nex, '-c', infile_csv,
-                    '-d', descr, '-e', e_mail, '-a', authors, '-o', actual_outp]
-        try:
-            subprocess.check_output(' '.join(cmd_list), shell=True)
-        except subprocess.CalledProcessError as e:
-            print(e.output)
-        with open(expected_outp, 'r') as expected_hndl:
-            expected_str = expected_hndl.read()
-        if os.path.isfile(actual_outp):
-            with open(actual_outp, 'r') as actual_hndl:
-                actual_str = actual_hndl.read()
-            os.remove(actual_outp)
-        else:
-            print('annonex2embl TESTING ERROR: actual_str not found.')
-        self.assertTrue(isinstance(expected_str, str), 'Not a string: ' + expected_outp)
-        self.assertTrue(isinstance(actual_str, str), 'Not a string: ' + actual_outp)
-        self.assertMultiLineEqual(expected_str, actual_str)
-
 
 ########
 # MAIN #

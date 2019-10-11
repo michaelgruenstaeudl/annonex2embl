@@ -198,6 +198,8 @@ def annonex2embl(path_to_nex,
                     break
             if skip:
                 continue
+# 6.2.1. Skip all sequence records smaller than 10 unambiguous nucleotides
+            ## TO DO
 
 ####################################
 

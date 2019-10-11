@@ -1,0 +1,23 @@
+#NEXUS
+
+[Foo Bar Baz]
+
+BEGIN DATA;
+DIMENSIONS NTAX=4 NCHAR=38;
+FORMAT DATATYPE=DNA GAP=- MISSING=?;
+
+MATRIX
+Taxon_1     TAAATGGATANNNAGNNTCAGCATTCCGGACTTTAACG  [regular]
+Taxon2      TAAATG---ATATAGAGTC------CC---CTTTAACG  [deletions]
+'taxon.3'   NNNATG---ATATAGAGTC------CCTGACTTTAANN  [deletions; mutations (internal stop codon at end); terminal Ns]
+T4          NNNNNN---ATATAGAGTN------NN---NNNNNNNN  [sequence smaller than nine unambiguous bp]
+;
+END;
+
+BEGIN SETS;
+CHARSET foo_CDS = 4-12 17-25 28-36;
+CHARSET foo_gene = 4-12 17-25 28-36;
+END;
+
+
+[Foo Bar Baz]

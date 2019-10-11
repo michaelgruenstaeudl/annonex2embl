@@ -87,13 +87,13 @@ class CLI():
 
         ### OPTIONAL ###
         parser.add_argument('--manifeststudy',
-                            help='the study accession number for the manifest file that the submission shall be linked to',
-                            default='PRJEB00000',
+                            help='the study accession number for the manifest file that the submission shall be linked to; Example: PRJEB00000',
+                            default='',
                             required=False)
 
         parser.add_argument('--manifestdescr',
-                            help='a unique text string for the manifest file characterizing the input alignment',
-                            default='a_unique_description_here',
+                            help='a unique, non-interrupted text string for the manifest file characterizing the input alignment; Example: a_unique_description_here',
+                            default='',
                             required=False)
 
         parser.add_argument('--productlookup',

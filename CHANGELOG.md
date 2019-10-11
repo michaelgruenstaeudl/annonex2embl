@@ -1,6 +1,9 @@
 CHANGELOG
 ---------
-#### Version 0.6.0 (2019.10.10)
+#### Version 0.6.5 (2019.10.11)
+* Unified information provision to user in case of warnings or exceptions
+* Updated example datasets
+#### Version 0.6.0 (2019.10.09)
 * Added a function that compresses the output flatfile upon user request
 * Added a function that conducts the taxonomy check primarily via the [ENA taxonomy service](https://www.ebi.ac.uk/ena/browse/taxonomy-service)
 * Added function to post-process the individual sequence records via internal functions instead of calling Bash's sed

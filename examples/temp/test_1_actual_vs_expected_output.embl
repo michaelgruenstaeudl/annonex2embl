@@ -1,0 +1,127 @@
+ID   T4; SV 1; linear; DNA; ; PLN; 12 BP.
+XX
+AC   T4;
+XX
+DE   Betula pubescens a description here, isolate T4
+XX
+OS   .
+OC   .
+XX
+RN   [1]
+RA   LastName1 A.; LastName2 B.
+RT   ;
+RL   Submitted (11-OCT-2019) to the INSDC.
+XX
+FH   Key             Location/Qualifiers
+FH
+FT   source          1..12
+FT                   /isolate="T4"
+FT                   /organism="Betula pubescens"
+FT                   /country="Iceland: Reykjavik"
+FT                   /mol_type="genomic DNA"
+FT   CDS             join(<1..3,8..>10)
+FT                   /note="foo"
+FT                   /transl_table=11
+FT                   /codon_start=1
+FT                   /translation="IV"
+FT   gap             10..12
+FT                   /estimated_length=3
+XX
+SQ   Sequence 12 BP; 4 A; 0 C; 2 G; 3 T; 3 other;
+     atatagagtn nn                                                            12
+//
+ID   Taxon2; SV 1; linear; DNA; ; PLN; 26 BP.
+XX
+AC   Taxon2;
+XX
+DE   Pyrus tamaschjanae a description here, isolate Taxon2
+XX
+OS   .
+OC   .
+XX
+RN   [1]
+RA   LastName1 A.; LastName2 B.
+RT   ;
+RL   Submitted (11-OCT-2019) to the INSDC.
+XX
+FH   Key             Location/Qualifiers
+FH
+FT   source          1..26
+FT                   /isolate="Taxon2"
+FT                   /organism="Pyrus tamaschjanae"
+FT                   /country="Country: Area, City"
+FT                   /specimen_voucher="Herbarium2: Lorrach9"
+FT                   /mol_type="genomic DNA"
+FT   CDS             join(4..9,14..16,19..24)
+FT                   /note="foo"
+FT                   /transl_table=11
+FT                   /translation="MIVL"
+FT   gene            join(4..9,14..16,19..24)
+FT                   /note="foo"
+XX
+SQ   Sequence 26 BP; 9 A; 5 C; 4 G; 8 T; 0 other;
+     taaatgatat agagtcccct ttaacg                                             26
+//
+ID   Taxon_1; SV 1; linear; DNA; ; PLN; 38 BP.
+XX
+AC   Taxon_1;
+XX
+DE   Arabidopsis thaliana a description here, isolate Taxon_1
+XX
+OS   .
+OC   .
+XX
+RN   [1]
+RA   LastName1 A.; LastName2 B.
+RT   ;
+RL   Submitted (11-OCT-2019) to the INSDC.
+XX
+FH   Key             Location/Qualifiers
+FH
+FT   source          1..38
+FT                   /isolate="Taxon_1"
+FT                   /organism="Arabidopsis thaliana"
+FT                   /specimen_voucher="Museum1: Collection#"
+FT                   /mol_type="genomic DNA"
+FT   CDS             join(4..6,8..12,17..25,28..36)
+FT                   /note="foo"
+FT                   /transl_table=11
+FT                   /translation="MIXSALDF"
+FT   gene            join(4..6,8..12,17..25,28..36)
+FT                   /note="foo"
+FT   gap             11..13
+FT                   /estimated_length=3
+FT   gap             16..17
+FT                   /estimated_length=2
+XX
+SQ   Sequence 38 BP; 11 A; 6 C; 7 G; 9 T; 5 other;
+     taaatggata nnnagnntca gcattccgga ctttaacg                                38
+//
+ID   taxon.3; SV 1; linear; DNA; ; PLN; 24 BP.
+XX
+AC   taxon.3;
+XX
+DE   Taxon three a description here, isolate taxon.3
+XX
+OS   .
+OC   .
+XX
+RN   [1]
+RA   LastName1 A.; LastName2 B.
+RT   ;
+RL   Submitted (11-OCT-2019) to the INSDC.
+XX
+FH   Key             Location/Qualifiers
+FH
+FT   source          1..24
+FT                   /isolate="taxon.3"
+FT                   /organism="Taxon three"
+FT                   /mol_type="genomic DNA"
+FT   CDS             join(1..6,11..13,16..18)
+FT                   /note="foo"
+FT                   /transl_table=11
+FT                   /translation="MIV"
+XX
+SQ   Sequence 24 BP; 8 A; 4 C; 4 G; 8 T; 0 other;
+     atgatataga gtccctgact ttaa                                               24
+//
