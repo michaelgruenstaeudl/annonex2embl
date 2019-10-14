@@ -95,35 +95,3 @@ XX
 SQ   Sequence 24 BP; 8 A; 3 C; 5 G; 8 T; 0 other;
      atgttatgga ctacgctatg ataa                                               24
 //
-ID   Taxon4; SV 1; linear; DNA; ; PLN; 12 BP.
-XX
-AC   Taxon4;
-XX
-DE   Betula pubescens a description here, isolate Taxon4
-XX
-OS   .
-OC   .
-XX
-RN   [1]
-RA   LastName1 A.; LastName2 B.
-RT   ;
-RL   Submitted (14-OCT-2019) to the INSDC.
-XX
-FH   Key             Location/Qualifiers
-FH
-FT   source          1..12
-FT                   /isolate="Taxon4"
-FT                   /organism="Betula pubescens"
-FT                   /country="Iceland: Reykjavik"
-FT                   /mol_type="genomic DNA"
-FT   CDS             join(<1..3,8..>10)
-FT                   /note="foo"
-FT                   /transl_table=11
-FT                   /codon_start=1
-FT                   /translation="LL"
-FT   gap             10..12
-FT                   /estimated_length=3
-XX
-SQ   Sequence 12 BP; 2 A; 1 C; 2 G; 4 T; 3 other;
-     ttatggactn nn                                                            12
-//
