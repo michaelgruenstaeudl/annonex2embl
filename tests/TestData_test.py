@@ -24,7 +24,7 @@ import subprocess
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.10.1730'
+__version__ = '2019.10.11.1900'
 
 #############
 # DEBUGGING #
@@ -74,7 +74,9 @@ class OutputTestCases(unittest.TestCase):
         cmd_list = ['python', script_path, '-n', infile_nex, '-c', infile_csv,
                     '-d', descr, '-e', e_mail, '-a', authors, '-o', actual_outp]
         try:
-            subprocess.check_output(' '.join(cmd_list), shell=True)
+            FNULL = open(os.devnull, 'w')
+            #subprocess.check_output(' '.join(cmd_list), shell=True)
+            subprocess.call(cmd_list, stdout=FNULL, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             print(e.output)
         with open(expected_outp, 'r') as expected_hndl:
@@ -85,7 +87,7 @@ class OutputTestCases(unittest.TestCase):
             ## Important: Remove actual output so that lines from 
             ## subsequent tests are not appended, rendering actual and 
             ## expected different!
-#            os.remove(actual_outp)
+            os.remove(actual_outp)
             # (Although keeping output can be helpful when generating 
             # new test files.)
         else:
@@ -106,7 +108,9 @@ class OutputTestCases(unittest.TestCase):
         cmd_list = ['python', script_path, '-n', infile_nex, '-c', infile_csv,
                     '-d', descr, '-e', e_mail, '-a', authors, '-o', actual_outp]
         try:
-            subprocess.check_output(' '.join(cmd_list), shell=True)
+            FNULL = open(os.devnull, 'w')
+            #subprocess.check_output(' '.join(cmd_list), shell=True)
+            subprocess.call(cmd_list, stdout=FNULL, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             print(e.output)
         with open(expected_outp, 'r') as expected_hndl:
@@ -114,7 +118,7 @@ class OutputTestCases(unittest.TestCase):
         if os.path.isfile(actual_outp):
             with open(actual_outp, 'r') as actual_hndl:
                 actual_str = actual_hndl.read()
-#            os.remove(actual_outp)
+            os.remove(actual_outp)
         else:
             print('annonex2embl TESTING ERROR: actual_str not found.')
         self.assertTrue(isinstance(expected_str, str), 'Not a string: ' + expected_outp)

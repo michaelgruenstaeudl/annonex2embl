@@ -1,5 +1,5 @@
 isolate, organism, country, specimen_voucher
-Taxon_1,Arabidopsis thaliana,,Museum1: Collection#
-Taxon2,Pyrus tamaschjanae,"Country: Area, City",Herbarium2: Lörrach9
-taxon.3,Taxon three,,
-T4,Betula pubescens,Iceland: Reykjavík,
+Taxon1,Arabidopsis thaliana,,Museum1: Collection#
+Taxon2,Nymphaea odorata,"Country: State, City",Herbarium2: Lörrach9
+Taxon3,Taxon three,,
+Taxon4,Betula pubescens,Iceland: Reykjavík,

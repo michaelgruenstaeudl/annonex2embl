@@ -26,7 +26,7 @@ except ImportError:
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.10.1300'
+__version__ = '2019.10.11.1900'
 
 #############
 # DEBUGGING #
@@ -154,7 +154,7 @@ class Outp:
         for line in SecRecord_handle.getvalue().split("\n"):
             if line[0:8] == 'FH   Key':
                 outp_handle.write("RN   [1]" +
-                          "\nRA   " + author_names +
+                          "\nRA   " + author_names.replace('"','') +
                           "\nRT   ;" +
                           "\nRL   Submitted (" + date_today + ") to the INSDC." +
                           "\nXX" +

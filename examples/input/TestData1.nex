@@ -7,10 +7,10 @@ DIMENSIONS NTAX=4 NCHAR=38;
 FORMAT DATATYPE=DNA GAP=- MISSING=?;
 
 MATRIX
-Taxon_1     TAAATGGATANNNAGNNTCAGCATTCCGGACTTTAACG  [regular]
-Taxon2      TAAATG---ATATAGAGTC------CC---CTTTAACG  [deletions]
-'taxon.3'   NNNATG---ATATAGAGTC------CCTGACTTTAANN  [deletions; mutations (internal stop codon at end); terminal Ns]
-T4          NNNNNN---ATATAGAGTN------NN---NNNNNNNN  [sequence smaller than nine unambiguous bp]
+Taxon1   TAAATGTCATNNNGGNNTATCATTACGCTATCATAACG  [internal Ns]
+Taxon2   TAAATG---TTATGGACTA------CG---TCATAACG  [deletions]
+Taxon3   NNNATG---TTATGGACTA------CGCTATGATAANN  [deletions; mutations (internal stop codon at end); terminal Ns]
+Taxon4   NNNNNN---TTATGGACTN------NN---NNNNNNNN  [sequence smaller than nine unambiguous bp]
 ;
 END;
 

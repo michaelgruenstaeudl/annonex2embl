@@ -38,7 +38,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'annone
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.10.1300'
+__version__ = '2019.10.11.1900'
 
 #############
 # DEBUGGING #
@@ -329,7 +329,7 @@ def annonex2embl(path_to_nex,
                         last_seen[2] = feature.location
                     except Exception as e:
                         msg = 'WARNING: Feature `%s` (type: %s) of sequence `%s` is not saved to '\
-                              'output' % (feature.id, feature.type, seq_record.id)
+                              'output. Reason: %s' % (feature.id, feature.type, seq_record.id, e)
                         warnings.warn(msg)
                         removal_list.append(indx)
                 elif feature.type == 'IGS' or feature.type == 'intron':

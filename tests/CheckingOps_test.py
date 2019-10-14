@@ -25,7 +25,7 @@ import CheckingOps as CkOps
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.09.1830'
+__version__ = '2019.10.11.1900'
 
 #############
 # DEBUGGING #
@@ -94,26 +94,6 @@ class AnnoChecksTestCases(unittest.TestCase):
         record_id = 'foobar'
         self.assertTrue(CkOps.AnnoCheck(extract, feature,
             record_id).for_unittest())
-
-
-    def test_AnnoChecks_example_4(self):
-        ''' Test to evaluate function `check` of class `AnnoChecks`.
-        This test evaluates the situation where the input sequence only codes 
-        for a single aminoacid. '''
-        from Bio.Seq import Seq
-        from Bio.Alphabet import generic_dna
-        from Bio.SeqFeature import FeatureLocation
-        from Bio import SeqFeature
-        extract = Seq("ATGTAA", generic_dna)
-        loc = FeatureLocation(0, 6) # Stop_pos must be +1
-        feature = SeqFeature.SeqFeature(loc, id='foobar', type='CDS')
-        record_id = 'foobar'
-        with self.assertRaises(Exception):
-            CkOps.AnnoCheck(extract, feature, record_id).for_unittest()
-
-
-#class TranslCheckTestCases(unittest.TestCase):
-#    ''' Tests for class `TranslCheck` '''
 
 
 class QualifierCheckTestCases(unittest.TestCase):

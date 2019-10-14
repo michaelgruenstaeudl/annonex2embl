@@ -25,7 +25,7 @@ from itertools import chain
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.10.1300'
+__version__ = '2019.10.11.1900'
 
 #############
 # DEBUGGING #
@@ -65,15 +65,18 @@ class AnnoCheck:
     @staticmethod
     def _transl(extract, transl_table, to_stop=False, cds=False):
         ''' An internal static function to translate a coding region. '''
-        transl = extract.translate(table=transl_table, to_stop=to_stop,
-                                   cds=cds)
-        # Adjustment for non-start codons given the necessary use of
-        # cds=True in TPL.
-        if not extract.startswith(GlobVars.nex2ena_start_codon):
-            first_codon_seq = extract[0:3]
-            first_aa = first_codon_seq.translate(table=transl_table,
-                                                 to_stop=to_stop, cds=False)
-            transl = first_aa + transl[1:]
+        
+        with warnings.catch_warnings():  # Note: Suppressing warnings necessary to suppress the Biopython warning about an annotation not being a multiple of three
+            warnings.filterwarnings("ignore")
+            transl = extract.translate(table=transl_table, to_stop=to_stop,
+                                       cds=cds)
+            # Adjustment for non-start codons given the necessary use of
+            # cds=True in TPL.
+            if not extract.startswith(GlobVars.nex2ena_start_codon):
+                first_codon_seq = extract[0:3]
+                first_aa = first_codon_seq.translate(table=transl_table,
+                                                     to_stop=to_stop, cds=False)
+                transl = first_aa + transl[1:]
         return transl
 
     @staticmethod
@@ -126,7 +129,7 @@ class AnnoCheck:
             transl_out = AnnoCheck._transl(self.extract,
                                            self.transl_table, cds=True)
             feat_loc = self.feature.location
-        except Exception:
+        except:
             try:
                 without_internalStop = AnnoCheck._transl(self.extract,
                                                          self.transl_table)
@@ -136,16 +139,16 @@ class AnnoCheck:
                 feat_loc = AnnoCheck._adjust_feat_loc(
                     self.feature.location, with_internalStop, without_internalStop)
             except Exception:
-                msg = 'ERROR: Translation of feature `%s` of '\
+                msg = 'Translation of feature `%s` of '\
                       'sequence `%s` is unsuccessful.' % (self.feature.id, self.record_id)
-                warnings.warn(msg)
-                raise Exception
+                #warnings.warn(msg)
+                raise Exception(msg)
         if len(transl_out) < 2:
-            msg = 'ERROR: Translation of feature `%s` of '\
+            msg = 'Translation of feature `%s` of '\
                   'sequence `%s` indicates a protein length of only a '\
                   'single amino acid.' % (self.feature.id, self.record_id)
-            warnings.warn(msg)
-            raise Exception
+            #warnings.warn(msg)
+            raise Exception(msg)
         # IMPORTANT!!!: In an ENA record, the translation does not display the
         # stop codon (i.e., the '*'), while the feature location range (i.e., 738..2291)
         # very much includes its position, which is biologically logical, as
@@ -235,8 +238,7 @@ class TranslCheck:
                     raise
             feature.location = loc
         except Exception as e:
-            print(e)
-            raise
+            raise Exception(e)
         return feature
 
 
