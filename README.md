@@ -76,10 +76,12 @@ Or, alternatively, if you want to get the latest development version of *annonex
 
 ## TESTING
 #### Regular testing
+
     python3 setup.py test
 
 #### Testing for development
 To run the unittests outside of 'python setup.py test':
+
     python3 -m unittest discover -s tests -p "*_test.py"
 
 <!--
