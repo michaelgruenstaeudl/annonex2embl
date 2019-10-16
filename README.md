@@ -1,7 +1,6 @@
 *annonex2embl*
 ==============
 
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/michaelgruenstaeudl/annonex2embl?branch=master&svg=true)](https://ci.appveyor.com/api/projects/status/github/michaelgruenstaeudl/annonex2embl)
 [![Build Status](https://travis-ci.com/michaelgruenstaeudl/annonex2embl.svg?branch=master)](https://travis-ci.com/michaelgruenstaeudl/annonex2embl)
 [![PyPI status](https://img.shields.io/pypi/status/annonex2embl.svg)](https://pypi.python.org/pypi/annonex2embl/)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/annonex2embl.svg)](https://pypi.python.org/pypi/annonex2embl/)
