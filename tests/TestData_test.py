@@ -24,7 +24,7 @@ import subprocess
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.11.1900'
+__version__ = '2019.10.16.1700'
 
 #############
 # DEBUGGING #
@@ -80,10 +80,12 @@ class OutputTestCases(unittest.TestCase):
         except subprocess.CalledProcessError as e:
             print(e.output)
         with open(expected_outp, 'r') as expected_hndl:
-            expected_str = expected_hndl.read()
+            expected_lst = expected_hndl.readlines()
+            expected_str = '\n'.join([l for l in expected_lst if "RL   Submitted (" not in l])
         if os.path.isfile(actual_outp):
             with open(actual_outp, 'r') as actual_hndl:
-                actual_str = actual_hndl.read()
+                actual_lst = actual_hndl.readlines()
+                actual_str = '\n'.join([l for l in expected_lst if "RL   Submitted (" not in l])
             ## Important: Remove actual output so that lines from 
             ## subsequent tests are not appended, rendering actual and 
             ## expected different!
@@ -114,10 +116,12 @@ class OutputTestCases(unittest.TestCase):
         except subprocess.CalledProcessError as e:
             print(e.output)
         with open(expected_outp, 'r') as expected_hndl:
-            expected_str = expected_hndl.read()
+            expected_lst = expected_hndl.readlines()
+            expected_str = '\n'.join([l for l in expected_lst if "RL   Submitted (" not in l])
         if os.path.isfile(actual_outp):
             with open(actual_outp, 'r') as actual_hndl:
-                actual_str = actual_hndl.read()
+                actual_lst = actual_hndl.readlines()
+                actual_str = '\n'.join([l for l in expected_lst if "RL   Submitted (" not in l])
             os.remove(actual_outp)
         else:
             print('annonex2embl TESTING ERROR: actual_str not found.')

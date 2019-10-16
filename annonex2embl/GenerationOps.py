@@ -22,7 +22,7 @@ from Bio.SeqFeature import ExactPosition, FeatureLocation, CompoundLocation
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.11.1900'
+__version__ = '2019.10.16.1700'
 
 #############
 # DEBUGGING #
@@ -102,15 +102,27 @@ class GenerateFeatLoc:
         orient = location_object._get_strand()
         if hasattr(location_object, 'parts'):
             if len(location_object.parts) == 1:
-                new_start_pos = SeqFeature.BeforePosition(
-                    location_object.start)
-                location_object = SeqFeature.FeatureLocation(
-                    new_start_pos, location_object.end)
+                if orient == -1:  # If feature reverse, fuzzy start must change with it
+                    new_start_pos = SeqFeature.BeforePosition(
+                        location_object.end)
+                    location_object = SeqFeature.FeatureLocation(
+                        location_object.start, new_start_pos)
+                else:
+                    new_start_pos = SeqFeature.BeforePosition(
+                        location_object.start)
+                    location_object = SeqFeature.FeatureLocation(
+                        new_start_pos, location_object.end)
             if len(location_object.parts) > 1:
-                new_start_pos = SeqFeature.BeforePosition(
-                    location_object.parts[0].start)
-                location_object.parts[0] = SeqFeature.FeatureLocation(
-                    new_start_pos, location_object.parts[0].end)
+                if orient == -1:
+                    new_start_pos = SeqFeature.BeforePosition(
+                        location_object.parts[0].end)
+                    location_object.parts[0] = SeqFeature.FeatureLocation(
+                        location_object.parts[0].start, new_start_pos)
+                else:
+                    new_start_pos = SeqFeature.BeforePosition(
+                        location_object.parts[0].start)
+                    location_object.parts[0] = SeqFeature.FeatureLocation(
+                        new_start_pos, location_object.parts[0].end)
         location_object._set_strand(orient)
         return location_object
 
@@ -147,15 +159,27 @@ class GenerateFeatLoc:
         orient = location_object._get_strand()
         if hasattr(location_object, 'parts'):
             if len(location_object.parts) == 1:
-                new_end_pos = SeqFeature.AfterPosition(location_object.end)
-                location_object = SeqFeature.FeatureLocation(
-                    location_object.start, new_end_pos)
+                if orient == -1: # If feature reverse, fuzzy end must change with it
+                    new_end_pos = SeqFeature.BeforePosition(location_object.start)
+                    location_object = SeqFeature.FeatureLocation(
+                        new_end_pos, location_object.end)
+                else:
+                    new_end_pos = SeqFeature.AfterPosition(location_object.end)
+                    location_object = SeqFeature.FeatureLocation(
+                        location_object.start, new_end_pos)
             if len(location_object.parts) > 1:
-                new_end_pos = SeqFeature.AfterPosition(
-                    location_object.parts[-1].end)
-                location_object.parts[-1] = SeqFeature.FeatureLocation(
-                    location_object.parts[-1].start, new_end_pos)
+                if orient == -1:
+                    new_end_pos = SeqFeature.BeforePosition(
+                        location_object.parts[-1].start)
+                    location_object.parts[-1] = SeqFeature.FeatureLocation(
+                        new_end_pos, location_object.parts[-1].end)
+                else:
+                    new_end_pos = SeqFeature.AfterPosition(
+                        location_object.parts[-1].end)
+                    location_object.parts[-1] = SeqFeature.FeatureLocation(
+                        location_object.parts[-1].start, new_end_pos)
         location_object._set_strand(orient)
+
         return location_object
 
 

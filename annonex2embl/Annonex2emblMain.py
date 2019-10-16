@@ -23,6 +23,7 @@ from Bio import SeqIO
 from Bio import SeqFeature
 from collections import OrderedDict
 from copy import copy
+from copy import deepcopy
 from distutils.util import strtobool
 from unidecode import unidecode
 
@@ -38,7 +39,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'annone
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.11.1900'
+__version__ = '2019.10.16.1700'
 
 #############
 # DEBUGGING #
@@ -170,9 +171,9 @@ def annonex2embl(path_to_nex,
 # 6. GENERATING SEQ_RECORDS BY LOOPING THROUGH EACH SEQUENCE OF THE ALIGNMENT
 #    Work off the sequences alphabetically.
         for counter, seq_name in enumerate(sorted_seqnames):
-            # TFLs generate safe copies of charset and alignment for every loop iteration
-            charsets_withgaps = copy(charsets_global)
-            alignm = copy(alignm_global)
+            # TFLs generate safe copies of charset and alignment for every loop iteration; however, the cmd "copy()" itself would not work because it cannot operate on lists of lists; thus, we use "deepcopy()", which can.
+            charsets_withgaps = deepcopy(charsets_global)
+            alignm = deepcopy(alignm_global)
 
 ####################################
 
@@ -198,8 +199,6 @@ def annonex2embl(path_to_nex,
                     break
             if skip:
                 continue
-# 6.2.1. Skip all sequence records smaller than 10 unambiguous nucleotides
-            ## TO DO
 
 ####################################
 
@@ -216,28 +215,27 @@ def annonex2embl(path_to_nex,
             # TFL generates a safe copy of sequence to work on
             seq_withgaps = copy(seq_record.seq)
 
-# 6.3.2. Remove leading ambiguities while maintaining
-#        correct annotations
+# 6.3.2. Skip all sequence records smaller than 10 unambiguous nucleotides
+            if len(seq_record.seq._data.replace('-','').strip('N')) <= 10:
+                msg = 'WARNING: Sequence `%s` not saved because shorter than 10 '\
+                      'unambiguous nucleotides.' % (seq_record.id)
+                warnings.warn(msg)
+                continue
+
+# 6.3.3. Remove leading ambiguities while maintaining correct annotations
             seq_noleadambigs, charsets_noleadambigs = DgOps.\
                 RmAmbigsButMaintainAnno().rm_leadambig(seq_withgaps, 'N',
                                                        charsets_withgaps)
 
-# 6.3.3. Remove trailing ambiguities while maintaining
-#        correct annotations
+# 6.3.4. Remove trailing ambiguities while maintaining correct annotations
             seq_notrailambigs, charsets_notrailambigs = DgOps.\
                 RmAmbigsButMaintainAnno().rm_trailambig(seq_noleadambigs,
                                                         'N', charsets_noleadambigs)
-
-# 6.3.4. (FUTURE) Give note that leading or trailing ambiguities were
-#        removed; for future association with of fuzzy ends
-#        if seq_noltambigs != seq_record.seq:
-#            ltambigs_removed = True
-
 # 6.3.5. Degap the sequence while maintaining correct annotations
             seq_nogaps, charsets_degapped = DgOps.\
                 DegapButMaintainAnno(seq_notrailambigs, '-',
                                      charsets_notrailambigs).degap()
-                                     
+
 # 6.3.6. Add gap features where stretches of Ns in sequence
             seq_final, charsets_final = DgOps.\
                 AddGapFeature(seq_nogaps, charsets_degapped).add()
@@ -270,13 +268,13 @@ def annonex2embl(path_to_nex,
 # 6.6. POPULATE THE FEATURE KEYS WITH THE CHARSET INFORMATION
 #      Note: Each charset represents a dictionary that must be added in
 #      full to the list "SeqRecord.features"
+
             for charset_name, charset_range in list(charsets_final.items()):
 
 # 6.6.1. Proceed in loop only if charset_range is not empty
 #        An empty charset_range could be the case if the charset only
 #        consisted of 'N' (which were removed in steps 6.3.2 and 6.3.3).
                 if charset_range:
-
 # 6.6.2. Convert charset_range into Location Object
                     location_object = GnOps.GenerateFeatLoc().make_location(charset_range)
 
@@ -362,13 +360,17 @@ def annonex2embl(path_to_nex,
                     charset_range_updated = list(range(feature.location.start.position,
                         feature.location.end.position))
                     coding_seq = ''.join([seq_record.seq[i] for i in charset_range_updated])
+                    if feature.location._get_strand() == -1:
+                        coding_seq = PrOps.SequenceParsing.reverseComplement(coding_seq)
+                        feature.location.parts = feature.location.parts[::-1] # if feature reverse, the feature components list must be inverted
                     if not coding_seq.startswith(GlobVars.nex2ena_start_codon):
                         feature.location = GnOps.GenerateFeatLoc().\
                             make_start_fuzzy(feature.location)
                     if all([not coding_seq.endswith(c)
                             for c in GlobVars.nex2ena_stop_codons]):
-                        feature.location = GnOps.GenerateFeatLoc().\
-                            make_end_fuzzy(feature.location)
+                                feature.location = GnOps.GenerateFeatLoc().\
+                                make_end_fuzzy(feature.location)
+
 
 # (FUTURE)  Also introduce fuzzy ends to features when those had leading or trailing Ns removed,
 #           because the removed Ns may constitute start of stop codons.

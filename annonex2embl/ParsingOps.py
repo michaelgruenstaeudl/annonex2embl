@@ -28,7 +28,7 @@ except Exception as e:
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.11.1900'
+__version__ = '2019.10.16.1700'
 
 #############
 # DEBUGGING #
@@ -443,3 +443,32 @@ class ParseCharsetName:
         else:
             charset_product = None
         return (charset_sym, charset_type, charset_orient, charset_product)
+
+class SequenceParsing:
+    '''
+    This class contains functions to parse and modify DNA sequence strings.
+    '''
+    def __init__(self):
+        pass
+
+    def reverseComplement(sequence):
+        ''' This function reverse complements a DNA sequence string
+            Args:
+                sequence (str)
+            Returns:
+                reverse complemented sequence (str)
+            Raises:
+                currently nothing
+        '''
+
+        reverseComplement = []
+        for nucl in sequence:
+            if nucl == "A":
+                reverseComplement.append("T")
+            elif nucl == "T":
+                reverseComplement.append("A")
+            elif nucl == "C":
+                reverseComplement.append("G")
+            elif nucl == "G":
+                reverseComplement.append("C")
+        return ''.join(reverseComplement)[::-1]

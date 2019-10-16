@@ -71,7 +71,6 @@ python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% -o %OTPUT%
 ```
 
 ## TO DO
-* Add feature so that all sequence records smaller than 10 unambiguous nucleotides are dropped (i.e., not saved to the output); adding preferentially at line 201 of Annonex2emblMain.py
 
 <!--
 * Implement improved argparse code: Currently, --taxcheck requires "True" of "False" as parameters. Please modify so that only the presence of --taxcheck indicates "True", whereas its abscence indicates "False".
