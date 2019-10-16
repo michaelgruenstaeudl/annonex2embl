@@ -1,6 +1,7 @@
 CHANGELOG
 ---------
 #### Version 0.7.0 (2019.10.16)
+* Added Travis-CI support
 * Added a function that drops all sequence records smaller than 10 unambiguous nucleotides
 * Minor code improvements
 #### Version 0.6.5 (2019.10.11)
