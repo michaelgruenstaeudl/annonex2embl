@@ -10,6 +10,18 @@
 Converts an annotated DNA multi-sequence alignment (in [NEXUS](http://wiki.christophchamp.com/index.php?title=NEXUS_file_format) format) to an EMBL flatfile for submission to [ENA](http://www.ebi.ac.uk/ena) via the [Webin-CLI submission tool](https://ena-docs.readthedocs.io/en/latest/cli_05.html).
 
 
+## INSTALLATION
+First, please be sure to have [Python 3 installed](https://www.python.org/downloads/) on your system. Then:
+
+To get the most recent stable version of *annonex2embl*, run:
+
+    pip install annonex2embl
+
+Or, alternatively, if you want to get the latest development version of *annonex2embl*, run:
+
+    pip install git+https://github.com/michaelgruenstaeudl/annonex2embl.git
+
+
 ## INPUT, OUTPUT AND PREREQUISITES
 * **Input**: an annotated DNA multiple sequence alignment in NEXUS format; a comma-delimited metadata table
 * **Output**: a submission-ready, multi-record EMBL flatfile
@@ -62,26 +74,15 @@ SET MNFTD=a_unique_description_here
 python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% --productlookup True -o %OTPUT% --manifeststudy %MNFTS% --manifestdescr %MNFTD% --compress True
 ```
 
-## INSTALLATION
-First, please be sure to have [Python 3 installed](https://www.python.org/downloads/) on your system. Then:
-
-To get the most recent stable version of *annonex2embl*, run:
-
-    pip install annonex2embl
-
-Or, alternatively, if you want to get the latest development version of *annonex2embl*, run:
-
-    pip install git+https://github.com/michaelgruenstaeudl/annonex2embl.git
-
-## TESTING
+## TESTING / DEVELOPMENT
 #### Regular testing
 
     python3 setup.py test
+    pytest  # alternative
 
 #### Testing for development
-To run the unittests outside of 'python setup.py test':
 
-    python3 -m unittest discover -s tests -p "*_test.py"
+    python3 -m unittest discover -s tests -p "*_test.py"  # to run the unittests outside of 'python3 setup.py test'
 
 <!--
 ## TO DO
