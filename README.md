@@ -74,15 +74,13 @@ SET MNFTD=a_unique_description_here
 python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% --productlookup True -o %OTPUT% --manifeststudy %MNFTS% --manifestdescr %MNFTD% --compress True
 ```
 
-## TESTING / DEVELOPMENT
-#### Regular testing
+## TESTING
 
     python3 setup.py test
-    pytest  # alternative
-
-#### Testing for development
-
+<!--
+    pytest  # alternative to 'python3 setup.py test'; on Linux only
     python3 -m unittest discover -s tests -p "*_test.py"  # to run the unittests outside of 'python3 setup.py test'
+-->
 
 <!--
 ## TO DO
