@@ -8,13 +8,14 @@ Classes to parse charset names
 #####################
 
 import GlobalVariables as GlobVars
-import sys
+import sys, os
 import pdb
 import unidecode
 import warnings
 
 from Bio import Entrez
 from collections import Counter
+from pathlib import PurePath
 
 try:
     from urllib.request import urlopen
@@ -234,9 +235,14 @@ class GetEntrezInfo:
                   'which is not allowed.' % (taxon_name)
             warnings.warn(msg)
             raise Exception
-        query_term = taxon_name
+        base_url = "https://www.ebi.ac.uk/ena/data/taxonomy/v1/taxon/scientific-name/"
+        if os.name == "nt":  # Windows
+            base_url = os.path.join(*PurePath(base_url).parts) # using the splat operator (*)
+        else:
+            pass
+        final_url = base_url + taxon_name.replace(" ", "%20")
         try:
-            enaTaxonomy_records = urlopen("https://www.ebi.ac.uk/ena/data/taxonomy/v1/taxon/scientific-name/" + query_term.replace(" ", "%20")).read()
+            enaTaxonomy_records = urlopen(final_url).read()
         except Exception as e:
             return str(0)
         entrez_hitcount = enaTaxonomy_records.decode('ascii').count("taxId", 0, len(enaTaxonomy_records.decode('ascii')))
