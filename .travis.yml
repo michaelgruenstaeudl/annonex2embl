@@ -16,15 +16,6 @@ matrix:
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
 install:
   - pip3 install --upgrade pip  # all three OSes agree about 'pip3'
-# command to install dependencies
-  - pip install -r requirements.txt
-# command to test against PyPI
-  - pip install .
-
-# command to run unittests
-script: pytest
-#script: pytest2
-
 # 'python' points to Python 2.7 on macOS but points to Python 3.7 on Linux and Windows
 # 'python3' is a 'command not found' error on Windows but 'py' works on Windows only
-#script: python3 my_app.py || python my_app.py
+script: python3 my_app.py || python my_app.py
