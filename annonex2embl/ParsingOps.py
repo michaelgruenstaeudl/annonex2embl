@@ -237,10 +237,14 @@ class GetEntrezInfo:
         base_url = "https://www.ebi.ac.uk/ena/data/taxonomy/v1/taxon/scientific-name/"
         if os.name == "nt":  # Windows
             base_url_parts = os.path.normpath(base_url).split(os.path.sep)
-            base_url = os.path.join(*base_url_parts) + '/' # using the splat operator (*)
+            base_url = os.path.join(*base_url_parts)  # using the splat operator (*)
+            base_url = base_url + '\\' # Adding back the final backward slash
         else:
             pass
         final_url = base_url + taxon_name.replace(" ", "%20")
+        print("\n")
+        print(final_url)
+        print("\n")
         try:
             enaTaxonomy_records = urlopen(final_url).read()
         except Exception as e:
