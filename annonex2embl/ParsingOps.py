@@ -240,6 +240,9 @@ class GetEntrezInfo:
             base_url = os.path.join(*base_url_parts) # using the splat operator (*)
         else:
             pass
+        print("\n\n")
+        print(base_url)
+        print("\n\n")
         final_url = base_url + taxon_name.replace(" ", "%20")
         try:
             enaTaxonomy_records = urlopen(final_url).read()
