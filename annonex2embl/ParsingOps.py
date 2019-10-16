@@ -10,6 +10,7 @@ Classes to parse charset names
 import GlobalVariables as GlobVars
 import sys, os
 import pdb
+import requests
 import unidecode
 import warnings
 
@@ -235,20 +236,21 @@ class GetEntrezInfo:
             warnings.warn(msg)
             raise Exception
         base_url = "https://www.ebi.ac.uk/ena/data/taxonomy/v1/taxon/scientific-name/"
-        if os.name == "nt":  # Windows
-            base_url_parts = os.path.normpath(base_url).split(os.path.sep)
-            base_url = os.path.join(*base_url_parts[1:])  # using the splat operator (*)
-            base_url = 'https:\\\\' + base_url + '\\' # Every backwardslash must be preceeded by its own backwardslash
-        else:
-            pass
         final_url = base_url + taxon_name.replace(" ", "%20")
-        print("\n")
-        print(final_url)
-        print("\n")
-        try:
-            enaTaxonomy_records = urlopen(final_url).read()
-        except Exception as e:
-            return str(0)
+        if os.name == "posix":  # Linux and MacOS
+            try:
+                enaTaxonomy_records = urlopen(final_url).read()
+            except:
+                return str(0)
+        elif os.name == "nt":  # Windows ## Note: "urlopen" does not work well under Windows, is replaced with "requests"
+            try:
+                response = requests.get(final_url)
+                if response.status_code == 200:
+                    return str(1)
+                else:
+                    raise
+            except:
+                return str(0)
         entrez_hitcount = enaTaxonomy_records.decode('ascii').count("taxId", 0, len(enaTaxonomy_records.decode('ascii')))
         return str(entrez_hitcount)
 
