@@ -17,21 +17,21 @@ with open("README.md", "r") as fh:
 setup(
     name='annonex2embl',
     version='0.7.0',
-    author='Michael Gruenstaeudl',
+    author='Michael Gruenstaeudl, PhD',
     author_email='m.gruenstaeudl@fu-berlin.de',
     description='Converts an annotated DNA multi-sequence alignment (in NEXUS format) to an EMBL flatfile for submission to ENA via the Webin-CLI submission tool',
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://github.com/michaelgruenstaeudl/annonex2embl',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.7',
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Bio-Informatics'
         ],
-    keywords='novel DNA sequences, public sequence databases, European Nucleotide Archive, file conversion, data upload',
+    keywords='novel DNA sequences, public sequence databases, European Nucleotide Archive, file conversion, flatfile',
     license='BSD',
     entry_points={
         'console_scripts': [
@@ -40,7 +40,7 @@ setup(
     },
     packages=['annonex2embl'], # So that the subfolder 'annonex2embl' is read immediately.
     #packages = find_packages(),
-    install_requires=['biopython', 'argparse', 'unidecode', 'termcolor'],
+    install_requires=['biopython', 'argparse', 'unidecode'],
     scripts=glob.glob('scripts/*'),
     test_suite='setup.my_test_suite',
     include_package_data=True,
