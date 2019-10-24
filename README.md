@@ -56,7 +56,7 @@ AUTHR='your name here'  # Do not use double-quotes
 MNFTS=PRJEB00000
 MNFTD=${DESCR//[^[:alnum:]]/_}
 
-python3 $SCRPT -n $INPUT -c $METAD -d "$DESCR" -e $EMAIL -a "$AUTHR" --productlookup True -o $OTPUT --manifeststudy $MNFTS --manifestdescr $MNFTD --compress True
+python3 $SCRPT -n $INPUT -c $METAD -d "$DESCR" -e $EMAIL -a "$AUTHR" -o $OTPUT --productlookup --manifeststudy $MNFTS --manifestdescr $MNFTD --compress
 ```
 
 #### On Windows
@@ -71,7 +71,7 @@ SET AUTHR='your name here'
 SET MNFTS=PRJEB00000
 SET MNFTD=a_unique_description_here
 
-python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% --productlookup True -o %OTPUT% --manifeststudy %MNFTS% --manifestdescr %MNFTD% --compress True
+python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% -o %OTPUT% --productlookup --manifeststudy %MNFTS% --manifestdescr %MNFTD% --compress
 ```
 
 <!--
@@ -80,12 +80,6 @@ python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% --productl
     python3 -m unittest discover -s tests -p "*_test.py" -v  # same as above
     python3 -m unittest discover -s tests -p "*_test.py"  # same as above, just shorter
     pytest  # same as above; on Linux only
--->
-
-<!--
-## TO DO
-* Implement improved argparse code: Currently, --taxcheck requires "True" of "False" as parameters. Please modify so that only the presence of --taxcheck indicates "True", whereas its abscence indicates "False".
-* Implement improved argparse code: Currently, the software incorrectly says "optional parameters" for all parameters upon execution via `python scripts/annonex2embl_launcher_CLI.py -h`. Please modify so that it correctly differentiates between "required" and "optional" parameters.
 -->
 
 ## CHANGELOG
