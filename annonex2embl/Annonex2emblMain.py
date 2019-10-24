@@ -39,7 +39,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'annone
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.16.1700'
+__version__ = '2019.10.24.1230'
 
 #############
 # DEBUGGING #
@@ -61,7 +61,6 @@ warnings.formatwarning = warning_on_one_line
 # FUNCTIONS #
 #############
 
-
 warnings.formatwarning = warning_on_one_line
 
 def annonex2embl(path_to_nex,
@@ -73,24 +72,16 @@ def annonex2embl(path_to_nex,
 
                  manifest_study='',
                  manifest_descr='',
-                 product_lookup='False',
-                 tax_check='False',
-                 linemask='False',
+                 product_lookup=False,
+                 tax_check=False,
+                 linemask=False,
                  topology='linear',
                  tax_division='PLN',
                  uniq_seqid_col='isolate',
                  transl_table='11',
                  organelle='plastid',
                  seq_version='1',
-                 compress='False'):
-
-########################################################################
-
-# 0. MAKE SPECIFIC VARIABLES BOOLEAN
-    productlookup_bool = strtobool(product_lookup)
-    taxcheck_bool = strtobool(tax_check)
-    linemask_bool = strtobool(linemask)
-    compress_bool = strtobool(compress)
+                 compress=False):
 
 ########################################################################
 
@@ -158,7 +149,7 @@ def annonex2embl(path_to_nex,
         for charset_name in list(charsets_global.keys()):
             try:
                 charset_sym, charset_type, charset_orient, charset_product = PrOps.\
-                    ParseCharsetName(charset_name, email_addr, productlookup_bool).parse()
+                    ParseCharsetName(charset_name, email_addr, product_lookup).parse()
             except Exception as e:
                 msg = 'ERROR: %s' % (e)
                 warnings.warn(msg)
@@ -171,7 +162,7 @@ def annonex2embl(path_to_nex,
 # 6. GENERATING SEQ_RECORDS BY LOOPING THROUGH EACH SEQUENCE OF THE ALIGNMENT
 #    Work off the sequences alphabetically.
         for counter, seq_name in enumerate(sorted_seqnames):
-            # TFLs generate safe copies of charset and alignment for every loop iteration; however, the cmd "copy()" itself would not work because it cannot operate on lists of lists; thus, we use "deepcopy()", which can.
+            # TFLs generate safe copies of charset and alignment for every loop iteration; however, the cmd "copy()" itself would not work because it cannot operate on lists of lists; thus, we use "deepcopy()", which can operate on lists of lists.
             charsets_withgaps = deepcopy(charsets_global)
             alignm = deepcopy(alignm_global)
 
@@ -259,9 +250,12 @@ def annonex2embl(path_to_nex,
 
 # 6.5.1. Test taxon name against NCBI taxonomy; if not listed, adjust
 #        taxon name and append ecotype info
-            if taxcheck_bool:
-                seq_record = PrOps.ConfirmAdjustTaxonName().go(seq_record,
+            if tax_check:
+                try:
+                    seq_record = PrOps.ConfirmAdjustTaxonName().go(seq_record,
                                                                email_addr)
+                except:
+                    continue
 
 ####################################
 
@@ -380,13 +374,13 @@ def annonex2embl(path_to_nex,
 # 6.10. DECISION ON OUTPUT FORMAT
             IOOps.Outp().write_SeqRecord(seq_name, seq_record,
                                          author_names, outp_handle,
-                                         linemask_bool)
+                                         linemask)
 
 ########################################################################
 
 # 7. CREATE COMPRESSED FILE
 
-    if compress_bool:
+    if compress:
         with open(path_to_outfile, 'r') as outp_handle:
             lines = outp_handle.readlines()
         with gzip.open(path_to_outfile + '.gz', 'wb') as outp_handle:
@@ -407,7 +401,7 @@ def annonex2embl(path_to_nex,
 
     if manifest_study and manifest_descr:
         manifest_flatfile = os.path.basename(path_to_outfile)
-        if compress_bool:
+        if compress:
             IOOps.Outp().create_manifest(path_to_outfile,
                                         manifest_study,
                                         manifest_descr,

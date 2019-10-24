@@ -1,5 +1,8 @@
 CHANGELOG
 ---------
+#### Version 0.8.5 (2019.10.24)
+* Minor code improvements to the argparse interface
+* Minor code improvements to the tax_check behaviour
 #### Version 0.8.0 (2019.10.16)
 * Added Travis-CI support
 * Minor code improvements to ensure cross-platform compatibility

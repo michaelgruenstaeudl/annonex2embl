@@ -47,9 +47,9 @@ script = 'scripts/annonex2embl_launcher_CLI.py'
 script_path = os.path.join(base_path, script)
 
 metad_fn = 'Metadata.csv'
-descr = '"a description here"'
+descr = '"description of alignment here"'
 e_mail = 'your_email_here@yourmailserver.com'
-authors = '"LastName1 A.; LastName2 B."'
+authors = '"your name here"'
 
 ###########
 # CLASSES #
