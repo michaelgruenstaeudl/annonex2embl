@@ -74,6 +74,9 @@ SET MNFTD=a_unique_description_here
 python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% -o %OTPUT% --productlookup --manifeststudy %MNFTS% --manifestdescr %MNFTD% --compress
 ```
 
+## TO DO
+* Implement a test that checks if any sequence name is duplicated. This occurs at times and needs to throw an error at the beginning of the software execution.
+
 <!--
 ## TESTING
     python3 setup.py test
