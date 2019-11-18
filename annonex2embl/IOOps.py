@@ -9,6 +9,7 @@ Custom operations input and output processes
 
 import os
 import datetime
+import warnings
 
 from csv import DictReader
 from Bio.Nexus import Nexus
