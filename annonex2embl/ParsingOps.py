@@ -189,11 +189,11 @@ class GetEntrezInfo:
             msg = 'No taxon name detected.'
             warnings.warn(msg)
             raise Exception
-        if '_' in taxon_name:
-            msg = 'Taxon name %s contains an underscore, '\
-                  'which is not allowed.' % (taxon_name)
-            warnings.warn(msg)
-            raise Exception
+        #if '_' in taxon_name:
+        #    msg = 'Taxon name `%s` contains an underscore, '\
+        #          'which is not allowed.' % (taxon_name)
+        #    warnings.warn(msg)
+        #    raise Exception
         query_term = taxon_name
         try:
             esearch_records = Entrez.esearch(db='taxonomy', term=query_term,
@@ -230,11 +230,11 @@ class GetEntrezInfo:
             msg = 'No taxon name detected.'
             warnings.warn(msg)
             raise Exception
-        if '_' in taxon_name:
-            msg = 'Taxon name %s contains an underscore, '\
-                  'which is not allowed.' % (taxon_name)
-            warnings.warn(msg)
-            raise Exception
+        #if '_' in taxon_name:
+        #    msg = 'Taxon name `%s` contains an underscore, '\
+        #          'which is not allowed.' % (taxon_name)
+        #    warnings.warn(msg)
+        #    raise Exception
         base_url = "https://www.ebi.ac.uk/ena/data/taxonomy/v1/taxon/scientific-name/"
         final_url = base_url + taxon_name.replace(" ", "%20")
         if os.name == "posix":  # Linux and MacOS

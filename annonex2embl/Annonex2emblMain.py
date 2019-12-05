@@ -45,7 +45,7 @@ __version__ = '2019.10.24.1230'
 # DEBUGGING #
 #############
 
-#import ipdb
+import ipdb
 #ipdb.set_trace()
 
 # To format warnings in a pretty, readable way:
@@ -170,9 +170,15 @@ def annonex2embl(path_to_nex,
 
 # 6.1. SELECT CURRENT SEQUENCES AND CURRENT QUALIFIERS
             current_seq = alignm[seq_name]
-            current_quals = [d for d in filtered_qualifiers
-                             if d[uniq_seqid_col] == seq_name][0]
-
+            try:
+                current_quals = [d for d in filtered_qualifiers
+                                if d[uniq_seqid_col] == seq_name][0]
+            except Exception as e:
+                msg = 'ERROR with qualifiers of `%s`: %s\n\nSkipping sequence.\n' % (seq_name, e)
+                warnings.warn(msg)
+                #raise Exception
+                continue
+                
 ####################################
 
 # 6.2. GENERATE THE BASIC SEQ_RECORD (I.E., WITHOUT FEATURES)

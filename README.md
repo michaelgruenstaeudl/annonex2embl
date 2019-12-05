@@ -77,6 +77,7 @@ python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% -o %OTPUT%
 ## TO DO
 * In the title line of each output record, the mol_type "; DNA;" must be automatically replaced with "; genomic DNA;".
 * Implement a test that checks if any sequence name is duplicated. This occurs at times and needs to throw an error at the beginning of the software execution.
+* Implement a test that checks if any sequence name does not have a corresponding entry in the metadata file. This occurs at times and needs to throw an error at the beginning of the software execution.
 
 <!--
 ## TESTING
