@@ -250,8 +250,10 @@ class GenerateSeqFeature:
             quals = {'note': feature_name}
         # 3. If a coding feature, add special qualifiers
         if feature_product:
-            if feature_type == 'CDS' or feature_type == 'gene':
+            if feature_type == 'CDS':
                 quals['product'] = feature_product
+            if feature_type == 'gene':
+                quals['gene'] = feature_product
         if feature_type == 'CDS':
             quals['transl_table'] = transl_table
             # Add a function to add "/codon_start=1" in CDS feature,
