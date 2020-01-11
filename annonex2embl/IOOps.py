@@ -25,9 +25,9 @@ except ImportError:
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.16.1700'
+__version__ = '2020.01.10.1900'
 
 #############
 # DEBUGGING #
@@ -65,10 +65,10 @@ class Inp:
         return fn[:fn.rfind('.')] + '.' + new_end
 
 
-    def parse_csv_file(self, path_to_csv):
+    def parse_csv_file(self, path_to_csv, metadata_delim):
         ''' This function parses a csv file. '''
         try:
-            reader = DictReader(open(path_to_csv, 'r'), delimiter=',',
+            reader = DictReader(open(path_to_csv, 'r'), delimiter=metadata_delim,
                                 quotechar='"', skipinitialspace=True)
             a_matrix = list(reader)
         except Exception as e:
@@ -137,6 +137,7 @@ class Outp:
 
         if ENAstrict_bool:
             SecRecord_handle_lines = SecRecord_handle.getvalue().splitlines()
+            #print(SecRecord_handle_lines)
             if SecRecord_handle_lines[0].split()[0] == 'ID':
                 ID_line = SecRecord_handle_lines[0]
                 ID_line_parts = ID_line.split('; ')
@@ -153,6 +154,15 @@ class Outp:
             pass
 
         for line in SecRecord_handle.getvalue().split("\n"):
+        # The following try-except-statement fixes a bug in the EMBL-writer-function of BioPython, which 
+        # writes mol_type "DNA" where it should write "genomic DNA" in the ID line of each EMBL record. 
+        # It replaces the incorrect with the correct string.
+            try:
+                if line.split()[0] =='ID' and line.split(";")[3] == " DNA":
+                    line = line.replace(" DNA", " genomic DNA")
+            except:
+                pass
+        # Manual correction of the author and institution lines of the output flatfile.
             if line[0:8] == 'FH   Key':
                 outp_handle.write("RN   [1]" +
                           "\nRA   " + author_names.replace('"','') +

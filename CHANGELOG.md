@@ -1,5 +1,10 @@
 CHANGELOG
 ---------
+#### Version 0.9.0 (2020.01.10)
+* Added optional commandline parameter to specify the metadata delimiter, with the default set to a comma (",")
+* Automatically replaces the mol_type "DNA" with "genomic DNA" in the ID line of each EMBL record
+* Implemented tests that check if any sequence name is duplicated in either the NEXUS or the metadata file.
+* Implemented a test that checks if every sequence name in the NEXUS file has a corresponding entry in the metadata file.
 #### Version 0.8.5 (2019.10.24)
 * Minor code improvements to the argparse interface
 * Minor code improvements to the tax_check behaviour

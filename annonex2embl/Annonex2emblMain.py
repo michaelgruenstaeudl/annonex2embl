@@ -37,9 +37,9 @@ sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'annone
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.24.1230'
+__version__ = '2020.01.10.1900'
 
 #############
 # DEBUGGING #
@@ -81,6 +81,7 @@ def annonex2embl(path_to_nex,
                  transl_table='11',
                  organelle='plastid',
                  seq_version='1',
+                 metadata_delim=',',
                  compress=False):
 
 ########################################################################
@@ -103,7 +104,7 @@ def annonex2embl(path_to_nex,
 
 # 3. PARSE DATA FROM .CSV-FILE
         try:
-            raw_qualifiers = IOOps.Inp().parse_csv_file(path_to_csv)
+            raw_qualifiers = IOOps.Inp().parse_csv_file(path_to_csv, metadata_delim)
         except Exception as e:
             msg = 'ERROR: %s' % (e)
             warnings.warn(msg)
@@ -126,6 +127,15 @@ def annonex2embl(path_to_nex,
     # 4.1.3 Enforce that all qualifier values consist of ASCII characters
         filtered_qualifiers = CkOps.QualifierCheck.\
             _enforce_ASCII(nonempty_qualifiers)
+
+    # 4.1.4 Check if (a) any sequence name is duplicated in either the 
+    #       NEXUS or the metadata file, and (b) every sequence name in 
+    #       the NEXUS file has a corresponding entry in the metadata file
+    #       Note: Sequence names in the metadata file are located in the 
+    #             column labelled by uniq_seqid_col ('isolate' by default)
+        CkOps.QualifierCheck.\
+            uniqueSeqname([x[uniq_seqid_col] for x in filtered_qualifiers], 
+                          list(alignm_global.keys()))
 
 ####################################
 
@@ -178,7 +188,7 @@ def annonex2embl(path_to_nex,
                 warnings.warn(msg)
                 #raise Exception
                 continue
-                
+
 ####################################
 
 # 6.2. GENERATE THE BASIC SEQ_RECORD (I.E., WITHOUT FEATURES)

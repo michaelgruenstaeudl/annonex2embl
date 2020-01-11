@@ -75,16 +75,13 @@ python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% -o %OTPUT%
 ```
 
 ## TO DO
-* In the title line of each output record, the mol_type "; DNA;" must be automatically replaced with "; genomic DNA;".
-* Implement a test that checks if any sequence name is duplicated. This occurs at times and needs to throw an error at the beginning of the software execution.
-* Implement a test that checks if any sequence name does not have a corresponding entry in the metadata file. This occurs at times and needs to throw an error at the beginning of the software execution.
+* currently nothing
 
 <!--
 ## TESTING
-    python3 setup.py test
-    python3 -m unittest discover -s tests -p "*_test.py" -v  # same as above
-    python3 -m unittest discover -s tests -p "*_test.py"  # same as above, just shorter
-    pytest  # same as above; on Linux only
+    python3 -m unittest discover -s tests -p "*_test.py"
+    python3 -m unittest discover -s tests -p "*_test.py" -v  # verbose version
+    pytest  # on Linux only, if python-pytest installed via pip
 -->
 
 ## CHANGELOG

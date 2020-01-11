@@ -23,9 +23,9 @@ from itertools import chain
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.16.1700'
+__version__ = '2020.01.10.1900'
 
 #############
 # DEBUGGING #
@@ -65,8 +65,10 @@ class AnnoCheck:
     @staticmethod
     def _transl(extract, transl_table, to_stop=False, cds=False):
         ''' An internal static function to translate a coding region. '''
-        
-        with warnings.catch_warnings():  # Note: Suppressing warnings necessary to suppress the Biopython warning about an annotation not being a multiple of three
+
+        # Note: Suppressing warnings necessary to suppress the Biopython 
+        #       warning about an annotation not being a multiple of three
+        with warnings.catch_warnings():
             warnings.filterwarnings("ignore")
             transl = extract.translate(table=transl_table, to_stop=to_stop,
                                        cds=cds)
@@ -169,7 +171,7 @@ class AnnoCheck:
         #    return False
         except Exception as e:
             print(e)
-            raise
+            raise  # Should this line be commented out?
 
 
 class TranslCheck:
@@ -311,6 +313,29 @@ class QualifierCheck:
             warnings.warn(msg)
             raise Exception
         return True
+
+    @staticmethod
+    def uniqueSeqname(seqnameCSV, seqnameNEX):
+        ''' This function checks if (a) any sequence name is duplicated in 
+            either the NEXUS or the metadata file, and (b) every sequence 
+            name in the NEXUS file has a corresponding entry in the metadata 
+            file. '''
+        if len(set(seqnameCSV)) != len(seqnameCSV):
+            msg = 'ERROR: Some sequence names are present more than once'\
+                  ' in the metadata file.'
+            warnings.warn(msg)
+            raise Exception
+        for seqname in seqnameNEX:
+            if seqname.split(".")[-1] == "copy":
+                msg = 'ERROR: Some sequence names are present more than once'\
+                      ' in the NEXUS file.'
+                warnings.warn(msg)
+                raise Exception
+            if not seqname in seqnameCSV:
+                msg = 'ERROR: The sequence name "%s" does not have a corresponding'\
+                      ' entry in the metadata file.' % (seqname)
+                warnings.warn(msg)
+                raise Exception
 
     def quality_of_qualifiers(self):
         ''' This function conducts a series of quality checks on the

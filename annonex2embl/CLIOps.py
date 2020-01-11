@@ -24,9 +24,9 @@ import argparse
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.24.1230'
+__version__ = '2020.01.10.1900'
 
 #############
 # DEBUGGING #
@@ -154,6 +154,11 @@ class CLI():
                             default='1',
                             required=False)
 
+        optional.add_argument('--metadelim',
+                            help='The delimiter that separates columns in the metadata file; default: a comma (",")',
+                            default=",",
+                            required=False)
+
         optional.add_argument('--compress',
                             help='a logical; shall the output flatfile be compressed (.gz) upon generation?',
                             action='store_true',
@@ -185,6 +190,7 @@ class CLI():
                                          args.transltable,
                                          args.organelle,
                                          args.seqvers,
+                                         args.metadelim,
                                          args.compress )
 
 ########
