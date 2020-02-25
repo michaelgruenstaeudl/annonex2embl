@@ -84,8 +84,10 @@ class GetEntrezInfo:
             raise Exception
         query_term = gene_sym + ' [sym]'
         try:
+            print("Attempting to communicate with server `%s` regarding the gene product of `%s`" % ("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gene&term=" + query_term + "&retmax=" + str(retmax), gene_sym))
             esearch_records = Entrez.esearch(db='gene', term=query_term,
                                              retmax=retmax, retmod='xml')
+            print("Success!\n")
         except Exception as e:
             msg = 'ERROR: An error occurred while retrieving '\
                   'data from %s: %s' % ('ESearch', e)
@@ -96,12 +98,13 @@ class GetEntrezInfo:
         return entrez_id_list
 
     @staticmethod
-    def _gene_product_lookup(entrez_id_list):
+    def _gene_product_lookup(entrez_id_list, gene_sym):
         ''' An internal static function to convert a list of Entrez IDs to a
         list of Entrez gene records via EPost and ESummary.
         Args:
             entrez_id_list (list): a list of Entrez IDs; example: ['26835430',
                                    '26833718', '26833393', ...]
+            gene_sym (string)    : string containing symbol of the gene
         Returns:
             entrez_rec_list (list): a list of Entrez gene records
         Raises:
@@ -114,7 +117,9 @@ class GetEntrezInfo:
 #                >>> _record_lookup(entrez_id_list)
 #                Out: ???
 
+        print("Attempting to communicate with server `%s` regarding the gene product of `%s`" % ("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/epost.fcgi?db=gene&id=" + ','.join(entrez_id_list), gene_sym))
         epost_query = Entrez.epost('gene', id=','.join(entrez_id_list))
+        print("Success!\n")
         try:
             epost_results = Entrez.read(epost_query)
         except Exception as e:
@@ -125,8 +130,10 @@ class GetEntrezInfo:
         webenv = epost_results['WebEnv']
         query_key = epost_results['QueryKey']
         try:
+            print("Attempting to communicate with server `%s` regarding the gene product of `%s`" % ("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=gene&webenv=" + webenv + "&query_key=" + query_key, gene_sym))
             esummary_records = Entrez.esummary(db='gene', webenv=webenv,
                                                query_key=query_key)
+            print("Success!\n")
         except Exception as e:
             msg = 'An error occurred while retrieving data from '\
                   '%s: %s' % ('ESummary', e)
@@ -196,8 +203,10 @@ class GetEntrezInfo:
         #    raise Exception
         query_term = taxon_name
         try:
+            print("Attempting to communicate with server `%s` regarding the taxonomy of `%s`" % ("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&term=" + query_term + "&retmax=" + str(retmax), taxon_name))
             esearch_records = Entrez.esearch(db='taxonomy', term=query_term,
                                              retmax=retmax, retmod='xml')
+            print("Success!\n")
 
         except Exception as e:
             msg = 'An error occurred while retrieving data from '\
@@ -239,7 +248,9 @@ class GetEntrezInfo:
         final_url = base_url + taxon_name.replace(" ", "%20")
         if os.name == "posix":  # Linux and MacOS
             try:
+                print("Attempting to communicate with server `%s` regarding the taxonomy of `%s`" % (final_url, taxon_name))
                 enaTaxonomy_records = urlopen(final_url).read()
+                print("Success!\n")
             except:
                 return str(0)
         elif os.name == "nt":  # Windows ## Note: "urlopen" does not work well under Windows, is replaced with "requests"
@@ -273,7 +284,7 @@ class GetEntrezInfo:
             raise
         try:
             entrez_rec_list = GetEntrezInfo._gene_product_lookup(
-                entrez_id_list)
+                entrez_id_list, gene_sym)
         except Exception as e:
             print(e)
             raise
