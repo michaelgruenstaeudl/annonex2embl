@@ -220,7 +220,7 @@ class GenerateSeqFeature:
         return source_feature
 
     def regular_feat(self, feature_name, feature_type, feature_orient, feature_loc,
-                     transl_table, feature_seq, feature_product=None):
+                     qualifiername, transl_table, feature_seq, feature_product=None):
         ''' This function generates a regular SeqFeature for a SeqRecord.
         Args:
             feature_name (str):  usually a gene symbol; example: 'matK'
@@ -245,9 +245,12 @@ class GenerateSeqFeature:
             warnings.warn(msg)
             raise Exception
         # 2. Generate qualifiers
+        if feature_type == 'CDS' or feature_type == 'gene':
+            qualifiername = 'note'
+            
         quals = {}
         if feature_name:
-            quals = {'note': feature_name}
+            quals = {qualifiername: feature_name}
         # 3. If a coding feature, add special qualifiers
         if feature_product:
             if feature_type == 'CDS':

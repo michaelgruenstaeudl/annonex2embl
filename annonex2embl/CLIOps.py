@@ -154,6 +154,11 @@ class CLI():
                             default='1',
                             required=False)
 
+        optional.add_argument('--qualifiername',
+                             help='Specify the qualifier where the name could be found. Stays always `note` for CDS and gene',
+                             default='note',
+                             required=False)
+
         optional.add_argument('--metadelim',
                             help='The delimiter that separates columns in the metadata file; default: a comma (",")',
                             default=",",
@@ -190,6 +195,7 @@ class CLI():
                                          args.transltable,
                                          args.organelle,
                                          args.seqvers,
+                                         args.qualifiername,
                                          args.metadelim,
                                          args.compress )
 

@@ -81,6 +81,7 @@ def annonex2embl(path_to_nex,
                  transl_table='11',
                  organelle='plastid',
                  seq_version='1',
+                 qualifiername='note',
                  metadata_delim=',',
                  compress=False):
 
@@ -128,13 +129,13 @@ def annonex2embl(path_to_nex,
         filtered_qualifiers = CkOps.QualifierCheck.\
             _enforce_ASCII(nonempty_qualifiers)
 
-    # 4.1.4 Check if (a) any sequence name is duplicated in either the 
-    #       NEXUS or the metadata file, and (b) every sequence name in 
+    # 4.1.4 Check if (a) any sequence name is duplicated in either the
+    #       NEXUS or the metadata file, and (b) every sequence name in
     #       the NEXUS file has a corresponding entry in the metadata file
-    #       Note: Sequence names in the metadata file are located in the 
+    #       Note: Sequence names in the metadata file are located in the
     #             column labelled by uniq_seqid_col ('isolate' by default)
         CkOps.QualifierCheck.\
-            uniqueSeqname([x[uniq_seqid_col] for x in filtered_qualifiers], 
+            uniqueSeqname([x[uniq_seqid_col] for x in filtered_qualifiers],
                           list(alignm_global.keys()))
 
 ####################################
@@ -305,8 +306,8 @@ def annonex2embl(path_to_nex,
                     seq = ''.join(seq)
 
                     seq_feature = GnOps.GenerateSeqFeature().regular_feat(
-                        charset_sym, charset_type, charset_orient, location_object, transl_table,
-                        seq, charset_product)
+                        charset_sym, charset_type, charset_orient, location_object, qualifiername,
+                        transl_table, seq, charset_product)
                     seq_record.features.append(seq_feature)
 
 ####################################
