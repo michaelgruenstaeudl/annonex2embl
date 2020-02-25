@@ -66,7 +66,7 @@ class AnnoCheck:
     def _transl(extract, transl_table, to_stop=False, cds=False):
         ''' An internal static function to translate a coding region. '''
 
-        # Note: Suppressing warnings necessary to suppress the Biopython 
+        # Note: Suppressing warnings necessary to suppress the Biopython
         #       warning about an annotation not being a multiple of three
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore")
@@ -316,9 +316,9 @@ class QualifierCheck:
 
     @staticmethod
     def uniqueSeqname(seqnameCSV, seqnameNEX):
-        ''' This function checks if (a) any sequence name is duplicated in 
-            either the NEXUS or the metadata file, and (b) every sequence 
-            name in the NEXUS file has a corresponding entry in the metadata 
+        ''' This function checks if (a) any sequence name is duplicated in
+            either the NEXUS or the metadata file, and (b) every sequence
+            name in the NEXUS file has a corresponding entry in the metadata
             file. '''
         if len(set(seqnameCSV)) != len(seqnameCSV):
             msg = 'ERROR: Some sequence names are present more than once'\

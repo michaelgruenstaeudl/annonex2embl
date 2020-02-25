@@ -82,9 +82,14 @@ class GetEntrezInfo:
                   'underscore, which is not allowed.' % (gene_sym)
             warnings.warn(msg)
             raise Exception
+        if not GetEntrezInfo.serverAvailable(GlobVars.esearchUrl):
+            msg = 'ERROR: The server `%s` is currently not accessible' % ('ESearch')
+            warnings.warn(msg)
+            raise Exception
+
         query_term = gene_sym + ' [sym]'
         try:
-            print("Attempting to communicate with server `%s` regarding the gene product of `%s`" % ("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gene&term=" + query_term + "&retmax=" + str(retmax), gene_sym))
+            print("Attempting to communicate with server `%s` regarding the gene product of `%s`" % (GlobVars.esearchUrl + "?db=gene&term=" + query_term + "&retmax=" + str(retmax), gene_sym))
             esearch_records = Entrez.esearch(db='gene', term=query_term,
                                              retmax=retmax, retmod='xml')
             print("Success!\n")
@@ -117,7 +122,17 @@ class GetEntrezInfo:
 #                >>> _record_lookup(entrez_id_list)
 #                Out: ???
 
-        print("Attempting to communicate with server `%s` regarding the gene product of `%s`" % ("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/epost.fcgi?db=gene&id=" + ','.join(entrez_id_list), gene_sym))
+        if not GetEntrezInfo.serverAvailable(GlobVars.epostUrl):
+            msg = 'ERROR: The server `%s` is currently not accessible' % ('EPost')
+            warnings.warn(msg)
+            raise Exception
+
+        if not GetEntrezInfo.serverAvailable(GlobVars.esummaryUrl):
+            msg = 'ERROR: The server `%s` is currently not accessible' % ('ESummary')
+            warnings.warn(msg)
+            raise Exception
+
+        print("Attempting to communicate with server `%s` regarding the gene product of `%s`" % (GlobVars.epostUrl + "?db=gene&id=" + ','.join(entrez_id_list), gene_sym))
         epost_query = Entrez.epost('gene', id=','.join(entrez_id_list))
         print("Success!\n")
         try:
@@ -130,7 +145,7 @@ class GetEntrezInfo:
         webenv = epost_results['WebEnv']
         query_key = epost_results['QueryKey']
         try:
-            print("Attempting to communicate with server `%s` regarding the gene product of `%s`" % ("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=gene&webenv=" + webenv + "&query_key=" + query_key, gene_sym))
+            print("Attempting to communicate with server `%s` regarding the gene product of `%s`" % (GlobVars.esummaryUrl + "?db=gene&webenv=" + webenv + "&query_key=" + query_key, gene_sym))
             esummary_records = Entrez.esummary(db='gene', webenv=webenv,
                                                query_key=query_key)
             print("Success!\n")
@@ -196,6 +211,11 @@ class GetEntrezInfo:
             msg = 'No taxon name detected.'
             warnings.warn(msg)
             raise Exception
+
+        if not GetEntrezInfo.serverAvailable(GlobVars.esearchUrl):
+            msg = 'ERROR: The server `%s` is currently not accessible' % ('ESearch')
+            warnings.warn(msg)
+            raise Exception
         #if '_' in taxon_name:
         #    msg = 'Taxon name `%s` contains an underscore, '\
         #          'which is not allowed.' % (taxon_name)
@@ -203,7 +223,7 @@ class GetEntrezInfo:
         #    raise Exception
         query_term = taxon_name
         try:
-            print("Attempting to communicate with server `%s` regarding the taxonomy of `%s`" % ("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&term=" + query_term + "&retmax=" + str(retmax), taxon_name))
+            print("Attempting to communicate with server `%s` regarding the taxonomy of `%s`" % (GlobVars.esearchUrl + "?db=taxonomy&term=" + query_term + "&retmax=" + str(retmax), taxon_name))
             esearch_records = Entrez.esearch(db='taxonomy', term=query_term,
                                              retmax=retmax, retmod='xml')
             print("Success!\n")
@@ -239,13 +259,18 @@ class GetEntrezInfo:
             msg = 'No taxon name detected.'
             warnings.warn(msg)
             raise Exception
+
+        if not GetEntrezInfo.serverAvailable(GlobVars.enaUrl):
+            msg = 'ERROR: The server `%s` is currently not accessible' % ('ENA')
+            warnings.warn(msg)
+            raise Exception
         #if '_' in taxon_name:
         #    msg = 'Taxon name `%s` contains an underscore, '\
         #          'which is not allowed.' % (taxon_name)
         #    warnings.warn(msg)
         #    raise Exception
-        base_url = "https://www.ebi.ac.uk/ena/data/taxonomy/v1/taxon/scientific-name/"
-        final_url = base_url + taxon_name.replace(" ", "%20")
+
+        final_url = GlobVars.enaUrl + "data/taxonomy/v1/taxon/scientific-name/" + taxon_name.replace(" ", "%20")
         if os.name == "posix":  # Linux and MacOS
             try:
                 print("Attempting to communicate with server `%s` regarding the taxonomy of `%s`" % (final_url, taxon_name))
@@ -319,6 +344,22 @@ class GetEntrezInfo:
         elif entrez_hitcount == '1':
             return True
 
+    def serverAvailable(url):
+        ''' This function checks if the server for a given url is accessible.
+        Args:
+            url (str): an url; example: 'https://www.ebi.ac.uk/ena/'
+        Returns:
+            bool: True - if server is accessible
+                  False - if not
+        Raises:
+            none
+        '''
+        try:
+            urlopen(url)
+            return True
+        except:
+            return False
+
 
 class ConfirmAdjustTaxonName:
     ''' This class contains functions to confirm or adjust a sequence's
@@ -373,7 +414,6 @@ class ConfirmAdjustTaxonName:
                       % (seq_record.id, species_name_new)
                 warnings.warn(msg)
         return seq_record
-
 
 class ParseCharsetName:
     ''' This class contains functions to parse charset names.

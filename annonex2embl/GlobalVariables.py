@@ -126,3 +126,8 @@ nex2ena_valid_INSDC_organelle = [
 
 nex2ena_valid_orientations = [
     'forw','rev']
+
+epostUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/epost.fcgi"
+esearchUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+esummaryUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
+enaUrl = "https://www.ebi.ac.uk/ena/"
