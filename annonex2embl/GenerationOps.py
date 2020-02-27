@@ -248,7 +248,6 @@ class GenerateSeqFeature:
         if feature_type == 'CDS' or feature_type == 'gene':
             qualifiername = 'note'
 
-        print(qualifiername)
         quals = {}
         if feature_name:
             quals = {qualifiername: feature_name}
@@ -268,7 +267,7 @@ class GenerateSeqFeature:
         if feature_type == 'gap':
             quals['estimated_length'] = str(feature_loc.end.position-feature_loc.start.position)
             #quals['estimated_length'] = str(feature_loc.end.real-feature_loc.start.real+1)
-            
+
         # 4. A function to read in if a charset is forward or reverse and to adjust the info in the feature table.
         if feature_orient == "forw":
             feature_orient = 1
