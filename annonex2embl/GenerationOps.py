@@ -247,7 +247,8 @@ class GenerateSeqFeature:
         # 2. Generate qualifiers
         if feature_type == 'CDS' or feature_type == 'gene':
             qualifiername = 'note'
-            
+
+        print(qualifiername)
         quals = {}
         if feature_name:
             quals = {qualifiername: feature_name}
@@ -259,7 +260,7 @@ class GenerateSeqFeature:
                 quals['gene'] = feature_product
         if feature_type == 'CDS':
             quals['transl_table'] = transl_table
-            # Add a function to add "/codon_start=1" in CDS feature,
+            # A function to add "/codon_start=1" in CDS feature,
             # if start and stop position of feature is uncertain
             # (i.e., <100..>200).
             if (not feature_seq.startswith(GlobVars.nex2ena_start_codon)) or (all([not feature_seq.endswith(c) for c in GlobVars.nex2ena_stop_codons])):
@@ -267,7 +268,8 @@ class GenerateSeqFeature:
         if feature_type == 'gap':
             quals['estimated_length'] = str(feature_loc.end.position-feature_loc.start.position)
             #quals['estimated_length'] = str(feature_loc.end.real-feature_loc.start.real+1)
-        # 4. Add a function to read in if a charset is forward or reverse and to adjust the info in the feature table.
+            
+        # 4. A function to read in if a charset is forward or reverse and to adjust the info in the feature table.
         if feature_orient == "forw":
             feature_orient = 1
         else:

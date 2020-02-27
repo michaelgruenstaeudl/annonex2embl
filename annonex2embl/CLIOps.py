@@ -38,7 +38,6 @@ __version__ = '2020.01.10.1900'
 ############
 # ARGPARSE #
 ############
-
 class CLI():
 
     def __init__(self):
@@ -155,9 +154,41 @@ class CLI():
                             required=False)
 
         optional.add_argument('--qualifiername',
-                             help='Specify the qualifier where the name could be found. Stays always `note` for CDS and gene',
-                             default='note',
-                             required=False)
+                            help='Specify the qualifier where the name could be found. Stays always `note` for CDS and gene',
+                            default='note',
+                            metavar='',
+                            choices=['allele','altitude','anticodon',
+                                     'artificial_location','bio_material','bound_moiety',
+                                     'cell_line','cell_type','chromosome',
+                                     'clone','clone_lib','collected_by',
+                                     'collection_date','compare','country',
+                                     'cultivar','culture_collection','db_xref',
+                                     'dev_stage','direction','EC_number',
+                                     'ecotype','environmental_sample','exception',
+                                     'experiment','focus','frequency',
+                                     'function','gap_type','gene',
+                                     'gene_synonym','germline','haplogroup',
+                                     'haplotype','host','identified_by',
+                                     'inference','isolate','isolation_source',
+                                     'lab_host','lat_lon','linkage_evidence',
+                                     'locus_tag','macronuclear','map',
+                                     'mating_type','metagenome_source','mobile_element_type',
+                                     'mod_base','mol_type','ncRNA_class',
+                                     'note','number','old_locus_tag',
+                                     'operon','organelle','organism',
+                                     'PCR_conditions','PCR_primers','plasmid',
+                                     'product','protein_id','proviral',
+                                     'pseudo','pseudogene','rearranged',
+                                     'regulatory_class','replace','ribosomal_slippage',
+                                     'rpt_family','rpt_type','rpt_unit_seq',
+                                     'satellite','Comment','segment',
+                                     'serotype','serovar','sex',
+                                     'specimen_voucher','strain','sub_clone',
+                                     'submitter_seqid','sub_species','sub_strain',
+                                     'tag_peptide','tissue_type','trans_splicing',
+                                     'transgenic','transl_except','translation',
+                                     'variety'],
+                            required=False)
 
         optional.add_argument('--metadelim',
                             help='The delimiter that separates columns in the metadata file; default: a comma (",")',

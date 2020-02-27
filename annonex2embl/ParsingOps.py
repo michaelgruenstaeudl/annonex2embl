@@ -354,11 +354,19 @@ class GetEntrezInfo:
         Raises:
             none
         '''
-        try:
-            urlopen(url)
-            return True
-        except:
-            return False
+        if os.name == "posix":  # Linux and MacOS
+            try:
+                urlopen(url)
+                return True
+            except:
+                return False
+        elif os.name == "nt":  # Windows ## Note: "urlopen" does not work well under Windows, is replaced with "requests"
+            try:
+                requests.get(url)
+                return True
+            except:
+                return False
+        return False
 
 
 class ConfirmAdjustTaxonName:
