@@ -1,4 +1,4 @@
-ID   Taxon1; SV 1; linear; DNA; ; PLN; 38 BP.
+ID   Taxon1; SV 1; linear; genomic DNA; ; PLN; 38 BP.
 XX
 AC   Taxon1;
 XX
@@ -10,7 +10,7 @@ XX
 RN   [1]
 RA   your name here
 RT   ;
-RL   Submitted (23-OCT-2019) to the INSDC.
+RL   Submitted (06-MAR-2020) to the INSDC.
 XX
 FH   Key             Location/Qualifiers
 FH
@@ -34,7 +34,7 @@ XX
 SQ   Sequence 38 BP; 10 A; 7 C; 5 G; 11 T; 5 other;
      taactgtcat nnnggnntat cattacgcta tcataacg                                38
 //
-ID   Taxon2; SV 1; linear; DNA; ; PLN; 26 BP.
+ID   Taxon2; SV 1; linear; genomic DNA; ; PLN; 26 BP.
 XX
 AC   Taxon2;
 XX
@@ -46,7 +46,7 @@ XX
 RN   [1]
 RA   your name here
 RT   ;
-RL   Submitted (23-OCT-2019) to the INSDC.
+RL   Submitted (06-MAR-2020) to the INSDC.
 XX
 FH   Key             Location/Qualifiers
 FH
@@ -71,7 +71,7 @@ XX
 SQ   Sequence 26 BP; 6 A; 3 C; 5 G; 7 T; 5 other;
      taaatgtnnn ggnntacgtc attacg                                             26
 //
-ID   Taxon3; SV 1; linear; DNA; ; PLN; 27 BP.
+ID   Taxon3; SV 1; linear; genomic DNA; ; PLN; 27 BP.
 XX
 AC   Taxon3;
 XX
@@ -83,7 +83,7 @@ XX
 RN   [1]
 RA   your name here
 RT   ;
-RL   Submitted (23-OCT-2019) to the INSDC.
+RL   Submitted (06-MAR-2020) to the INSDC.
 XX
 FH   Key             Location/Qualifiers
 FH
@@ -105,7 +105,7 @@ XX
 SQ   Sequence 27 BP; 7 A; 4 C; 4 G; 7 T; 5 other;
      atgcatnnng gnntatcgct atcataa                                            27
 //
-ID   Taxon4; SV 1; linear; DNA; ; PLN; 29 BP.
+ID   Taxon4; SV 1; linear; genomic DNA; ; PLN; 29 BP.
 XX
 AC   Taxon4;
 XX
@@ -117,7 +117,7 @@ XX
 RN   [1]
 RA   your name here
 RT   ;
-RL   Submitted (23-OCT-2019) to the INSDC.
+RL   Submitted (06-MAR-2020) to the INSDC.
 XX
 FH   Key             Location/Qualifiers
 FH
@@ -132,7 +132,7 @@ FT   intron          4..7
 FT                   /note="bar"
 FT   gap             7
 FT                   /estimated_length=1
-FT   CDS             complement(join(19..27,<11..16))
+FT   CDS             complement(join(<11..16,19..27))
 FT                   /note="baz"
 FT                   /transl_table=11
 FT                   /codon_start=1

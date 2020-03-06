@@ -7,9 +7,12 @@ Unit Tests for the classes of the module `CheckingOps`
 # IMPORT OPERATIONS #
 #####################
 
-import Bio # Do not remove; important for assertIsInstance
-import unittest
 import warnings
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    import Bio # Do not remove; important for assertIsInstance
+
+import unittest
 import sys, os
 
 # Add specific directory to sys.path in order to import its modules
@@ -23,9 +26,9 @@ import CheckingOps as CkOps
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.16.1700'
+__version__ = '2020.03.06.1800'
 
 #############
 # DEBUGGING #

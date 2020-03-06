@@ -1,5 +1,8 @@
 CHANGELOG
 ---------
+#### Version 0.9.5 (2020.03.06)
+* Added functions that check each time an interaction with a third-party server is conducted if that server is up and running; the user is notified of this check and a possible down-time of the server via messages to the screen.
+* Added optional commandline parameter "qualifiername" that allows users to specifiy the name of the qualifier that contains the product information (or other information) of a sequence feature in the resulting EMBL flatfile.
 #### Version 0.9.0 (2020.01.10)
 * Added optional commandline parameter to specify the metadata delimiter, with the default set to a comma (",")
 * Automatically replaces the mol_type "DNA" with "genomic DNA" in the ID line of each EMBL record

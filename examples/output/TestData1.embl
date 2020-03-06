@@ -1,4 +1,4 @@
-ID   Taxon1; SV 1; linear; DNA; ; PLN; 38 BP.
+ID   Taxon1; SV 1; linear; genomic DNA; ; PLN; 38 BP.
 XX
 AC   Taxon1;
 XX
@@ -10,7 +10,7 @@ XX
 RN   [1]
 RA   your name here
 RT   ;
-RL   Submitted (23-OCT-2019) to the INSDC.
+RL   Submitted (06-MAR-2020) to the INSDC.
 XX
 FH   Key             Location/Qualifiers
 FH
@@ -33,7 +33,7 @@ XX
 SQ   Sequence 38 BP; 11 A; 6 C; 5 G; 11 T; 5 other;
      taaatgtcat nnnggnntat cattacgcta tcataacg                                38
 //
-ID   Taxon2; SV 1; linear; DNA; ; PLN; 26 BP.
+ID   Taxon2; SV 1; linear; genomic DNA; ; PLN; 26 BP.
 XX
 AC   Taxon2;
 XX
@@ -45,7 +45,7 @@ XX
 RN   [1]
 RA   your name here
 RT   ;
-RL   Submitted (23-OCT-2019) to the INSDC.
+RL   Submitted (06-MAR-2020) to the INSDC.
 XX
 FH   Key             Location/Qualifiers
 FH
@@ -65,7 +65,7 @@ XX
 SQ   Sequence 26 BP; 9 A; 4 C; 5 G; 8 T; 0 other;
      taaatgttat ggactacgtc ataacg                                             26
 //
-ID   Taxon3; SV 1; linear; DNA; ; PLN; 24 BP.
+ID   Taxon3; SV 1; linear; genomic DNA; ; PLN; 24 BP.
 XX
 AC   Taxon3;
 XX
@@ -77,7 +77,7 @@ XX
 RN   [1]
 RA   your name here
 RT   ;
-RL   Submitted (23-OCT-2019) to the INSDC.
+RL   Submitted (06-MAR-2020) to the INSDC.
 XX
 FH   Key             Location/Qualifiers
 FH

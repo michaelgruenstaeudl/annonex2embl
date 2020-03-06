@@ -7,9 +7,12 @@ Unit Tests for the classes of the module `GenerationOps`
 # IMPORT OPERATIONS #
 #####################
 
-import Bio # Do not remove; important for assertIsInstance
-import unittest
 import warnings
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    import Bio # Do not remove; important for assertIsInstance
+
+import unittest
 import sys, os
 
 # Add specific directory to sys.path in order to import its modules
@@ -28,9 +31,9 @@ from Bio import SeqFeature
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.16.1700'
+__version__ = '2020.03.06.1800'
 
 #############
 # DEBUGGING #
@@ -165,12 +168,14 @@ class GenerateSeqFeatureTestCases(unittest.TestCase):
         feature_name = 'psbI'
         feature_type = 'intron'
         feature_orient = 'forw'
+        qualifier_name = 'note'
         transl_table = 11
         feature_seq = 'ACGTACGTACGTACGT'
         charset_range = [2,3,4,5]
         feature_loc = GnOps.GenerateFeatLoc().make_location(charset_range)
         out = GnOps.GenerateSeqFeature().regular_feat(feature_name,
-            feature_type, feature_orient, feature_loc, transl_table, feature_seq)
+            feature_type, feature_orient, feature_loc, qualifier_name,
+            transl_table, feature_seq)
         self.assertIsInstance(out, Bio.SeqFeature.SeqFeature)
 
 

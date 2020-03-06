@@ -15,12 +15,15 @@ import IOOps as IOOps
 import sys
 import os
 import gzip
-import warnings
 
-from Bio import SeqIO
-#from Bio.Alphabet import generic_dna
-#from Bio.Seq import Seq
-from Bio import SeqFeature
+import warnings
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from Bio import SeqIO
+    #from Bio.Alphabet import generic_dna
+    #from Bio.Seq import Seq
+    from Bio import SeqFeature
+
 from collections import OrderedDict
 from copy import copy
 from copy import deepcopy
@@ -39,7 +42,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'annone
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2020.01.10.1900'
+__version__ = '2020.03.06.1800'
 
 #############
 # DEBUGGING #
@@ -47,6 +50,10 @@ __version__ = '2020.01.10.1900'
 
 #import ipdb
 #ipdb.set_trace()
+
+############
+# WARNINGS #
+############
 
 # To format warnings in a pretty, readable way:
 def warning_on_one_line(message, category, filename, lineno, file=None, line=None):
@@ -60,8 +67,6 @@ warnings.formatwarning = warning_on_one_line
 #############
 # FUNCTIONS #
 #############
-
-warnings.formatwarning = warning_on_one_line
 
 def annonex2embl(path_to_nex,
                  path_to_csv,
@@ -147,9 +152,9 @@ def annonex2embl(path_to_nex,
         try:
             not_shared = list(set(sorted_seqnames) - set(sorted_seqids))
         except Exception as e:
-            msg = 'ERROR: Sequence names in %s are NOT IDENTICAL to sequence IDs in %s.'\
-                  '%s The following sequence names don\'t have a match: %s'\
-                  % (path_to_nex, path_to_csv, '\n', ','.join(not_shared))
+            msg = 'ERROR: Sequence names in `%s` are not identical to \
+sequence IDs in `%s`.\n The following sequence names do not have a \
+match: %s' % (path_to_nex, path_to_csv, ','.join(not_shared))
             warnings.warn(msg)
             raise Exception
 
@@ -185,7 +190,8 @@ def annonex2embl(path_to_nex,
                 current_quals = [d for d in filtered_qualifiers
                                 if d[uniq_seqid_col] == seq_name][0]
             except Exception as e:
-                msg = 'ERROR with qualifiers of `%s`: %s\n\nSkipping sequence.\n' % (seq_name, e)
+                msg = 'ERROR with qualifiers of `%s`: %s\n\nSkipping \
+sequence.\n' % (seq_name, e)
                 warnings.warn(msg)
                 #raise Exception
                 continue
@@ -225,24 +231,24 @@ def annonex2embl(path_to_nex,
 
 # 6.3.2. Skip all sequence records smaller than 10 unambiguous nucleotides
             if len(seq_record.seq._data.replace('-','').strip('N')) <= 10:
-                msg = 'WARNING: Sequence `%s` not saved because shorter than 10 '\
-                      'unambiguous nucleotides.' % (seq_record.id)
+                msg = 'WARNING: Sequence `%s` not saved because \
+shorter than 10 unambiguous nucleotides.' % (seq_record.id)
                 warnings.warn(msg)
                 continue
 
 # 6.3.3. Remove leading ambiguities while maintaining correct annotations
             seq_noleadambigs, charsets_noleadambigs = DgOps.\
                 RmAmbigsButMaintainAnno().rm_leadambig(seq_withgaps, 'N',
-                                                       charsets_withgaps)
+                charsets_withgaps)
 
 # 6.3.4. Remove trailing ambiguities while maintaining correct annotations
             seq_notrailambigs, charsets_notrailambigs = DgOps.\
                 RmAmbigsButMaintainAnno().rm_trailambig(seq_noleadambigs,
-                                                        'N', charsets_noleadambigs)
+                'N', charsets_noleadambigs)
 # 6.3.5. Degap the sequence while maintaining correct annotations
             seq_nogaps, charsets_degapped = DgOps.\
                 DegapButMaintainAnno(seq_notrailambigs, '-',
-                                     charsets_notrailambigs).degap()
+                    charsets_notrailambigs).degap()
 
 # 6.3.6. Add gap features where stretches of Ns in sequence
             seq_final, charsets_final = DgOps.\
@@ -270,7 +276,7 @@ def annonex2embl(path_to_nex,
             if tax_check:
                 try:
                     seq_record = PrOps.ConfirmAdjustTaxonName().go(seq_record,
-                                                               email_addr)
+                        email_addr)
                 except:
                     continue
 
@@ -306,8 +312,9 @@ def annonex2embl(path_to_nex,
                     seq = ''.join(seq)
 
                     seq_feature = GnOps.GenerateSeqFeature().regular_feat(
-                        charset_sym, charset_type, charset_orient, location_object, qualifiername,
-                        transl_table, seq, charset_product)
+                        charset_sym, charset_type, charset_orient, 
+                        location_object, qualifiername, transl_table, 
+                        seq, charset_product)
                     seq_record.features.append(seq_feature)
 
 ####################################
@@ -337,15 +344,16 @@ def annonex2embl(path_to_nex,
                                                          feature, transl_table)
                         last_seen[2] = feature.location
                     except Exception as e:
-                        msg = 'WARNING: Feature `%s` (type: %s) of sequence `%s` is not saved to '\
-                              'output. Reason: %s' % (feature.id, feature.type, seq_record.id, e)
+                        msg = 'WARNING: Feature `%s` (type: %s) of \
+sequence `%s` is not saved to output. Reason: %s' \
+% (feature.id, feature.type, seq_record.id, e)
                         warnings.warn(msg)
                         removal_list.append(indx)
                 elif feature.type == 'IGS' or feature.type == 'intron':
                     if  last_seen[0] == 'CDS' or last_seen[0] == 'gene':
                         if not last_seen[1] == last_seen[2]:
                             feature.location = CkOps.TranslCheck().\
-                                                    adjustLocation(feature.location, last_seen[2])
+                                adjustLocation(feature.location, last_seen[2])
                     last_seen = ["type","loc_before","loc_after"]
                 else:
                     last_seen = ["type","loc_before","loc_after"]
@@ -382,7 +390,6 @@ def annonex2embl(path_to_nex,
                                 feature.location = GnOps.GenerateFeatLoc().\
                                 make_end_fuzzy(feature.location)
 
-
 # (FUTURE)  Also introduce fuzzy ends to features when those had leading or trailing Ns removed,
 #           because the removed Ns may constitute start of stop codons.
 
@@ -390,8 +397,7 @@ def annonex2embl(path_to_nex,
 
 # 6.10. DECISION ON OUTPUT FORMAT
             IOOps.Outp().write_SeqRecord(seq_name, seq_record,
-                                         author_names, outp_handle,
-                                         linemask)
+                author_names, outp_handle, linemask)
 
 ########################################################################
 
@@ -408,8 +414,8 @@ def annonex2embl(path_to_nex,
                     try:
                         outp_handle.write(line)
                     except Exception as e:
-                        msg = 'WARNING: EMBL flatfile not compressed '\
-                              'due to error: %s' % (e)
+                        msg = 'WARNING: EMBL flatfile not compressed \
+due to error: %s' % (e)
                         warnings.warn(msg)
 
 ########################################################################
@@ -420,23 +426,19 @@ def annonex2embl(path_to_nex,
         manifest_flatfile = os.path.basename(path_to_outfile)
         if compress:
             IOOps.Outp().create_manifest(path_to_outfile,
-                                        manifest_study,
-                                        manifest_descr,
-                                        manifest_flatfile+'.gz')
+                manifest_study, manifest_descr, manifest_flatfile+'.gz')
         else:
             IOOps.Outp().create_manifest(path_to_outfile,
-                                        manifest_study,
-                                        manifest_descr,
-                                        manifest_flatfile)
+                manifest_study, manifest_descr, manifest_flatfile)
 
     elif manifest_study and not manifest_descr:
-        msg = 'WARNING: Manifest file not written '\
-              'due to missing manifest name.'
+        msg = 'WARNING: Manifest file not written \
+due to missing manifest name.'
         warnings.warn(msg)
 
     elif not manifest_study and manifest_descr:
-        msg = 'WARNING: Manifest file not written '\
-              'due to missing manifest study.'
+        msg = 'WARNING: Manifest file not written \
+due to missing manifest study.'
         warnings.warn(msg)
     else:
         pass

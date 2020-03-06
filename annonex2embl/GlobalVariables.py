@@ -10,7 +10,7 @@ Setting global variables.
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.16.1700'
+__version__ = '2020.03.06.1800'
 
 #############
 # DEBUGGING #
@@ -124,9 +124,19 @@ nex2ena_valid_INSDC_organelle = [
     'plastid:apicoplast', 'plastid:chromoplast', 'plastid:cyanelle',
     'plastid:leucoplast', 'plastid:proplastid']
 
-nex2ena_valid_orientations = [
-    'forw','rev']
+nex2ena_valid_orientations = ['forw','rev']
 
+# Feature table qualifiers that only occur in the source feature
+INSDC_quals_only_source = [
+            'clone', 'environmental_sample', 'focus', 'germline', 
+            'isolation_source', 'serotype', 'serovar', 'transgenic']
+
+# All feature table qualifiers except those that only occur in the 
+# source feature
+INSDC_quals_not_source = [q for q in nex2ena_valid_INSDC_quals 
+                          if q not in INSDC_quals_only_source]
+
+# List of URLs
 epostUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/epost.fcgi"
 esearchUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 esummaryUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"

@@ -9,12 +9,15 @@ Custom operations to check annotations
 
 import GenerationOps as GnOps
 import GlobalVariables as GlobVars
-import warnings
 
-from Bio.Seq import Seq
-from Bio.SeqRecord import SeqRecord
-from Bio.SeqFeature import FeatureLocation
-from Bio.SeqFeature import CompoundLocation
+import warnings
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from Bio.Seq import Seq
+    from Bio.SeqRecord import SeqRecord
+    from Bio.SeqFeature import FeatureLocation
+    from Bio.SeqFeature import CompoundLocation
+
 from unidecode import unidecode
 from itertools import chain
 
@@ -25,7 +28,7 @@ from itertools import chain
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2020.01.10.1900'
+__version__ = '2020.03.06.1800'
 
 #############
 # DEBUGGING #
@@ -70,14 +73,14 @@ class AnnoCheck:
         #       warning about an annotation not being a multiple of three
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore")
-            transl = extract.translate(table=transl_table, to_stop=to_stop,
-                                       cds=cds)
+            transl = extract.translate(table=transl_table, 
+                to_stop=to_stop, cds=cds)
             # Adjustment for non-start codons given the necessary use of
             # cds=True in TPL.
             if not extract.startswith(GlobVars.nex2ena_start_codon):
                 first_codon_seq = extract[0:3]
                 first_aa = first_codon_seq.translate(table=transl_table,
-                                                     to_stop=to_stop, cds=False)
+                    to_stop=to_stop, cds=False)
                 transl = first_aa + transl[1:]
         return transl
 
@@ -96,7 +99,7 @@ class AnnoCheck:
         if len(transl_without_internStop) > len(transl_with_internStop):
             # 1. Unnest the nested lists
             contiguous_subsets = [list(range(e.start.position, e.end.position))
-                for e in location_object.parts]
+                                 for e in location_object.parts]
             compound_integer_range = sum(contiguous_subsets, [])
             # 2. Adjust location range
             len_with_internStop = len(transl_with_internStop) * 3
@@ -134,21 +137,21 @@ class AnnoCheck:
         except:
             try:
                 without_internalStop = AnnoCheck._transl(self.extract,
-                                                         self.transl_table)
+                    self.transl_table)
                 with_internalStop = AnnoCheck._transl(
                     self.extract, self.transl_table, to_stop=True)
                 transl_out = with_internalStop
                 feat_loc = AnnoCheck._adjust_feat_loc(
                     self.feature.location, with_internalStop, without_internalStop)
             except Exception:
-                msg = 'Translation of feature `%s` of '\
-                      'sequence `%s` is unsuccessful.' % (self.feature.id, self.record_id)
+                msg = 'Translation of feature `%s` of \
+sequence `%s` is unsuccessful.' % (self.feature.id, self.record_id)
                 #warnings.warn(msg)
                 raise Exception(msg)
         if len(transl_out) < 2:
-            msg = 'Translation of feature `%s` of '\
-                  'sequence `%s` indicates a protein length of only a '\
-                  'single amino acid.' % (self.feature.id, self.record_id)
+            msg = 'Translation of feature `%s` of sequence `%s` \
+indicates a protein length of only a single amino acid.' \
+% (self.feature.id, self.record_id)
             #warnings.warn(msg)
             raise Exception(msg)
         # IMPORTANT!!!: In an ENA record, the translation does not display the
@@ -170,8 +173,8 @@ class AnnoCheck:
         # except ValueError: # Keep 'ValueError'; don't replace with 'Exception'
         #    return False
         except Exception as e:
-            print(e)
-            raise  # Should this line be commented out?
+            warnings.warn(e)
+            raise Exception  # Should this line be commented out?
 
 
 class TranslCheck:
@@ -282,8 +285,8 @@ class QualifierCheck:
             of a list of dictionaries encompass the element <label> at
             least once. '''
         if not all(label in list(dct.keys()) for dct in lst_of_dcts):
-            msg = 'ERROR: csv-file does not '\
-                  'contain a column labelled %s' % (label)
+            msg = 'ERROR: csv-file does not contain a column \
+labelled %s' % (label)
             warnings.warn(msg)
             raise Exception
         return True
@@ -308,8 +311,8 @@ class QualifierCheck:
         not_valid = [k for k in keys_present if k not in
                      GlobVars.nex2ena_valid_INSDC_quals]
         if not_valid:
-            msg = 'ERROR: The following are '\
-                  'invalid INSDC qualifiers: %s' % (', '.join(not_valid))
+            msg = 'ERROR: The following are invalid INSDC \
+qualifiers: %s' % (', '.join(not_valid))
             warnings.warn(msg)
             raise Exception
         return True
@@ -321,19 +324,19 @@ class QualifierCheck:
             name in the NEXUS file has a corresponding entry in the metadata
             file. '''
         if len(set(seqnameCSV)) != len(seqnameCSV):
-            msg = 'ERROR: Some sequence names are present more than once'\
-                  ' in the metadata file.'
+            msg = 'ERROR: Some sequence names are present more than \
+once in the metadata file.'
             warnings.warn(msg)
             raise Exception
         for seqname in seqnameNEX:
             if seqname.split(".")[-1] == "copy":
-                msg = 'ERROR: Some sequence names are present more than once'\
-                      ' in the NEXUS file.'
+                msg = 'ERROR: Some sequence names are present more \
+than once in the NEXUS file.'
                 warnings.warn(msg)
                 raise Exception
             if not seqname in seqnameCSV:
-                msg = 'ERROR: The sequence name "%s" does not have a corresponding'\
-                      ' entry in the metadata file.' % (seqname)
+                msg = 'ERROR: The sequence name `%s` does not have a \
+corresponding entry in the metadata file.' % (seqname)
                 warnings.warn(msg)
                 raise Exception
 
@@ -356,10 +359,6 @@ class QualifierCheck:
         '''
         try:
             QualifierCheck._label_present(self.lst_of_dcts, self.label)
-        except Exception as e:
-            warnings.warn(e)
-            raise Exception
-        try:
             QualifierCheck._valid_INSDC_quals(self.lst_of_dcts)
         except Exception as e:
             warnings.warn(e)

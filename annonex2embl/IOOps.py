@@ -9,11 +9,14 @@ Custom operations input and output processes
 
 import os
 import datetime
+
 import warnings
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from Bio.Nexus import Nexus
+    from Bio import SeqIO
 
 from csv import DictReader
-from Bio.Nexus import Nexus
-from Bio import SeqIO
 
 try:
     from StringIO import StringIO ## for Python 2
@@ -27,7 +30,7 @@ except ImportError:
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2020.01.10.1900'
+__version__ = '2020.03.06.1800'
 
 #############
 # DEBUGGING #
@@ -47,8 +50,6 @@ class Inp:
         [specific to function]
     Returns:
         [specific to function]
-    Raises:
-        -
     '''
 
     def __init__(self):
@@ -64,7 +65,6 @@ class Inp:
         different ending. '''
         return fn[:fn.rfind('.')] + '.' + new_end
 
-
     def parse_csv_file(self, path_to_csv, metadata_delim):
         ''' This function parses a csv file. '''
         try:
@@ -72,8 +72,7 @@ class Inp:
                                 quotechar='"', skipinitialspace=True)
             a_matrix = list(reader)
         except Exception as e:
-            msg = 'ERROR: %s:\n %s' % ('Parsing of '
-            '.csv-file unsuccessful', e)
+            msg = 'ERROR: Parsing of CSV-file unsuccessful:\n %s' % (str(e))
             warnings.warn(msg)
             raise Exception
         return a_matrix
@@ -86,11 +85,10 @@ class Inp:
             charsets = aln.charsets
             matrix = aln.matrix
         except Nexus.NexusError as e:
-            print(e)
-            raise
+            warnings.warn(e)
+            raise Exception
         except Exception as e:
-            msg = 'ERROR: %s:\n %s' % ('Parsing of '
-            '.nex-file unsuccessful', e)
+            msg = 'ERROR: Parsing of NEX-file unsuccessful:\n %s' % (str(e))
             warnings.warn(msg)
             raise Exception
         return (charsets, matrix)
@@ -102,8 +100,6 @@ class Outp:
         [specific to function]
     Returns:
         [specific to function]
-    Raises:
-        -
     '''
 
     def __init__(self):
@@ -120,9 +116,7 @@ class Outp:
             outp_handle (obj)
             ENAstrict_bool(bool)
         Returns:
-            currently nothing
-        Raises:
-            -
+            [currently nothing]
         '''
 
         date_today = datetime.date.today().strftime("%d-%b-%Y").upper()
@@ -130,8 +124,8 @@ class Outp:
         try:
             SeqIO.write(seq_record, SecRecord_handle, 'embl')
         except Exception as e:
-            msg = 'ERROR: %s: %s. Did not write to '
-            'internal handle.\n %s' % ('Problem with sequence ', seq_name, e)
+            msg = 'ERROR: Problem with sequence `%s`. Did not write to \
+internal handle.\n %s' % (seq_name, e)
             warnings.warn(msg)
             raise Exception
 

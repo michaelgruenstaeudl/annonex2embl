@@ -21,9 +21,9 @@ import DegappingOps as DgOps
 ###############
 
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
-__copyright__ = 'Copyright (C) 2016-2019 Michael Gruenstaeudl'
+__copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.16.1700'
+__version__ = '2020.03.06.1800'
 
 #############
 # DEBUGGING #
@@ -31,6 +31,10 @@ __version__ = '2019.10.16.1700'
 
 #import ipdb
 #ipdb.set_trace()
+
+############
+# WARNINGS #
+############
 
 def ignore_warnings(test_func):
     def do_test(self, *args, **kwargs):

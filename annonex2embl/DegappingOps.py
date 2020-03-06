@@ -19,7 +19,7 @@ from itertools import count, groupby
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.16.1700'
+__version__ = '2020.03.06.1800'
 
 #############
 # DEBUGGING #
@@ -51,8 +51,6 @@ class AddGapFeature:
         tupl.   The return consists of the input sequence and the
                 corresponding charsets (plus a gap charset, if
                 appropriate); example: (degapped_seq, degapped_charsets)
-    Raises:
-        currently nothing
     '''
 
     def __init__(self, seq, charsets):
@@ -72,7 +70,9 @@ class AddGapFeature:
                 try:
                     annotations["gap"+str(countr)] = rnge
                 except Exception as e:
-                    warnings.warn("Cannot process Ns in positions %s." % (','.join(rnge)))
+                    msg = "Cannot process Ns in positions `%s`." \
+% (','.join(rnge))
+                    warnings.warn(msg)
         return seq, annotations
 
 class DegapButMaintainAnno:
@@ -91,8 +91,6 @@ class DegapButMaintainAnno:
         tupl.   The return consists of the degapped sequence and the
                 corresponding degapped charsets; example:
                 (degapped_seq, degapped_charsets)
-    Raises:
-        currently nothing
     '''
 
     def __init__(self, seq, rmchar, charsets):
@@ -136,8 +134,6 @@ class RmAmbigsButMaintainAnno:
         tupl.   The return consists of the shortened DNA sequence and
                 the corresponding shortened charsets; example:
                 (shortened_seq, shortened_charsets)
-    Raises:
-        currently nothing
     '''
 
     def __init__(self):

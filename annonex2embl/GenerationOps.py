@@ -11,9 +11,13 @@ import GlobalVariables as GlobVars
 
 from operator import itemgetter
 from itertools import groupby
-from Bio import SeqFeature
-from Bio.SeqRecord import SeqRecord
-from Bio.SeqFeature import ExactPosition, FeatureLocation, CompoundLocation
+
+import warnings
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from Bio import SeqFeature
+    from Bio.SeqRecord import SeqRecord
+    from Bio.SeqFeature import ExactPosition, FeatureLocation, CompoundLocation
 
 ###############
 # AUTHOR INFO #
@@ -22,7 +26,7 @@ from Bio.SeqFeature import ExactPosition, FeatureLocation, CompoundLocation
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2019.10.16.1700'
+__version__ = '2020.03.06.1800'
 
 #############
 # DEBUGGING #
@@ -74,12 +78,11 @@ class GenerateFeatLoc:
         ''' This function goes through a decision tree and generates
             fitting feature locations.
         Args:
-            charset_range (list): a list of index positions, example: [1,2,3,8,9 ...]
+            charset_range (list): a list of index positions, 
+            example: [1,2,3,8,9 ...]
         Returns:
             FeatureLocation (obj):  A SeqFeature location object; either a
                                     FeatureLocation or a CompoundLocation
-        Raises:
-            -
         '''
         contiguous_ranges = GenerateFeatLoc._extract_contiguous_subsets(
             charset_range)
@@ -220,15 +223,17 @@ class GenerateSeqFeature:
         return source_feature
 
     def regular_feat(self, feature_name, feature_type, feature_orient, feature_loc,
-                     qualifiername, transl_table, feature_seq, feature_product=None):
+                     qualifier_name, transl_table, feature_seq, feature_product=None):
         ''' This function generates a regular SeqFeature for a SeqRecord.
         Args:
             feature_name (str):  usually a gene symbol; example: 'matK'
             feature_type (str):  an identifier as to the type of feature;
                                  example: 'intron'
-            feature_orient (str): a string defining
+            feature_orient (str): a string defining the orientation of the feature
             feature_loc (object): a SeqFeature object specifying a simple
                                   or compund location on a DNA string
+            qualifier_name (str): a string defining the name of the qualifier
+                                  under which the feature_product is displayed
             transl_table (int): an integer; example: 11 (for bacterial code)
             feature_product (str): the product of the feature in question;
                                    example: 'maturase K'
@@ -238,20 +243,20 @@ class GenerateSeqFeature:
         Raises:
             -
         '''
-        # 1. Define the annotation type
+        # Step 1. Define the annotation type
         if feature_type not in GlobVars.nex2ena_valid_INSDC_featurekeys:
             msg = '%s nex2embl ERROR: Internal error: '\
                   'Name of feature key not passed correctly.'
             warnings.warn(msg)
             raise Exception
-        # 2. Generate qualifiers
+        # Step 2. Generate qualifiers
         if feature_type == 'CDS' or feature_type == 'gene':
-            qualifiername = 'note'
+            qualifier_name = 'note'
 
         quals = {}
         if feature_name:
-            quals = {qualifiername: feature_name}
-        # 3. If a coding feature, add special qualifiers
+            quals = {qualifier_name: feature_name}
+        # Step 3. If a coding feature, add special qualifiers
         if feature_product:
             if feature_type == 'CDS':
                 quals['product'] = feature_product
@@ -268,7 +273,8 @@ class GenerateSeqFeature:
             quals['estimated_length'] = str(feature_loc.end.position-feature_loc.start.position)
             #quals['estimated_length'] = str(feature_loc.end.real-feature_loc.start.real+1)
 
-        # 4. A function to read in if a charset is forward or reverse and to adjust the info in the feature table.
+        # Step 4. A function to read in if a charset is forward or reverse 
+        #         and to adjust the info in the feature table.
         if feature_orient == "forw":
             feature_orient = 1
         else:

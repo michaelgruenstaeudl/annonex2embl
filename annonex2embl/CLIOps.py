@@ -26,7 +26,7 @@ import argparse
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2020.01.10.1900'
+__version__ = '2020.03.06.1800'
 
 #############
 # DEBUGGING #
@@ -50,6 +50,35 @@ class CLI():
         required = parser.add_argument_group('required arguments')
         optional = parser.add_argument_group('optional arguments')
 
+        valid_INSDC_quals = [
+            'allele', 'altitude', 'anticodon', 'artificial_location',
+            'bio_material', 'bound_moiety', 'cell_line', 'cell_type',
+            'chromosome', 'citation', 'clone', 'clone_lib', 'codon_start',
+            'collected_by', 'collection_date', 'compare', 'country',
+            'cultivar', 'culture_collection', 'db_xref', 'dev_stage',
+            'direction', 'EC_number', 'ecotype', 'environmental_sample',
+            'estimated_length', 'exception', 'experiment', 'focus',
+            'frequency', 'function', 'gap_type', 'gene', 'gene_synonym',
+            'germline', 'haplogroup', 'haplotype', 'host', 'identified_by',
+            'inference', 'isolate', 'isolation_source', 'lab_host',
+            'lat_lon', 'linkage_evidence', 'locus_tag', 'macronuclear',
+            'map', 'mating_type', 'mobile_element_type', 'mod_base',
+            'mol_type', 'ncRNA_class', 'note', 'number', 'old_locus_tag',
+            'operon', 'organelle', 'organism', 'partial', 'PCR_conditions',
+            'PCR_primers', 'phenotype', 'plasmid', 'pop_variant', 'product',
+            'protein_id', 'proviral', 'pseudo', 'pseudogene', 'rearranged',
+            'regulatory_class', 'replace', 'ribosomal_slippage',
+            'rpt_family', 'rpt_type', 'rpt_unit_range', 'rpt_unit_seq',
+            'satellite', 'segment', 'serotype', 'serovar', 'sex',
+            'specimen_voucher', 'standard_name', 'strain', 'sub_clone',
+            'sub_species', 'sub_strain', 'tag_peptide', 'tissue_lib',
+            'tissue_type', 'transgenic', 'translation', 'transl_except',
+            'transl_table', 'trans_splicing', 'type_material', 'variety']
+        INSDC_quals_only_source = [
+            'clone', 'environmental_sample', 'focus', 'germline', 
+            'isolation_source', 'serotype', 'serovar', 'transgenic']
+        INSDC_quals_not_source = [q for q in valid_INSDC_quals if q not in INSDC_quals_only_source]
+    
 
         ### REQUIRED ###
         required.add_argument('-n',
@@ -154,40 +183,11 @@ class CLI():
                             required=False)
 
         optional.add_argument('--qualifiername',
-                            help='Specify the qualifier where the name could be found. Stays always `note` for CDS and gene',
+                            help='name of the qualifier that contains the product (or other) information of a sequence feature; '\
+                            'can only be a valid INSDC qualifier not reserved for feature `\source`',
                             default='note',
                             metavar='',
-                            choices=['allele','altitude','anticodon',
-                                     'artificial_location','bio_material','bound_moiety',
-                                     'cell_line','cell_type','chromosome',
-                                     'clone','clone_lib','collected_by',
-                                     'collection_date','compare','country',
-                                     'cultivar','culture_collection','db_xref',
-                                     'dev_stage','direction','EC_number',
-                                     'ecotype','environmental_sample','exception',
-                                     'experiment','focus','frequency',
-                                     'function','gap_type','gene',
-                                     'gene_synonym','germline','haplogroup',
-                                     'haplotype','host','identified_by',
-                                     'inference','isolate','isolation_source',
-                                     'lab_host','lat_lon','linkage_evidence',
-                                     'locus_tag','macronuclear','map',
-                                     'mating_type','metagenome_source','mobile_element_type',
-                                     'mod_base','mol_type','ncRNA_class',
-                                     'note','number','old_locus_tag',
-                                     'operon','organelle','organism',
-                                     'PCR_conditions','PCR_primers','plasmid',
-                                     'product','protein_id','proviral',
-                                     'pseudo','pseudogene','rearranged',
-                                     'regulatory_class','replace','ribosomal_slippage',
-                                     'rpt_family','rpt_type','rpt_unit_seq',
-                                     'satellite','Comment','segment',
-                                     'serotype','serovar','sex',
-                                     'specimen_voucher','strain','sub_clone',
-                                     'submitter_seqid','sub_species','sub_strain',
-                                     'tag_peptide','tissue_type','trans_splicing',
-                                     'transgenic','transl_except','translation',
-                                     'variety'],
+                            choices=INSDC_quals_not_source,
                             required=False)
 
         optional.add_argument('--metadelim',
