@@ -312,9 +312,11 @@ the taxonomy of `%s`." % ('ENA ('+GlobVars.enaUrl+')', taxon_name))
             return True
         except:
             try:
-                requests.get(url)  # Windows ## Note: "urlopen" does not 
-                                   # work well under Windows, is 
-                                   # replaced with "requests"
+                requests.get(url)  # Windows and some MacOS versions
+                                   ## Note: Since "urlopen" does not 
+                                   # work well under Windows and some 
+                                   # MacOS versions, it is replaced 
+                                   # with "requests"
                 return True
             except:
                 return False
