@@ -11,8 +11,6 @@ Converts an annotated DNA multi-sequence alignment (in [NEXUS](http://wiki.chris
 
 
 ## INSTALLATION
-First, please be sure to have [Python 3 installed](https://www.python.org/downloads/) on your system. Then:
-
 To get the most recent stable version of *annonex2embl*, run:
 
     pip install annonex2embl
@@ -23,7 +21,7 @@ Or, alternatively, if you want to get the latest development version of *annonex
 
 
 ## INPUT, OUTPUT AND PREREQUISITES
-* **Input**: an annotated DNA multiple sequence alignment in NEXUS format; a comma-delimited metadata table
+* **Input**: an annotated DNA multiple sequence alignment in NEXUS format; and a comma-delimited (CSV) metadata table
 * **Output**: a submission-ready, multi-record EMBL flatfile
 
 #### Requirements / Input preparation
