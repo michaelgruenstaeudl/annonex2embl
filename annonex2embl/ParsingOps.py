@@ -306,20 +306,20 @@ the taxonomy of `%s`." % ('ENA ('+GlobVars.enaUrl+')', taxon_name))
             bool: True - if server is accessible
                   False - if not
         '''
-"""
-        try:
-            urlopen(url)           # Linux and MacOS
-            return True
-        except:
-            try:
-                requests.get(url)  # Windows ## Note: "urlopen" does not 
-                                   # work well under Windows, is 
-                                   # replaced with "requests"
-                return True
-            except:
-                return False
-        return False
-"""
+
+#        try:
+#            urlopen(url)           # Linux and MacOS
+#            return True
+#        except:
+#            try:
+#                requests.get(url)  # Windows ## Note: "urlopen" does not 
+#                                   # work well under Windows, is 
+#                                   # replaced with "requests"
+#                return True
+#            except:
+#                return False
+#        return False
+
         if os.name == "posix":  # Linux and MacOS
             try:
                 urlopen(url)
