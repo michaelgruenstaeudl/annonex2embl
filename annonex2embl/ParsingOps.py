@@ -307,40 +307,40 @@ the taxonomy of `%s`." % ('ENA ('+GlobVars.enaUrl+')', taxon_name))
                   False - if not
         '''
 
-#        try:
-#            urlopen(url)           # Linux and MacOS
-#            return True
-#        except:
-#            try:
-#                requests.get(url)  # Windows ## Note: "urlopen" does not 
-#                                   # work well under Windows, is 
-#                                   # replaced with "requests"
-#                return True
-#            except:
-#                return False
-#        return False
-
-        if os.name == "posix":  # Linux and MacOS
+        try:
+            urlopen(url)           # Linux and MacOS
+            return True
+        except:
             try:
-                urlopen(url)
-                return True
-            except:
-                return False
-        elif os.name == "nt":  # Windows ## Note: "urlopen" does not 
-                               #            work well under Windows, is 
-                               #            replaced with "requests"
-            try:
-                requests.get(url)
-                return True
-            except:
-                return False
-        else:                   # Some MacOS versions do not register as posix
-            try:
-                urlopen(url)
+                requests.get(url)  # Windows ## Note: "urlopen" does not 
+                                   # work well under Windows, is 
+                                   # replaced with "requests"
                 return True
             except:
                 return False
         return False
+
+#        if os.name == "posix":  # Linux and MacOS
+#            try:
+#                urlopen(url)
+#                return True
+#            except:
+#                return False
+#        elif os.name == "nt":  # Windows ## Note: "urlopen" does not 
+#                               #            work well under Windows, is 
+#                               #            replaced with "requests"
+#            try:
+#                requests.get(url)
+#                return True
+#            except:
+#                return False
+#        else:                   # Some MacOS versions do not register as posix
+#            try:
+#                urlopen(url)
+#                return True
+#            except:
+#                return False
+#        return False
 
 
     def obtain_gene_product(self, gene_sym):
