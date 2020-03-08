@@ -16,7 +16,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='annonex2embl',
-    version='0.9.5',
+    version='1.0.0',
     author='Michael Gruenstaeudl, PhD',
     author_email='m.gruenstaeudl@fu-berlin.de',
     description='Converts an annotated DNA multi-sequence alignment (in NEXUS format) to an EMBL flatfile for submission to ENA via the Webin-CLI submission tool',
