@@ -72,9 +72,12 @@ SET MNFTD=a_unique_description_here
 python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% -o %OTPUT% --productlookup --manifeststudy %MNFTS% --manifestdescr %MNFTD% --compress
 ```
 
+<!--
 ## TO DO
-* ~~Would it be possible to have the CDS definition of Taxon 4 in TestData2.embl changed from "complement(join(19..27,<11..16))" to "complement(join(<11..16,19..27))", while the automatic translation remains "MLSLL"? (I know that we chatted about it, but I don't remember the precise discussion anymore. Something about the meaning of "complement".) If it is possible, then please adjust the code accordingly. If not, then please write down an explanation sentence for me as to why that would mess up the translation.~~
-Currently the output is "complement(join(<11..16,19..27))"
+* Foo bar baz
+* Foo bar baz
+-->
+
 
 <!--
 ## TESTING

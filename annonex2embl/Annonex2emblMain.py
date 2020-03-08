@@ -42,7 +42,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'annone
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2020.03.06.1800'
+__version__ = '2020.03.08.1700'
 
 #############
 # DEBUGGING #
@@ -70,7 +70,7 @@ warnings.formatwarning = warning_on_one_line
 
 def annonex2embl(path_to_nex,
                  path_to_csv,
-                 descr_DEline,
+                 descript_line,
                  email_addr,
                  author_names,
                  path_to_outfile,
@@ -86,7 +86,7 @@ def annonex2embl(path_to_nex,
                  transl_table='11',
                  organelle='plastid',
                  seq_version='1',
-                 qualifiername='note',
+                 qualifier_name=False,
                  metadata_delim=',',
                  compress=False):
 
@@ -167,9 +167,10 @@ match: %s' % (path_to_nex, path_to_csv, ','.join(not_shared))
                 charset_sym, charset_type, charset_orient, charset_product = PrOps.\
                     ParseCharsetName(charset_name, email_addr, product_lookup).parse()
             except Exception as e:
-                msg = 'ERROR: %s' % (e)
-                warnings.warn(msg)
-                raise Exception
+                #msg = 'ERROR: %s' % (e)
+                #warnings.warn(msg)
+                #raise Exception
+                sys.exit()
             charset_dict[charset_name] = (charset_sym, charset_type, charset_orient,
                                           charset_product)
 
@@ -203,7 +204,7 @@ sequence.\n' % (seq_name, e)
 # 6.2.1. Generate the basic SeqRecord
             seq_record = GnOps.GenerateSeqRecord().base_record(
                 current_seq, current_quals, uniq_seqid_col, seq_version,
-                descr_DEline, topology, tax_division, organelle)
+                descript_line, topology, tax_division, organelle)
             # Add a function that automatically removes all sequences
             # that consist only of Ns (or ?s).
             skip = True
@@ -313,7 +314,7 @@ shorter than 10 unambiguous nucleotides.' % (seq_record.id)
 
                     seq_feature = GnOps.GenerateSeqFeature().regular_feat(
                         charset_sym, charset_type, charset_orient, 
-                        location_object, qualifiername, transl_table, 
+                        location_object, qualifier_name, transl_table, 
                         seq, charset_product)
                     seq_record.features.append(seq_feature)
 

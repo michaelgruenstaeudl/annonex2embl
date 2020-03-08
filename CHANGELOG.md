@@ -1,5 +1,8 @@
 CHANGELOG
 ---------
+#### Version 1.0.0 (2020.03.08)
+* Minor improvements to the example files
+* Minor code improvements
 #### Version 0.9.5 (2020.03.06)
 * Added functions that check each time an interaction with a third-party server is conducted if that server is up and running; the user is notified of this check and a possible down-time of the server via messages to the screen.
 * Added optional commandline parameter "qualifiername" that allows users to specifiy the name of the qualifier that contains the product information (or other information) of a sequence feature in the resulting EMBL flatfile.

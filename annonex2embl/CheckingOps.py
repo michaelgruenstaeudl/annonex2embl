@@ -28,7 +28,7 @@ from itertools import chain
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2020.03.06.1800'
+__version__ = '2020.03.08.1700'
 
 #############
 # DEBUGGING #
@@ -174,7 +174,7 @@ indicates a protein length of only a single amino acid.' \
         #    return False
         except Exception as e:
             warnings.warn(e)
-            raise Exception  # Should this line be commented out?
+            raise Exception(e)  # Should this line be commented out?
 
 
 class TranslCheck:
@@ -362,5 +362,5 @@ corresponding entry in the metadata file.' % (seqname)
             QualifierCheck._valid_INSDC_quals(self.lst_of_dcts)
         except Exception as e:
             warnings.warn(e)
-            raise Exception
+            raise Exception(e)
         return True

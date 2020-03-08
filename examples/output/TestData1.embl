@@ -10,7 +10,7 @@ XX
 RN   [1]
 RA   your name here
 RT   ;
-RL   Submitted (06-MAR-2020) to the INSDC.
+RL   Submitted (08-MAR-2020) to the INSDC.
 XX
 FH   Key             Location/Qualifiers
 FH
@@ -20,11 +20,11 @@ FT                   /organism="Arabidopsis thaliana"
 FT                   /specimen_voucher="Museum1: Collection#"
 FT                   /mol_type="genomic DNA"
 FT   CDS             join(4..12,17..25,28..36)
-FT                   /note="foo"
+FT                   /product="maturase K"
 FT                   /transl_table=11
 FT                   /translation="MSXXSLLS"
-FT   gene            join(4..12,17..25,28..36)
-FT                   /note="foo"
+FT   gene            4..36
+FT                   /gene="maturase K"
 FT   gap             11..13
 FT                   /estimated_length=3
 FT   gap             16..17
@@ -45,7 +45,7 @@ XX
 RN   [1]
 RA   your name here
 RT   ;
-RL   Submitted (06-MAR-2020) to the INSDC.
+RL   Submitted (08-MAR-2020) to the INSDC.
 XX
 FH   Key             Location/Qualifiers
 FH
@@ -56,11 +56,11 @@ FT                   /country="Country: State, City"
 FT                   /specimen_voucher="Herbarium2: Lorrach9"
 FT                   /mol_type="genomic DNA"
 FT   CDS             join(4..9,14..16,19..24)
-FT                   /note="foo"
+FT                   /product="maturase K"
 FT                   /transl_table=11
 FT                   /translation="MLLS"
-FT   gene            join(4..9,14..16,19..24)
-FT                   /note="foo"
+FT   gene            4..24
+FT                   /gene="maturase K"
 XX
 SQ   Sequence 26 BP; 9 A; 4 C; 5 G; 8 T; 0 other;
      taaatgttat ggactacgtc ataacg                                             26
@@ -77,7 +77,7 @@ XX
 RN   [1]
 RA   your name here
 RT   ;
-RL   Submitted (06-MAR-2020) to the INSDC.
+RL   Submitted (08-MAR-2020) to the INSDC.
 XX
 FH   Key             Location/Qualifiers
 FH
@@ -86,11 +86,11 @@ FT                   /isolate="Taxon3"
 FT                   /organism="Taxon three"
 FT                   /mol_type="genomic DNA"
 FT   CDS             join(1..6,11..13,16..21)
-FT                   /note="foo"
+FT                   /product="maturase K"
 FT                   /transl_table=11
 FT                   /translation="MLLL"
-FT   gene            join(1..6,11..13,16..21)
-FT                   /note="foo"
+FT   gene            1..21
+FT                   /gene="maturase K"
 XX
 SQ   Sequence 24 BP; 8 A; 3 C; 5 G; 8 T; 0 other;
      atgttatgga ctacgctatg ataa                                               24

@@ -26,7 +26,7 @@ import argparse
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2020.03.06.1800'
+__version__ = '2020.03.08.1700'
 
 #############
 # DEBUGGING #
@@ -185,7 +185,7 @@ class CLI():
         optional.add_argument('--qualifiername',
                             help='name of the qualifier that contains the product (or other) information of a sequence feature; '\
                             'can only be a valid INSDC qualifier not reserved for feature `\source`',
-                            default='note',
+                            default=False,
                             metavar='',
                             choices=INSDC_quals_not_source,
                             required=False)

@@ -16,9 +16,9 @@ Taxon4   NNNNNN---TNNNGGNTGATAGTAACGTGATAGCATCG  [reverse gene]
 END;
 
 BEGIN SETS;
-CHARSET foo_CDS_forward = 4-12 17-25 28-36;
-CHARSET bar_intron = 13-16;
-CHARSET baz_CDS_reverse = 20-25 28-36;
+CHARSET COI_CDS_forward = 4-12 17-25 28-36;
+CHARSET COI_intron = 13-16;
+CHARSET Cytb_CDS_reverse = 20-25 28-36;
 END;
 
 

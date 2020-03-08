@@ -32,7 +32,7 @@ except Exception as e:
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2020.03.06.1800'
+__version__ = '2020.03.08.1700'
 
 #############
 # DEBUGGING #
@@ -100,7 +100,7 @@ regarding the gene product of `%s`." \
             msg = 'ERROR: An error occurred while retrieving \
 data from server %s: %s' % ('ESearch ('+GlobVars.esearchUrl+')', e)
             warnings.warn(msg)
-            raise Exception
+            raise Exception(e)
         parsed_records = Entrez.read(esearch_records)
         entrez_id_list = parsed_records['IdList']
         return entrez_id_list
@@ -144,7 +144,7 @@ product of `%s`." % ('EPost ('+GlobVars.epostUrl+')', gene_sym))
             msg = 'ERROR: An error occurred while retrieving data \
 from `%s`: %s' % ('EPost ('+GlobVars.epostUrl+')', e)
             warnings.warn(msg)
-            raise Exception
+            raise Exception(e)
         webenv = epost_results['WebEnv']
         query_key = epost_results['QueryKey']
         try:
@@ -156,7 +156,7 @@ product of `%s`." % ('ESummary ('+GlobVars.esummaryUrl+')', gene_sym))
             msg = 'An error occurred while retrieving data from \
 `%s`: %s' % ('ESummary ('+GlobVars.esummaryUrl+')', e)
             warnings.warn(msg)
-            raise Exception
+            raise Exception(e)
         entrez_rec_list = Entrez.read(esummary_records)
         return entrez_rec_list
 
@@ -182,12 +182,18 @@ product of `%s`." % ('ESummary ('+GlobVars.esummaryUrl+')', gene_sym))
             msg = 'An error occurred while parsing the data from \
 `%s`: %s' % ('ESummary ('+GlobVars.esummaryUrl+')', e)
             warnings.warn(msg)
-            raise Exception
-        list_gene_product = [doc['Description'] for doc in docs]
-        #list_gene_symbol = [doc['NomenclatureSymbol'] for doc in docs]
-        #list_gene_name = [doc['Name'] for doc in docs]
-        # Avoiding that spurious first hit biases gene_product:
-        gene_product = Counter(list_gene_product).most_common()[0][0]
+            raise Exception(e)
+        try:
+            list_gene_product = [doc['Description'] for doc in docs]
+            #list_gene_symbol = [doc['NomenclatureSymbol'] for doc in docs]
+            #list_gene_name = [doc['Name'] for doc in docs]
+            # Avoiding that spurious first hit biases gene_product:
+            gene_product = Counter(list_gene_product).most_common()[0][0]
+        except Exception as e:
+            msg = 'An error occurred while parsing the gene product \
+name: %s' % (e)
+            warnings.warn(msg)
+            raise Exception(e)
         return gene_product
 
 
@@ -233,7 +239,7 @@ regarding the taxonomy of `%s`.'" %
             msg = 'An error occurred while retrieving data from \
 `%s`: %s' % ('ESearch ('+GlobVars.esearchUrl+')', e)
             warnings.warn(msg)
-            raise Exception
+            raise Exception(e)
         parsed_records = Entrez.read(esearch_records)
         entrez_hitcount = parsed_records['Count']
         return str(entrez_hitcount)
@@ -357,12 +363,26 @@ the taxonomy of `%s`." % ('ENA ('+GlobVars.enaUrl+')', taxon_name))
         Entrez.email = self.email_addr
         try:
             entrez_id_list = GetEntrezInfo._id_lookup(gene_sym)
+        except Exception as e:
+            msg = 'ERROR: An error occurred during the ID lookup \
+process for gene `%s`: %s' % (gene_sym, e)
+            warnings.warn(msg)
+            raise Exception(e)
+        try:
             entrez_rec_list = GetEntrezInfo._gene_product_lookup(
                 entrez_id_list, gene_sym)
+        except Exception as e:
+            msg = 'ERROR: An error occurred during the gene product lookup \
+process for gene `%s`: %s' % (gene_sym, e)
+            warnings.warn(msg)
+            raise Exception(e)
+        try:
             gene_product = GetEntrezInfo._parse_gene_products(entrez_rec_list)
         except Exception as e:
-            warnings.warn(e)
-            raise Exception
+            msg = 'ERROR: An error occurred during the gene product parsing \
+process for gene `%s`: %s' % (gene_sym, e)
+            warnings.warn(msg)
+            raise Exception(e)
         return gene_product
 
 
@@ -382,7 +402,7 @@ the taxonomy of `%s`." % ('ENA ('+GlobVars.enaUrl+')', taxon_name))
             #entrez_hitcount = GetEntrezInfo._taxname_lookup_ncbi(taxon_name)
         except Exception as e:
             warnings.warn(e)
-            raise Exception
+            raise Exception(e)
         if entrez_hitcount == '0':
             return False
         elif entrez_hitcount == '1':
@@ -413,7 +433,7 @@ class ConfirmAdjustTaxonName:
             msg = 'ERROR: Could not locate a whitespace between genus \
 name and specific epithet in taxon name of sequence `%s`.' % (seq_record.id)
             warnings.warn(msg)
-            raise Exception
+            raise Exception(e)
         if not GetEntrezInfo(email_addr).does_taxon_exist(seq_record.name):
             msg = 'WARNING: Taxon name `%s` of sequence `%s` is not a \
 name registered with the taxonomy service of ENA. Please consider \
@@ -476,7 +496,7 @@ class ParseCharsetName:
             msg = 'ERROR: Unclear parsing of feature orientation in \
 charset `%s`: %s' % (charset_name, str(e))
             warnings.warn(msg)
-            raise Exception
+            raise Exception(e)
         type_present = [typ for typ in GlobVars.nex2ena_valid_INSDC_featurekeys 
                         if typ in charset_name]
         try:
@@ -498,7 +518,7 @@ encountered in charset `%s`.' % (charset_name)
             msg = 'ERROR: Unclear parsing of features in \
 charset `%s`: %s' % (charset_name, str(e))
             warnings.warn(msg)
-            raise Exception
+            raise Exception(e)
         charset_sym = charset_name.strip('_').split('_')
         try:
             if len(charset_sym) == 1:
@@ -507,7 +527,7 @@ charset `%s`: %s' % (charset_name, str(e))
             msg = 'ERROR: Unspecified error during feature parsing in \
 charset `%s`: %s' % (charset_name, str(e))
             warnings.warn(msg)
-            raise Exception
+            raise Exception(e)
 
 
     def parse(self):
@@ -521,18 +541,18 @@ charset `%s`: %s' % (charset_name, str(e))
 _extract_charset_info(self.charset_name)
         except Exception as e:
             msg = 'ERROR: Error while parsing the charset `%s`: %s' \
-% (charset_name, str(e))
+% (self.charset_name, str(e))
             warnings.warn(msg)
-            raise Exception
+            raise Exception(e)
         entrez_handle = GetEntrezInfo(self.email_addr)
         if (charset_type == 'CDS' or charset_type == 'gene') and self.product_lookup:
             try:
                 charset_product = entrez_handle.obtain_gene_product(charset_sym)
             except Exception as e:
                 msg = 'ERROR: Error while obtaining gene product for \
-charset `%s`: %s' % (charset_name, str(e))
+charset `%s`: %s' % (self.charset_name, str(e))
                 warnings.warn(msg)
-                raise Exception
+                raise Exception(e)
         else:
             charset_product = None
         return (charset_sym, charset_type, charset_orient, charset_product)

@@ -26,7 +26,7 @@ with warnings.catch_warnings():
 __author__ = 'Michael Gruenstaeudl <m.gruenstaeudl@fu-berlin.de>'
 __copyright__ = 'Copyright (C) 2016-2020 Michael Gruenstaeudl'
 __info__ = 'annonex2embl'
-__version__ = '2020.03.06.1800'
+__version__ = '2020.03.08.1700'
 
 #############
 # DEBUGGING #
@@ -240,8 +240,6 @@ class GenerateSeqFeature:
             feature_seq (str): nucleotide sequence sequence
         Returns:
             SeqFeature (obj):   A SeqFeature object
-        Raises:
-            -
         '''
         # Step 1. Define the annotation type
         if feature_type not in GlobVars.nex2ena_valid_INSDC_featurekeys:
@@ -251,10 +249,13 @@ class GenerateSeqFeature:
             raise Exception
         # Step 2. Generate qualifiers
         if feature_type == 'CDS' or feature_type == 'gene':
+            if qualifier_name:
+                qualifier_name = 'note'
+        if feature_type == 'intron' or feature_type == 'IGS':
             qualifier_name = 'note'
 
         quals = {}
-        if feature_name:
+        if feature_name and qualifier_name:
             quals = {qualifier_name: feature_name}
         # Step 3. If a coding feature, add special qualifiers
         if feature_product:
@@ -297,7 +298,7 @@ class GenerateSeqRecord:
         pass
 
     def base_record(self, current_seq, current_qual, uniq_seqid_col,
-                    seq_version, descr_DEline, topology, tax_division,
+                    seq_version, descript_line, topology, tax_division,
                     organelle):
         ''' This function generates a base SeqRecord (i.e., the foundation to
             subsequent SeqRecords).
@@ -308,7 +309,7 @@ class GenerateSeqRecord:
                                   contains info on the sequence names;
                                   example: "isolate"
             seq_version (str):    an integer in string format
-            descr_DEline (str):   a text string to be included in the
+            descript_line (str):   a text string to be included in the
                                   DE line
             topology (str):       one of the valid ENA topology
                                   specifications
@@ -330,8 +331,8 @@ class GenerateSeqRecord:
         except Exception:
             org_name = 'undetermined organism'
         # 3. Generating DE line
-        descr_DEline = descr_DEline.replace('"', '')
-        DE_line = ' '.join([org_name, descr_DEline + ',', 'isolate',
+        descript_line = descript_line.replace('"', '')
+        DE_line = ' '.join([org_name, descript_line + ',', 'isolate',
                             uniq_seqid])
         # 4. Set up new seq record
         seq_record = SeqRecord(current_seq, id=ID_line, name=org_name,

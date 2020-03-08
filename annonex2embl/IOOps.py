@@ -74,7 +74,7 @@ class Inp:
         except Exception as e:
             msg = 'ERROR: Parsing of CSV-file unsuccessful:\n %s' % (str(e))
             warnings.warn(msg)
-            raise Exception
+            raise Exception(e)
         return a_matrix
 
     def parse_nexus_file(self, path_to_nex):
@@ -90,7 +90,7 @@ class Inp:
         except Exception as e:
             msg = 'ERROR: Parsing of NEX-file unsuccessful:\n %s' % (str(e))
             warnings.warn(msg)
-            raise Exception
+            raise Exception(e)
         return (charsets, matrix)
 
 
@@ -127,7 +127,7 @@ class Outp:
             msg = 'ERROR: Problem with sequence `%s`. Did not write to \
 internal handle.\n %s' % (seq_name, e)
             warnings.warn(msg)
-            raise Exception
+            raise Exception(e)
 
         if ENAstrict_bool:
             SecRecord_handle_lines = SecRecord_handle.getvalue().splitlines()

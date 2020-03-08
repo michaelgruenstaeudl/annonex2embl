@@ -10,7 +10,7 @@ XX
 RN   [1]
 RA   your name here
 RT   ;
-RL   Submitted (06-MAR-2020) to the INSDC.
+RL   Submitted (08-MAR-2020) to the INSDC.
 XX
 FH   Key             Location/Qualifiers
 FH
@@ -20,14 +20,14 @@ FT                   /organism="Arabidopsis thaliana"
 FT                   /specimen_voucher="Museum1: Collection#"
 FT                   /mol_type="genomic DNA"
 FT   CDS             join(<4..12,17..25,28..36)
-FT                   /note="foo"
+FT                   /product="cytochrome c oxidase subunit I"
 FT                   /transl_table=11
 FT                   /codon_start=1
 FT                   /translation="LSXXSLLS"
 FT   gap             11..13
 FT                   /estimated_length=3
 FT   intron          13..16
-FT                   /note="bar"
+FT                   /note="COI"
 FT   gap             16..17
 FT                   /estimated_length=2
 XX
@@ -46,7 +46,7 @@ XX
 RN   [1]
 RA   your name here
 RT   ;
-RL   Submitted (06-MAR-2020) to the INSDC.
+RL   Submitted (08-MAR-2020) to the INSDC.
 XX
 FH   Key             Location/Qualifiers
 FH
@@ -57,14 +57,14 @@ FT                   /country="Country: State, City"
 FT                   /specimen_voucher="Herbarium2: Lorrach9"
 FT                   /mol_type="genomic DNA"
 FT   CDS             join(4..9,14..16,19..>24)
-FT                   /note="foo"
+FT                   /product="cytochrome c oxidase subunit I"
 FT                   /transl_table=11
 FT                   /codon_start=1
 FT                   /translation="MXXSL"
 FT   gap             8..10
 FT                   /estimated_length=3
 FT   intron          10..13
-FT                   /note="bar"
+FT                   /note="COI"
 FT   gap             13..14
 FT                   /estimated_length=2
 XX
@@ -83,7 +83,7 @@ XX
 RN   [1]
 RA   your name here
 RT   ;
-RL   Submitted (06-MAR-2020) to the INSDC.
+RL   Submitted (08-MAR-2020) to the INSDC.
 XX
 FH   Key             Location/Qualifiers
 FH
@@ -92,13 +92,13 @@ FT                   /isolate="Taxon3"
 FT                   /organism="Taxon three"
 FT                   /mol_type="genomic DNA"
 FT   CDS             join(1..8,13..16,19..27)
-FT                   /note="foo"
+FT                   /product="cytochrome c oxidase subunit I"
 FT                   /transl_table=11
 FT                   /translation="MHXYLS"
 FT   gap             7..9
 FT                   /estimated_length=3
 FT   intron          9..12
-FT                   /note="bar"
+FT                   /note="COI"
 FT   gap             12..13
 FT                   /estimated_length=2
 XX
@@ -117,7 +117,7 @@ XX
 RN   [1]
 RA   your name here
 RT   ;
-RL   Submitted (06-MAR-2020) to the INSDC.
+RL   Submitted (08-MAR-2020) to the INSDC.
 XX
 FH   Key             Location/Qualifiers
 FH
@@ -129,11 +129,11 @@ FT                   /mol_type="genomic DNA"
 FT   gap             2..4
 FT                   /estimated_length=3
 FT   intron          4..7
-FT                   /note="bar"
+FT                   /note="COI"
 FT   gap             7
 FT                   /estimated_length=1
 FT   CDS             complement(join(<11..16,19..27))
-FT                   /note="baz"
+FT                   /product="cytochrome b"
 FT                   /transl_table=11
 FT                   /codon_start=1
 FT                   /translation="MLSLL"
