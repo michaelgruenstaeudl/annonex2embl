@@ -86,7 +86,7 @@ def annonex2embl(path_to_nex,
                  transl_table='11',
                  organelle='plastid',
                  seq_version='1',
-                 qualifier_name=False,
+                 qualifier_name='note',
                  metadata_delim=',',
                  compress=False):
 
