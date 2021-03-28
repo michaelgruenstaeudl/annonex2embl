@@ -1,5 +1,7 @@
 CHANGELOG
 ---------
+#### Version 1.0.1 (2021.03.28)
+* Minor bugfix
 #### Version 1.0.0 (2020.03.08)
 * Minor improvements to the example files
 * Minor code improvements
