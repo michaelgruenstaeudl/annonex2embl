@@ -90,6 +90,10 @@ python3 -m unittest discover -s tests -p "*_test.py"
 python3 -m unittest discover -s tests -p "*_test.py" -v  # verbose version
 pytest  # on Linux only, if python-pytest installed via pip
 
+## NEW TAG
+git tag v.1.0.3
+git push origin v.1.0.3
+
 ## PACKAGING INSTRUCTIONS
 #pip install .  #For local testing
 
