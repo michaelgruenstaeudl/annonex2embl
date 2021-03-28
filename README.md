@@ -50,6 +50,7 @@ DESCR="tRNA-Lys (trnK) intron, partial sequence; maturase K (matK) gene, complet
 SCRPT=$PWD/scripts/annonex2embl_launcher_CLI.py
 INPUT=$PWD/examples/input/TestData1.nex
 METAD=$PWD/examples/input/Metadata.csv
+mkdir -p $PWD/examples/temp/
 OTPUT=$PWD/examples/temp/TestData1.embl
 DESCR='description of alignment here'  # Do not use double-quotes
 EMAIL=your_email_here@yourmailserver.com
@@ -65,6 +66,7 @@ python3 $SCRPT -n $INPUT -c $METAD -d "$DESCR" -e $EMAIL -a "$AUTHR" -o $OTPUT -
 SET SCRPT=$PWD\scripts\annonex2embl_launcher_CLI.py
 SET INPUT=$PWD\examples\input\TestData1.nex
 SET METAD=$PWD\examples\input\Metadata.csv
+mkdir $PWD\examples\temp\
 SET OTPUT=$PWD\examples\temp\TestData1.embl
 SET DESCR='description of alignment here'
 SET EMAIL=your_email_here@yourmailserver.com
