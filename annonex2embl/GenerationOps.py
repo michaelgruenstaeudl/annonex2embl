@@ -223,7 +223,7 @@ class GenerateSeqFeature:
         return source_feature
 
     def regular_feat(self, feature_name, feature_type, feature_orient, feature_loc,
-                     qualifier_name, transl_table, feature_seq, feature_product=None):
+                     transl_table, feature_seq, feature_product=None, qualifier_name="note"):
         ''' This function generates a regular SeqFeature for a SeqRecord.
         Args:
             feature_name (str):  usually a gene symbol; example: 'matK'

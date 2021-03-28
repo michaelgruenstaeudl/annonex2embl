@@ -54,7 +54,7 @@ AUTHR='your name here'  # Do not use double-quotes
 MNFTS=PRJEB00000
 MNFTD=${DESCR//[^[:alnum:]]/_}
 
-python3 $SCRPT -n $INPUT -c $METAD -d "$DESCR" -e $EMAIL -a "$AUTHR" -o $OTPUT --productlookup --manifeststudy $MNFTS --manifestdescr $MNFTD --compress
+python3 $SCRPT -n $INPUT -c $METAD -d "$DESCR" -e $EMAIL -a "$AUTHR" -o $OTPUT --qualifiername "note" --productlookup --manifeststudy $MNFTS --manifestdescr $MNFTD --compress
 ```
 
 #### On Windows
@@ -84,6 +84,18 @@ python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% -o %OTPUT%
     python3 -m unittest discover -s tests -p "*_test.py"
     python3 -m unittest discover -s tests -p "*_test.py" -v  # verbose version
     pytest  # on Linux only, if python-pytest installed via pip
+
+## PACKAGING INSTRUCTIONS
+```
+#pip install .  ## For local testing
+
+python3 -m build
+python3 -m twine upload --repository testpypi dist/*
+python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps annonex2embl
+
+python3 -m twine upload dist/*
+python3 -m pip install annonex2embl
+```
 -->
 
 ## CHANGELOG

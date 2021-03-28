@@ -186,7 +186,7 @@ class CLI():
                             help='name of the qualifier that contains the product (or other) information of a sequence feature; '\
                             'can only be a valid INSDC qualifier not reserved for feature `\source`',
                             default='note',
-                            metavar='',
+                            #metavar='',
                             choices=INSDC_quals_not_source,
                             required=False)
 

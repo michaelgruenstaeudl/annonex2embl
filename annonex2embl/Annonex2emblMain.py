@@ -314,8 +314,9 @@ shorter than 10 unambiguous nucleotides.' % (seq_record.id)
 
                     seq_feature = GnOps.GenerateSeqFeature().regular_feat(
                         charset_sym, charset_type, charset_orient, 
-                        location_object, qualifier_name, transl_table, 
-                        seq, charset_product)
+                        location_object, transl_table, seq, 
+                        charset_product, qualifier_name)
+                    
                     seq_record.features.append(seq_feature)
 
 ####################################
@@ -351,8 +352,8 @@ sequence `%s` is not saved to output. Reason: %s' \
                         warnings.warn(msg)
                         removal_list.append(indx)
                 elif feature.type == 'IGS' or feature.type == 'intron':
-                    if  last_seen[0] == 'CDS' or last_seen[0] == 'gene':
-                        if not last_seen[1] == last_seen[2]:
+                    if last_seen[0] == 'CDS' or last_seen[0] == 'gene':
+                        if not (type(last_seen[2])) == str and not last_seen[1] == last_seen[2]:
                             feature.location = CkOps.TranslCheck().\
                                 adjustLocation(feature.location, last_seen[2])
                     last_seen = ["type","loc_before","loc_after"]
