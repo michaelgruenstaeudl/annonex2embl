@@ -81,13 +81,12 @@ python %SCRPT% -n %INPUT% -c %METAD% -d %DESCR% -e %EMAIL% -a %AUTHR% -o %OTPUT%
 
 <!--
 ## TESTING
-    python3 -m unittest discover -s tests -p "*_test.py"
-    python3 -m unittest discover -s tests -p "*_test.py" -v  # verbose version
-    pytest  # on Linux only, if python-pytest installed via pip
+python3 -m unittest discover -s tests -p "*_test.py"
+python3 -m unittest discover -s tests -p "*_test.py" -v  # verbose version
+pytest  # on Linux only, if python-pytest installed via pip
 
 ## PACKAGING INSTRUCTIONS
-```
-#pip install .  ## For local testing
+#pip install .  #For local testing
 
 python3 -m build
 python3 -m twine upload --repository testpypi dist/*
@@ -95,7 +94,6 @@ python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps annon
 
 python3 -m twine upload dist/*
 python3 -m pip install annonex2embl
-```
 -->
 
 ## CHANGELOG
